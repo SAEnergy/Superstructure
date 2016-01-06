@@ -1,10 +1,7 @@
 ﻿using Core.Interfaces.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Core.Logging
 {
@@ -52,7 +49,7 @@ namespace Core.Logging
         public List<LogMessage> DequeueMessages()
         {
             var list = new List<LogMessage>();
-            var sleepTime = _queueTimeOut.Milliseconds / _queueBatchSize;
+            var sleepTime = Math.Max(_queueTimeOut.Milliseconds / _queueBatchSize, 1); //regardless of what a silly user might set, don't let the sleep get below 1 millisecond
             var timeOutTime = DateTime.UtcNow.Add(_queueTimeOut);
 
             while (list.Count < _queueBatchSize && DateTime.UtcNow < timeOutTime)
@@ -62,7 +59,7 @@ namespace Core.Logging
                     //lock here so you can enqueue while we are still dequeuing in worker threads
                     lock (_logQueue)
                     {
-                        //while we have a log on the queue, burn threw it till we empty it or fill ourselves up
+                        //while we have a lock on the queue, burn threw it till we empty it or fill ourselves up
                         while (list.Count < _queueBatchSize && _logQueue.Count > 0)
                         {
                             list.Add(_logQueue.Dequeue());

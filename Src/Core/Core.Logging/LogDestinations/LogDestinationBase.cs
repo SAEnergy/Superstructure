@@ -1,10 +1,6 @@
 ﻿using Core.Interfaces.Logging;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Core.Logging.LogDestinations
 {
@@ -14,7 +10,6 @@ namespace Core.Logging.LogDestinations
 
         protected LogMessageQueue _destinationQueue;
         protected Thread _logDestinationWorkerThread;
-        protected ManualResetEvent _logDestinationDone;
 
         private object syncObject = new object();
 
@@ -48,7 +43,6 @@ namespace Core.Logging.LogDestinations
             {
                 if(!IsRunning)
                 {
-                    _logDestinationDone = new ManualResetEvent(false);
                     _logDestinationWorkerThread = new Thread(new ThreadStart(LogDestinationWorker));
                     _logDestinationWorkerThread.IsBackground = true;
 
@@ -67,7 +61,7 @@ namespace Core.Logging.LogDestinations
                 {
                     IsRunning = false;
 
-                    _logDestinationDone.WaitOne();
+                    _logDestinationWorkerThread.Join();
 
                     ShutDownDestination();
                 }
@@ -96,8 +90,6 @@ namespace Core.Logging.LogDestinations
                     ProcessMessage(message);
                 }
             }
-
-            _logDestinationDone.Set();
         }
 
         #endregion
