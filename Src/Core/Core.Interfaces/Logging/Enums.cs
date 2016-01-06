@@ -8,6 +8,9 @@ namespace Core.Interfaces.Logging
 {
     public enum LogMessageSeverity
     {
-        None
+        Information,
+        Warning,
+        Error,
+        Critical
     }
 }

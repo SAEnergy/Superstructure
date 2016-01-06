@@ -13,6 +13,9 @@ namespace Core.Logging
     {
         #region Fields
 
+        private TimeSpan _queueTimeOut = new TimeSpan(0, 0, 0, 0, 100); // milliseconds
+        private const int _queueBatchSize = 50;
+
         private List<ILogDestination> _destinations;
         private Thread _logWorker;
         private ManualResetEvent _logWorkerDone;
@@ -32,7 +35,7 @@ namespace Core.Logging
             }
         }
 
-        public static bool IsRunning { get; private set; }
+        public bool IsRunning { get; private set; }
 
         #endregion
 
@@ -67,7 +70,7 @@ namespace Core.Logging
         }
 
         public void Log(LogMessageSeverity severity, string message, [CallerMemberName] string callerName = "",
-            [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1, params object[] args)
+            [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1)
         {
             var logMessage = new LogMessage();
 
@@ -131,14 +134,17 @@ namespace Core.Logging
         {
             while(IsRunning)
             {
-                //will block for a moment and return a list of messages which will be handed off to all destinations
+                //will block for max of the timespan timeout, or return a list the size of the batch size constant
                 var messages = GetMessages();
 
-                lock(_destinations)
+                if (messages.Count > 0)
                 {
-                    foreach(var destination in _destinations)
+                    lock (_destinations)
                     {
-                        destination.ProcessMessages(messages);
+                        foreach (var destination in _destinations)
+                        {
+                            destination.ProcessMessages(messages);
+                        }
                     }
                 }
             }
@@ -149,8 +155,21 @@ namespace Core.Logging
         private List<LogMessage> GetMessages()
         {
             var list = new List<LogMessage>();
+            var sleepTime = _queueTimeOut.Milliseconds / _queueBatchSize;
+            var timeOutTime = DateTime.UtcNow.Add(_queueTimeOut);
 
+            while (list.Count < _queueBatchSize && DateTime.UtcNow < timeOutTime)
+            {
+                if (_logQueue.Count > 0)
+                {
+                    lock (_logQueue)
+                    {
+                        list.Add(_logQueue.Dequeue());
+                    }
+                }
 
+                Thread.Sleep(sleepTime);
+            }
 
             return list;
         }
