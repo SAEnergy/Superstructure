@@ -31,7 +31,10 @@ namespace Core.Logging
         {
             get
             {
-                return _destinations.AsReadOnly();
+                lock (_destinations)
+                {
+                    return _destinations.AsReadOnly();
+                }
             }
         }
 
