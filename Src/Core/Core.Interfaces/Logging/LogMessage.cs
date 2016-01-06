@@ -16,12 +16,23 @@ namespace Core.Interfaces.Logging
         public LogMessageSeverity Severity { get; set; }
 
         [DataMember]
+        public string FilePath { get; set; }
+
+        [DataMember]
+        public string CallerName { get; set; }
+
+        [DataMember]
+        public int LineNumber { get; set; }
+
+        [DataMember]
         public int ProcessId { get; set; }
 
         [DataMember]
         public string ProcessName { get; set; }
 
-        [DataMember]
-        public string Source { get; set; }
+        public LogMessage()
+        {
+            TimeStamp = DateTime.Now;
+        }
     }
 }

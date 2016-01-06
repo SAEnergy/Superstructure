@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 
 namespace Test.Mocks
 {
@@ -14,7 +15,12 @@ namespace Test.Mocks
             throw new NotImplementedException();
         }
 
-        public void Log(LogMessage logMessage)
+        public void Log(LogMessage logMessage, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Log(LogMessageSeverity severity, string message, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1, params object[] args)
         {
             throw new NotImplementedException();
         }

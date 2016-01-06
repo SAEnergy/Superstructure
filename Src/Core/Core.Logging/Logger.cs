@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -55,12 +56,28 @@ namespace Core.Logging
             }
         }
 
-        public void Log(LogMessage logMessage)
+        public void Log(LogMessage logMessage, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFilePath = "",
+            [CallerLineNumber] int callerLineNumber = -1)
         {
-            lock(_logQueue)
-            {
-                _logQueue.Enqueue(logMessage);
-            }
+            logMessage.CallerName = callerName;
+            logMessage.FilePath = callerFilePath;
+            logMessage.LineNumber = callerLineNumber;
+
+            EnqueLogMessage(logMessage);
+        }
+
+        public void Log(LogMessageSeverity severity, string message, [CallerMemberName] string callerName = "",
+            [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1, params object[] args)
+        {
+            var logMessage = new LogMessage();
+
+            logMessage.Severity = severity;
+            logMessage.Message = message;
+            logMessage.CallerName = callerName;
+            logMessage.FilePath = callerFilePath;
+            logMessage.LineNumber = callerLineNumber;
+
+            EnqueLogMessage(logMessage);
         }
 
         public void RemoveLogDestination(ILogDestination logDestination)
@@ -102,11 +119,28 @@ namespace Core.Logging
 
         #region Private Methods
 
+        private void EnqueLogMessage(LogMessage logMessage)
+        {
+            lock (_logQueue)
+            {
+                _logQueue.Enqueue(logMessage);
+            }
+        }
+
         private void LogWorker()
         {
             while(IsRunning)
             {
+                //will block for a moment and return a list of messages which will be handed off to all destinations
                 var messages = GetMessages();
+
+                lock(_destinations)
+                {
+                    foreach(var destination in _destinations)
+                    {
+                        destination.ProcessMessages(messages);
+                    }
+                }
             }
 
             _logWorkerDone.Set();
