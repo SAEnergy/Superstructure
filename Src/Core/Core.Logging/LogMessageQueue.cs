@@ -62,7 +62,11 @@ namespace Core.Logging
                     //lock here so you can enqueue while we are still dequeuing in worker threads
                     lock (_logQueue)
                     {
-                        list.Add(_logQueue.Dequeue());
+                        //while we have a log on the queue, burn threw it till we empty it or fill ourselves up
+                        while (list.Count < _queueBatchSize && _logQueue.Count > 0)
+                        {
+                            list.Add(_logQueue.Dequeue());
+                        }
                     }
                 }
 
