@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Core.Logging.LogDestinations
 {
-    public sealed class CSVLogDestination : BaseLogDestination
+    public sealed class CSVLogDestination : LogDestinationBase
     {
         #region Constructor
 

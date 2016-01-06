@@ -13,13 +13,10 @@ namespace Core.Logging
     {
         #region Fields
 
-        private TimeSpan _queueTimeOut = new TimeSpan(0, 0, 0, 0, 100); // milliseconds
-        private const int _queueBatchSize = 50;
-
         private List<ILogDestination> _destinations;
         private Thread _logWorker;
         private ManualResetEvent _logWorkerDone;
-        private Queue<LogMessage> _logQueue;
+        private LogMessageQueue _loggerQueue;
 
         private static object _syncObject = new object();
 
@@ -47,7 +44,7 @@ namespace Core.Logging
         public Logger()
         {
             _destinations = new List<ILogDestination>();
-            _logQueue = new Queue<LogMessage>();
+            _loggerQueue = new LogMessageQueue();
         }
 
         #endregion
@@ -56,6 +53,11 @@ namespace Core.Logging
 
         public void AddLogDestination(ILogDestination logDestination)
         {
+            if(IsRunning)
+            {
+                logDestination.Start();
+            }
+
             lock(_destinations)
             {
                 _destinations.Add(logDestination);
@@ -69,7 +71,7 @@ namespace Core.Logging
             logMessage.FilePath = callerFilePath;
             logMessage.LineNumber = callerLineNumber;
 
-            EnqueLogMessage(logMessage);
+            _loggerQueue.EnqueueMessage(logMessage);
         }
 
         public void Log(LogMessageSeverity severity, string message, [CallerMemberName] string callerName = "",
@@ -83,7 +85,7 @@ namespace Core.Logging
             logMessage.FilePath = callerFilePath;
             logMessage.LineNumber = callerLineNumber;
 
-            EnqueLogMessage(logMessage);
+            _loggerQueue.EnqueueMessage(logMessage);
         }
 
         public void RemoveLogDestination(ILogDestination logDestination)
@@ -99,6 +101,14 @@ namespace Core.Logging
                 {
                     IsRunning = true;
                     _logWorkerDone = new ManualResetEvent(false);
+
+                    lock (_destinations)
+                    {
+                        foreach (var destination in _destinations)
+                        {
+                            destination.Start();
+                        }
+                    }
 
                     _logWorker = new Thread(new ThreadStart(LogWorker));
 
@@ -116,6 +126,14 @@ namespace Core.Logging
                 {
                     IsRunning = false;
 
+                    lock(_destinations)
+                    {
+                        foreach (var destination in _destinations)
+                        {
+                            destination.Stop();
+                        }
+                    }
+
                     _logWorkerDone.WaitOne();
                 }
             }
@@ -125,20 +143,12 @@ namespace Core.Logging
 
         #region Private Methods
 
-        private void EnqueLogMessage(LogMessage logMessage)
-        {
-            lock (_logQueue)
-            {
-                _logQueue.Enqueue(logMessage);
-            }
-        }
-
         private void LogWorker()
         {
             while(IsRunning)
             {
                 //will block for max of the timespan timeout, or return a list the size of the batch size constant
-                var messages = GetMessages();
+                var messages = _loggerQueue.DequeueMessages();
 
                 if (messages.Count > 0)
                 {
@@ -153,28 +163,6 @@ namespace Core.Logging
             }
 
             _logWorkerDone.Set();
-        }
-
-        private List<LogMessage> GetMessages()
-        {
-            var list = new List<LogMessage>();
-            var sleepTime = _queueTimeOut.Milliseconds / _queueBatchSize;
-            var timeOutTime = DateTime.UtcNow.Add(_queueTimeOut);
-
-            while (list.Count < _queueBatchSize && DateTime.UtcNow < timeOutTime)
-            {
-                if (_logQueue.Count > 0)
-                {
-                    lock (_logQueue)
-                    {
-                        list.Add(_logQueue.Dequeue());
-                    }
-                }
-
-                Thread.Sleep(sleepTime);
-            }
-
-            return list;
         }
 
         #endregion

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Core.Logging.LogDestinations
 {
-    public sealed class ConsoleLogDestination : BaseLogDestination
+    public sealed class ConsoleLogDestination : LogDestinationBase
     {
         #region Constructor
 
