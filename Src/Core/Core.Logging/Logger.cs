@@ -1,11 +1,8 @@
 ﻿using Core.Interfaces.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Core.Logging
 {
@@ -15,7 +12,6 @@ namespace Core.Logging
 
         private List<ILogDestination> _destinations;
         private Thread _logWorker;
-        private ManualResetEvent _logWorkerDone;
         private LogMessageQueue _loggerQueue;
 
         private static object _syncObject = new object();
@@ -67,11 +63,14 @@ namespace Core.Logging
         public void Log(LogMessage logMessage, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFilePath = "",
             [CallerLineNumber] int callerLineNumber = -1)
         {
-            logMessage.CallerName = callerName;
-            logMessage.FilePath = callerFilePath;
-            logMessage.LineNumber = callerLineNumber;
+            if (logMessage != null)
+            {
+                logMessage.CallerName = callerName;
+                logMessage.FilePath = callerFilePath;
+                logMessage.LineNumber = callerLineNumber;
 
-            _loggerQueue.EnqueueMessage(logMessage);
+                _loggerQueue.EnqueueMessage(logMessage);
+            }
         }
 
         public void Log(LogMessageSeverity severity, string message, [CallerMemberName] string callerName = "",
@@ -100,7 +99,6 @@ namespace Core.Logging
                 if (!IsRunning)
                 {
                     IsRunning = true;
-                    _logWorkerDone = new ManualResetEvent(false);
 
                     lock (_destinations)
                     {
@@ -126,7 +124,7 @@ namespace Core.Logging
                 {
                     IsRunning = false;
 
-                    _logWorkerDone.WaitOne();
+                    _logWorker.Join();
 
                     lock (_destinations)
                     {
@@ -161,8 +159,6 @@ namespace Core.Logging
                     }
                 }
             }
-
-            _logWorkerDone.Set();
         }
 
         #endregion
