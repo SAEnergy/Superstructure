@@ -68,11 +68,18 @@ namespace Core.Logging.LogDestinations
                     IsRunning = false;
 
                     _logDestinationDone.WaitOne();
+
+                    ShutDownDestination();
                 }
             }
         }
 
         public abstract void ProcessMessage(LogMessage message);
+
+        public virtual void ShutDownDestination()
+        {
+            //do nothing is base class, child classes can put shutdown logic in an override method if needed
+        }
 
         #endregion
 

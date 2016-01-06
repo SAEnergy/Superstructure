@@ -126,15 +126,15 @@ namespace Core.Logging
                 {
                     IsRunning = false;
 
-                    lock(_destinations)
+                    _logWorkerDone.WaitOne();
+
+                    lock (_destinations)
                     {
                         foreach (var destination in _destinations)
                         {
                             destination.Stop();
                         }
                     }
-
-                    _logWorkerDone.WaitOne();
                 }
             }
         }
