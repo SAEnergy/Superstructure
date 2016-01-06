@@ -40,10 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LogDestinations\BaseLogDestination.cs" />
+    <Compile Include="LogDestinations\LogDestinationBase.cs" />
     <Compile Include="LogDestinations\ConsoleLogDestination.cs" />
     <Compile Include="LogDestinations\CSVLogDestination.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="LogMessageQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
