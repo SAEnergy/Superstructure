@@ -7,11 +7,24 @@ using System.Threading.Tasks;
 
 namespace Core.Logging.LogDestinations
 {
-    public class CSVLogDestination : ILogDestination
+    public sealed class CSVLogDestination : BaseLogDestination
     {
-        public void ProcessMessages(List<LogMessage> messages)
+        #region Constructor
+
+        public CSVLogDestination()
         {
-            throw new NotImplementedException();
+
         }
+
+        #endregion
+
+        #region Public Methods
+
+        public override void ProcessMessage(LogMessage message)
+        {
+
+        }
+
+        #endregion
     }
 }

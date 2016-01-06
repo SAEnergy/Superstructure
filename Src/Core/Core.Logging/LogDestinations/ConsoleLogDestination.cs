@@ -7,11 +7,24 @@ using System.Threading.Tasks;
 
 namespace Core.Logging.LogDestinations
 {
-    public class ConsoleLogDestination : ILogDestination
+    public sealed class ConsoleLogDestination : BaseLogDestination
     {
-        public void ProcessMessages(List<LogMessage> messages)
+        #region Constructor
+
+        public ConsoleLogDestination()
         {
-            throw new NotImplementedException();
+
         }
+
+        #endregion
+
+        #region Public Methods
+
+        public override void ProcessMessage(LogMessage message)
+        {
+            Console.WriteLine(message.Message);
+        }
+
+        #endregion
     }
 }

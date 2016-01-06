@@ -10,6 +10,8 @@ namespace Test.Mocks
 {
     public class LoggerMock : ILogger
     {
+        public bool IsRunning { get; }
+
         public void AddLogDestination(ILogDestination logDestination)
         {
             throw new NotImplementedException();
@@ -20,7 +22,7 @@ namespace Test.Mocks
             throw new NotImplementedException();
         }
 
-        public void Log(LogMessageSeverity severity, string message, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1, params object[] args)
+        public void Log(LogMessageSeverity severity, string message, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1)
         {
             throw new NotImplementedException();
         }
