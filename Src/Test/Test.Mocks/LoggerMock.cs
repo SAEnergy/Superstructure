@@ -10,7 +10,7 @@ namespace Test.Mocks
 {
     public class LoggerMock : ILogger
     {
-        public bool IsRunning { get; }
+        public bool IsRunning { get; private set; }
 
         public void AddLogDestination(ILogDestination logDestination)
         {
