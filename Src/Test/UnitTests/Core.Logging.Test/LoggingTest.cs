@@ -7,13 +7,8 @@ using System.Runtime.CompilerServices;
 namespace Core.Logging.Test
 {
     [TestClass]
-    public class UnitTest1
+    public class LoggingTest
     {
-        [TestMethod]
-        public void TestMethod1()
-        {
-        }
-
         [TestMethod]
         public void TestUserExtensibleEnum()
         {
