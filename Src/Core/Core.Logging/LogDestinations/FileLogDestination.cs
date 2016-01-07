@@ -61,12 +61,15 @@ namespace Core.Logging.LogDestinations
                     _currentLogFileInfo = OpenFile(_expandedDirectory, _currentLogFileInfo.Item2 + 1);
                 }
 
-                foreach (var message in messages)
+                if (_currentLogFileInfo != null)
                 {
-                    _currentLogFileInfo.Item1.WriteLine(_config.LogMessageFormatter.Format(message));
-                }
+                    foreach (var message in messages)
+                    {
+                        _currentLogFileInfo.Item1.WriteLine(_config.LogMessageFormatter.Format(message));
+                    }
 
-                _currentLogFileInfo.Item1.Flush();
+                    _currentLogFileInfo.Item1.Flush();
+                }
             }
         }
 
@@ -174,7 +177,7 @@ namespace Core.Logging.LogDestinations
             currentNumber = currentNumber < _config.MaxLogFileCount ? currentNumber : 0;
 
             //we're trying to log, if we can't log, we should loop forever, at least while we're still running
-            while (retVal == null && IsRunning)
+            while (retVal == null && (IsRunning || !_destinationQueue.IsQueueEmpty))
             {
                 string fileName = GetFileName(directory, currentNumber);
 
@@ -201,7 +204,7 @@ namespace Core.Logging.LogDestinations
             bool successful = false;
             int retryCount = 0;
 
-            while (!successful && retryCount < RETRY_COUNT && IsRunning)
+            while (!successful && retryCount < RETRY_COUNT && (IsRunning || !_destinationQueue.IsQueueEmpty))
             {
                 retryCount++;
 
