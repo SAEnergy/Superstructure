@@ -97,7 +97,12 @@ namespace Core.Logging.LogDestinations
 
             while (IsRunning || !_destinationQueue.IsQueueEmpty)
             {
-                ReportMessages(_destinationQueue.DequeueMessages());
+                var messages = _destinationQueue.DequeueMessages();
+
+                if (messages.Count > 0)
+                {
+                    ReportMessages(messages);
+                }
             }
         }
 
