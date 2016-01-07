@@ -20,9 +20,16 @@ namespace Core.Logging.LogDestinations
 
         #region Public Methods
 
-        public override void ProcessMessage(LogMessage message)
+        public override void ReportMessages(List<LogMessage> messages)
         {
-            Console.WriteLine(message.Message);
+            StringBuilder builder = new StringBuilder();
+
+            foreach(var message in messages)
+            {
+                builder.AppendLine(message.Message);
+            }
+
+            Console.WriteLine(builder.ToString());
         }
 
         #endregion

@@ -105,8 +105,6 @@ namespace Core.Logging
                 {
                     Log(LogMessageSeverity.Information, string.Format("Logger starting.", this.GetType().Name));
 
-                    IsRunning = true;
-
                     lock (_destinations)
                     {
                         foreach (var destination in _destinations)
@@ -152,7 +150,9 @@ namespace Core.Logging
 
         private void LogWorker()
         {
-            while(IsRunning || !_loggerQueue.IsQueueEmpty)
+            IsRunning = true;
+
+            while (IsRunning || !_loggerQueue.IsQueueEmpty)
             {
                 //will block for max of the timespan timeout, or return a list the size of the batch size constant
                 var messages = _loggerQueue.DequeueMessages();

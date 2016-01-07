@@ -43,7 +43,7 @@ namespace Core.Logging.LogDestinations
 
         #region Public Methods
 
-        public override void ProcessMessage(LogMessage message)
+        public override void ReportMessages(List<LogMessage> messages)
         {
             if (_currentLogFileInfo == null)
             {
@@ -61,7 +61,11 @@ namespace Core.Logging.LogDestinations
                     _currentLogFileInfo = OpenFile(_expandedDirectory, _currentLogFileInfo.Item2 + 1);
                 }
 
-                _currentLogFileInfo.Item1.WriteLine(_config.LogMessageFormatter.Format(message));
+                foreach (var message in messages)
+                {
+                    _currentLogFileInfo.Item1.WriteLine(_config.LogMessageFormatter.Format(message));
+                }
+
                 _currentLogFileInfo.Item1.Flush();
             }
         }
