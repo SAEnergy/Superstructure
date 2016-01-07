@@ -56,8 +56,6 @@ namespace Core.Logging.LogDestinations
                         _logDestinationWorkerThread.IsBackground = true;
 
                         _logDestinationWorkerThread.Start();
-
-                        IsRunning = true;
                     }
                 }
                 else
@@ -82,7 +80,7 @@ namespace Core.Logging.LogDestinations
             }
         }
 
-        public abstract void ProcessMessage(LogMessage message);
+        public abstract void ReportMessages(List<LogMessage> messages);
 
         public virtual void ShutDownDestination()
         {
@@ -95,14 +93,11 @@ namespace Core.Logging.LogDestinations
 
         private void LogDestinationWorker()
         {
-            while(IsRunning || !_destinationQueue.IsQueueEmpty)
-            {
-                var messages = _destinationQueue.DequeueMessages();
+            IsRunning = true;
 
-                foreach(var message in messages)
-                {
-                    ProcessMessage(message);
-                }
+            while (IsRunning || !_destinationQueue.IsQueueEmpty)
+            {
+                ReportMessages(_destinationQueue.DequeueMessages());
             }
         }
 

@@ -12,14 +12,32 @@ namespace HostService
 {
     public class HostService : IRunnable
     {
+        #region Fields
+
         private Heartbeat _heartBeat;
+
+        private readonly ILogger _logger;
+
+        #endregion
+
+        #region Properties
 
         public bool IsRunning { get; private set; }
 
+        #endregion
+
+        #region Constructor
+
         public HostService()
         {
+            _logger = IoCContainer.Instance.Resolve<ILogger>();
+
             Start();
         }
+
+        #endregion
+
+        #region Public Methods
 
         public void Start()
         {
@@ -38,5 +56,11 @@ namespace HostService
                 _heartBeat.Stop();
             }
         }
+
+        #endregion
+
+        #region Private Methods
+
+        #endregion
     }
 }
