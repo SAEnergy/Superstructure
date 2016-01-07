@@ -1,6 +1,8 @@
 ﻿using Core.Interfaces.Logging;
 using Core.IoC.Container;
+using Core.Logging.LogDestinationConfigs;
 using Core.Logging.LogDestinations;
+using Core.Logging.LogMessageFormats;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +31,18 @@ namespace HostService
 
             _logger = IoCContainer.Instance.Resolve<ILogger>();
 
+            var logFileConfig = new FileLogDestinationConfig();
+
+            //hardcode for now
+            logFileConfig.LogDirectory = ".\\Logs";
+            logFileConfig.LogFileExtension = "csv";
+            logFileConfig.LogFilePrefix = "HostServiceLog";
+            logFileConfig.LogMessageFormatter = new CSVLogMessageFormatter();
+            logFileConfig.MaxLogFileSize = 10;
+            logFileConfig.MaxLogFileCount = 5;
+
+            _logger.AddLogDestination(new FileLogDestination(logFileConfig));
+
             _logger.Log(LogMessageSeverity.Information, string.Format("Server starting up local time - {0}", DateTime.Now));
 
             if (Environment.UserInteractive)
@@ -54,7 +68,7 @@ namespace HostService
 
             _logger.Log(LogMessageSeverity.Information, "Server shutting down...");
 
-            //Shut down hostservice here
+            _hostService.Stop();
 
             _logger.Log(LogMessageSeverity.Information, "Server shut down.");
 

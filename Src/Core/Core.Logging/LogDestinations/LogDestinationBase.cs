@@ -1,4 +1,5 @@
 ﻿using Core.Interfaces.Logging;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -10,6 +11,7 @@ namespace Core.Logging.LogDestinations
 
         protected LogMessageQueue _destinationQueue;
         protected Thread _logDestinationWorkerThread;
+        protected ILogger _logger;
 
         private object syncObject = new object();
 
@@ -41,14 +43,26 @@ namespace Core.Logging.LogDestinations
         {
             lock(syncObject)
             {
-                if(!IsRunning)
+                //we want to be able to log internally if something goes wrong
+                if (Logger.InternalLogger != null)
                 {
-                    _logDestinationWorkerThread = new Thread(new ThreadStart(LogDestinationWorker));
-                    _logDestinationWorkerThread.IsBackground = true;
+                    _logger = Logger.InternalLogger;
 
-                    _logDestinationWorkerThread.Start();
+                    _logger.Log(LogMessageSeverity.Information, string.Format("LogDestination of type \"{0}\" starting.", this.GetType().Name));
 
-                    IsRunning = true;
+                    if (!IsRunning)
+                    {
+                        _logDestinationWorkerThread = new Thread(new ThreadStart(LogDestinationWorker));
+                        _logDestinationWorkerThread.IsBackground = true;
+
+                        _logDestinationWorkerThread.Start();
+
+                        IsRunning = true;
+                    }
+                }
+                else
+                {
+                    throw new NullReferenceException("Logger is null, cannot start log destinations until a logger has been created.");
                 }
             }
         }
@@ -81,7 +95,7 @@ namespace Core.Logging.LogDestinations
 
         private void LogDestinationWorker()
         {
-            while(IsRunning)
+            while(IsRunning || !_destinationQueue.IsQueueEmpty)
             {
                 var messages = _destinationQueue.DequeueMessages();
 

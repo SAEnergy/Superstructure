@@ -6,7 +6,7 @@ namespace Core.Logging.LogMessageFormats
     {
         public string Format(LogMessage message)
         {
-            return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8}", message.TimeStamp,
+            return string.Format("{0},{1},\"{2}\",{3},{4},{5},{6},{7}", message.TimeStamp,
                 message.Severity, message.Message, message.ProcessName, message.ProcessId,
                 message.FilePath, message.CallerName, message.LineNumber);
         }
