@@ -16,6 +16,18 @@ namespace Core.Logging
 
         #endregion
 
+        #region Properties
+
+        public bool IsQueueEmpty
+        {
+            get
+            {
+                return _logQueue.Count == 0;
+            }
+        }
+
+        #endregion
+
         #region Constructor
 
         public LogMessageQueue()

@@ -31,6 +31,8 @@ namespace Core.Logging
             }
         }
 
+        internal static ILogger InternalLogger { get; private set; }
+
         public bool IsRunning { get; private set; }
 
         #endregion
@@ -41,6 +43,7 @@ namespace Core.Logging
         {
             _destinations = new List<ILogDestination>();
             _loggerQueue = new LogMessageQueue();
+            InternalLogger = this;
         }
 
         #endregion
@@ -56,6 +59,8 @@ namespace Core.Logging
 
             lock(_destinations)
             {
+                Log(LogMessageSeverity.Information, string.Format("LogDestination of type \"{0}\" added.", logDestination.GetType().Name));
+
                 _destinations.Add(logDestination);
             }
         }
@@ -98,6 +103,8 @@ namespace Core.Logging
             {
                 if (!IsRunning)
                 {
+                    Log(LogMessageSeverity.Information, string.Format("Logger starting.", this.GetType().Name));
+
                     IsRunning = true;
 
                     lock (_destinations)
@@ -122,6 +129,8 @@ namespace Core.Logging
             {
                 if (IsRunning)
                 {
+                    Log(LogMessageSeverity.Information, string.Format("Logger stopping.", this.GetType().Name));
+
                     IsRunning = false;
 
                     _logWorker.Join();
@@ -143,7 +152,7 @@ namespace Core.Logging
 
         private void LogWorker()
         {
-            while(IsRunning)
+            while(IsRunning || !_loggerQueue.IsQueueEmpty)
             {
                 //will block for max of the timespan timeout, or return a list the size of the batch size constant
                 var messages = _loggerQueue.DequeueMessages();
