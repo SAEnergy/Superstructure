@@ -31,15 +31,7 @@ namespace HostService
 
             _logger = IoCContainer.Instance.Resolve<ILogger>();
 
-            var logFileConfig = new FileLogDestinationConfig();
-
-            //hardcode for now
-            logFileConfig.LogDirectory = ".\\Logs";
-            logFileConfig.LogFileExtension = "csv";
-            logFileConfig.LogFilePrefix = "HostServiceLog";
-            logFileConfig.LogMessageFormatter = new CSVLogMessageFormatter();
-            logFileConfig.MaxLogFileSize = 10;
-            logFileConfig.MaxLogFileCount = 5;
+            var logFileConfig = GetLogConfiguration();
 
             _logger.AddLogDestination(new FileLogDestination(logFileConfig));
 
@@ -77,6 +69,27 @@ namespace HostService
 
             //last thing that happens ever
             _serviceStopped.Set();
+        }
+
+        private static FileLogDestinationConfig GetLogConfiguration()
+        {
+            var logFileConfig = new FileLogDestinationConfig();
+
+            //hardcode for now
+            logFileConfig.LogDirectory = Configuration.Instance.LogDirectory;
+            logFileConfig.LogFileExtension = Configuration.Instance.LogFileExtension;
+            logFileConfig.LogFilePrefix = Configuration.Instance.LogFilePrefix;
+            logFileConfig.LogMessageFormatter = BuildFormatter(Configuration.Instance.LogMessageFormatter);
+            logFileConfig.MaxLogFileSize = Configuration.Instance.MaxLogFileSize;
+            logFileConfig.MaxLogFileCount = Configuration.Instance.MaxLogFileCount;
+
+            return logFileConfig;
+        }
+
+        private static ILogMessageFormatter BuildFormatter(string typeName)
+        {
+            //hard code this for now
+            return new CSVLogMessageFormatter();
         }
 
         private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)

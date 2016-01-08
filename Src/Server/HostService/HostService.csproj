@@ -50,6 +50,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -60,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BootStrapper.cs" />
+    <Compile Include="Configuration.cs" />
     <Compile Include="HeartBeat.cs" />
     <Compile Include="HostService.cs" />
     <Compile Include="Program.cs" />
@@ -69,6 +71,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Core\Core.Database\Core.Database.csproj">
+      <Project>{b21c9416-91fc-462c-9676-a429d4b4d132}</Project>
+      <Name>Core.Database</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Core\Core.Interfaces\Core.Interfaces.csproj">
       <Project>{bdb06c43-2402-444e-a9e0-72c88174fed7}</Project>
       <Name>Core.Interfaces</Name>
@@ -84,6 +90,10 @@
     <ProjectReference Include="..\..\Core\Core.Services\Core.Services.csproj">
       <Project>{e6322468-7278-4940-9d5c-826e30477a19}</Project>
       <Name>Core.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Core.Settings\Core.Settings.csproj">
+      <Project>{990d2026-6a74-4a32-8510-6b28142ba3f2}</Project>
+      <Name>Core.Settings</Name>
     </ProjectReference>
     <ProjectReference Include="..\Server.Hosts\Server.Hosts.csproj">
       <Project>{1ad8a980-3f70-45a8-a682-68365183b845}</Project>
