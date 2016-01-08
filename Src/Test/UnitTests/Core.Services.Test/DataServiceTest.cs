@@ -4,7 +4,6 @@ using Core.Database;
 using Test.Mocks;
 using Core.Interfaces.Logging;
 using Core.Models.Persistent;
-using System.Data.Entity.Core.EntityClient;
 
 namespace Core.Services.Test
 {
