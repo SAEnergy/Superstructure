@@ -16,9 +16,12 @@ namespace Core.Database
 
         #endregion
 
-        #region Constructor
+        #region Constructors
 
-        public ServerContext(string connectionString)
+        public ServerContext() : base(DatabaseSettings.Instance.ConnectionString) { }
+
+        //main constructor
+        public ServerContext(string connectionString) : base(connectionString)
         {
             System.Data.Entity.Database.SetInitializer(new MigrateDatabaseToLatestVersion<ServerContext, ServerContextConfig>());
         }
