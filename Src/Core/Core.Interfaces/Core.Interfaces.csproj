@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\IRunnable.cs" />
+    <Compile Include="Base\IHost.cs" />
     <Compile Include="IoC\Enums.cs" />
     <Compile Include="IoC\IIoCContainer.cs" />
     <Compile Include="Logging\Enums.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="Logging\LogMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IDataService.cs" />
+    <Compile Include="Services\IHostManagerService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

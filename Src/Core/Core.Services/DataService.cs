@@ -5,14 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Core.Services.DataService
+namespace Core.Services
 {
     public class DataService : IDataService
     {
         #region Fields
 
         private readonly ILogger _logger;
-        private string connectionString;
 
         #endregion
 
@@ -111,7 +110,23 @@ namespace Core.Services.DataService
 
         public bool Update<T>(int key, T obj) where T : class
         {
-            throw new NotImplementedException();
+            bool result = false;
+
+            using (ServerContext db = new ServerContext())
+            {
+                T dbObj = null;
+
+                var set = db.Set<T>();
+                dbObj = set.Find(key);
+
+                if (dbObj != null)
+                {
+                    dbObj = obj;
+                    result = db.SaveChanges() > 0;
+                }
+            }
+
+            return result;
         }
 
         #endregion

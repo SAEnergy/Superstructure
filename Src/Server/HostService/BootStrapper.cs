@@ -2,7 +2,7 @@
 using Core.Interfaces.Logging;
 using Core.Interfaces.Services;
 using Core.Logging;
-using Core.Services.DataService;
+using Core.Services;
 
 namespace HostService
 {
@@ -14,6 +14,7 @@ namespace HostService
 
             container.Register<ILogger, Logger>();
             container.Register<IDataService, DataService>();
+            container.Register<IHostManagerService, HostManagerService>();
 
             #endregion
         }

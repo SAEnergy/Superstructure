@@ -1,5 +1,6 @@
 ﻿using Core.Interfaces.Base;
 using Core.Interfaces.Logging;
+using Core.Interfaces.Services;
 using Core.IoC.Container;
 using System;
 using System.Collections.Generic;
@@ -45,6 +46,8 @@ namespace HostService
             {
                 IsRunning = true;
                 _heartBeat = new Heartbeat();
+
+                IoCContainer.Instance.Resolve<IHostManagerService>().StartAll();
             }
         }
 
@@ -54,6 +57,8 @@ namespace HostService
             {
                 IsRunning = false;
                 _heartBeat.Stop();
+
+                IoCContainer.Instance.Resolve<IHostManagerService>().StopAll();
             }
         }
 
