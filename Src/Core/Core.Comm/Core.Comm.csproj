@@ -48,6 +48,10 @@
       <Project>{bdb06c43-2402-444e-a9e0-72c88174fed7}</Project>
       <Name>Core.Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Core.IoC.Container\Core.IoC.Container.csproj">
+      <Project>{e4860231-c690-45df-b396-120a9e3bcdd4}</Project>
+      <Name>Core.IoC.Container</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

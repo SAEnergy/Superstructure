@@ -1,6 +1,9 @@
-﻿namespace Core.Interfaces.Base
+﻿using System;
+
+namespace Core.Interfaces.Base
 {
     public interface IHost : IRunnable
     {
+        Type InterfaceType { get; }
     }
 }
