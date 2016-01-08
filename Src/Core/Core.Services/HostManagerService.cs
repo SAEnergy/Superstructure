@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.Services
 {
@@ -67,19 +65,48 @@ namespace Core.Services
             }
         }
 
-        void IHostManagerService.Restart<T>()
+        public void Restart<T>()
         {
-            throw new NotImplementedException();
+            Stop<T>();
+            Start<T>();
         }
 
-        void IHostManagerService.Start<T>()
+        public void Start<T>()
         {
-            throw new NotImplementedException();
+            IHost host;
+
+            if (!_hosts.TryGetValue(typeof(T), out host))
+            {
+                _logger.Log(LogMessageSeverity.Error, string.Format("HostManager cannot find host with interface type of \"{0}\".", typeof(T).Name));
+            }
+            else
+            {
+                if (host != null)
+                {
+                    _logger.Log(LogMessageSeverity.Error, string.Format("HostManager starting host with interface type of \"{0}\".", typeof(T).Name));
+
+                    host.Start();
+                }
+            }
         }
 
-        void IHostManagerService.Stop<T>()
+        public void Stop<T>()
         {
-            throw new NotImplementedException();
+            IHost host;
+
+            if (!_hosts.TryGetValue(typeof(T), out host))
+            {
+                _logger.Log(LogMessageSeverity.Error, string.Format("HostManager cannot find host with interface type of \"{0}\".", typeof(T).Name));
+            }
+            else
+            {
+                if (host != null)
+                {
+                    _logger.Log(LogMessageSeverity.Error, string.Format("HostManager stopping host with interface type of \"{0}\".", typeof(T).Name));
+
+                    host.Stop();
+                }
+            }
         }
 
         #endregion

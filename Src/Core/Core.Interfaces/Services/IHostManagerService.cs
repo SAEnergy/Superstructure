@@ -15,10 +15,10 @@ namespace Core.Interfaces.Services
 
         void RestartAll();
 
-        void Stop<T>() where T : class, IHost;
+        void Stop<T>();
 
-        void Start<T>() where T : class, IHost;
+        void Start<T>();
 
-        void Restart<T>() where T : class, IHost;
+        void Restart<T>();
     }
 }

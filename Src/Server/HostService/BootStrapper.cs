@@ -15,6 +15,7 @@ namespace HostService
             container.Register<ILogger, Logger>();
             container.Register<IDataService, DataService>();
             container.Register<IHostManagerService, HostManagerService>();
+            container.Register<ISchedulerService, SchedulerService>();
 
             #endregion
         }
