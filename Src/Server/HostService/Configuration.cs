@@ -3,12 +3,7 @@ using Core.Interfaces.Logging;
 using Core.IoC.Container;
 using Core.Settings;
 using Core.Settings.BaseClasses;
-using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HostService
 {
@@ -63,7 +58,7 @@ namespace HostService
 
         private Configuration() : base (IoCContainer.Instance.Resolve<ILogger>())
         {
-            DatabaseSettings.Instance.ConnectionString = ConfigurationManager.ConnectionStrings["AppConnectionString"].ConnectionString;
+            DatabaseSettings.Instance.ConnectionString = ConfigurationManager.ConnectionStrings["ServerConnectionString"].ConnectionString;
         }
     }
 }

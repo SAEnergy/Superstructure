@@ -21,8 +21,6 @@ namespace Core.Services.DataService
         public DataService(ILogger logger)
         {
             _logger = logger;
-
-            connectionString = @"Data Source=localhost\SQLExpress;Initial Catalog=ServerDatabase;Integrated Security=True;"; //make this configurable
         }
 
         #endregion
@@ -54,7 +52,7 @@ namespace Core.Services.DataService
 
             if (ValidateObject(obj))
             {
-                using (ServerContext db = new ServerContext(connectionString))
+                using (ServerContext db = new ServerContext())
                 {
                     var set = db.Set<T>();
                     set.Attach(obj);
@@ -72,7 +70,7 @@ namespace Core.Services.DataService
         {
             T result = null;
 
-            using (ServerContext db = new ServerContext(connectionString))
+            using (ServerContext db = new ServerContext())
             {
                 var set = db.Set<T>();
                 result = set.Find(key);
@@ -85,7 +83,7 @@ namespace Core.Services.DataService
         {
             List<T> results;
 
-            using (ServerContext db = new ServerContext(connectionString))
+            using (ServerContext db = new ServerContext())
             {
                 var set = db.Set<T>();
                 results = set.Where(where).ToList();
@@ -100,7 +98,7 @@ namespace Core.Services.DataService
 
             if (ValidateObject(obj))
             {
-                using (ServerContext db = new ServerContext(connectionString))
+                using (ServerContext db = new ServerContext())
                 {
                     var set = db.Set<T>();
                     set.Add(obj);
