@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 namespace Test.Mocks
 {
@@ -19,12 +20,12 @@ namespace Test.Mocks
 
         public void Log(LogMessage logMessage, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1)
         {
-            throw new NotImplementedException();
+            Trace.TraceInformation(logMessage.Message);
         }
 
         public void Log(LogMessageSeverity severity, string message, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1)
         {
-            throw new NotImplementedException();
+            Trace.TraceInformation(message);
         }
 
         public void RemoveLogDestination(ILogDestination logDestination)

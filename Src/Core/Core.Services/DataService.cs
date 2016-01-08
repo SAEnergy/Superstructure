@@ -101,7 +101,7 @@ namespace Core.Services
                 {
                     var set = db.Set<T>();
                     set.Add(obj);
-                    db.SaveChanges();
+                    retVal = db.SaveChanges() > 0;
                 }
             }
 
