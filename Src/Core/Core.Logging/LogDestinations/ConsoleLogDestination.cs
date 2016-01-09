@@ -18,19 +18,95 @@ namespace Core.Logging.LogDestinations
 
         #endregion
 
+
+        #region Private Methods
+
+        private void WriteLine(string msg)
+        {
+            Console.WriteLine(msg);
+        }
+
+        private void WriteLineInformation(LogMessage message)
+        {
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.White;
+            WriteLine(message.Message);
+            Console.ResetColor();
+        }
+
+        private void WriteLineWarning(LogMessage message)
+        {
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            WriteLine(message.Message);
+            Console.ResetColor();
+        }
+
+        private void WriteLineError(LogMessage message)
+        {
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.Red;
+            WriteLine(message.Message);
+            Console.ResetColor();
+        }
+
+        private void WriteLineCritical(LogMessage message)
+        {
+            Console.BackgroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            WriteLine(message.Message);
+            Console.ResetColor();
+
+        }
+
+        private void WriteLineNone(LogMessage message)
+        {
+            Console.BackgroundColor = ConsoleColor.Gray;
+            Console.ForegroundColor = ConsoleColor.Red;
+            WriteLine(message.Message);
+            Console.ResetColor();
+        }
+
+        #endregion 
+
+
         #region Public Methods
+
+
+        public void WriteLine(LogMessage message)
+        {
+            if (LogMessageSeverity.Information == message.Severity)
+            {
+                WriteLineInformation(message);
+            }
+            else if (LogMessageSeverity.Warning == message.Severity)
+            {
+                WriteLineWarning(message);
+            }
+            else if (LogMessageSeverity.Error == message.Severity)
+            {
+                WriteLineError(message);
+            }
+            else if (LogMessageSeverity.Critical == message.Severity)
+            {
+                WriteLineCritical(message);
+            }
+            else
+            {
+                WriteLineNone(message);
+            }
+        }
+
 
         public override void ReportMessages(List<LogMessage> messages)
         {
-            StringBuilder builder = new StringBuilder();
-
-            foreach(var message in messages)
+            foreach(LogMessage message in messages)
             {
-                builder.AppendLine(message.Message);
+                WriteLine(message);
             }
-
-            Console.WriteLine(builder.ToString());
         }
+
+
 
         #endregion
     }
