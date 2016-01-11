@@ -108,8 +108,6 @@ namespace Core.Logging
                 {
                     while(_logQueue.Count > MaxQueueSize)
                     {
-                        //may want to move this message in the future
-                        _logQueue.Enqueue(CreateLogMessage(LogMessageSeverity.Warning, string.Format("This LogDestination's internal queue size of {0} has been overwhelmed. Blocking processing.", MaxQueueSize)));
                         Thread.Sleep(_queueTimeOut);
                     }
                 }
