@@ -44,6 +44,7 @@ namespace Core.Logging
             _destinations = new List<ILogDestination>();
             _loggerQueue = new LogMessageQueue() { IsBlocking = true };
             InternalLogger = this;
+            AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
         }
 
         #endregion
@@ -115,7 +116,6 @@ namespace Core.Logging
 
                     _logWorker = new Thread(new ThreadStart(LogWorker));
 
-                    _logWorker.IsBackground = true;
                     _logWorker.Start();
                 }
             }
@@ -167,6 +167,15 @@ namespace Core.Logging
                         }
                     }
                 }
+            }
+        }
+
+        private void CurrentDomain_ProcessExit(object sender, EventArgs e)
+        {
+            if (IsRunning)
+            {
+                Log(LogMessageSeverity.Warning, "Process exiting, shutting down logging system...");
+                Stop();
             }
         }
 

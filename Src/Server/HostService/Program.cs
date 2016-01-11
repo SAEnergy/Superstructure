@@ -31,6 +31,8 @@ namespace HostService
 
             _logger = IoCContainer.Instance.Resolve<ILogger>();
 
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
             var logFileConfig = GetLogConfiguration();
 
             _logger.AddLogDestination(new FileLogDestination(logFileConfig));
@@ -71,6 +73,13 @@ namespace HostService
             _serviceStopped.Set();
         }
 
+        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            _logger.Log(LogMessageSeverity.Critical, "Unhandled exception in HostService");
+            _logger.Log(LogMessageSeverity.Critical, e.ExceptionObject.ToString());
+            StopService();
+        }
+
         private static FileLogDestinationConfig GetLogConfiguration()
         {
             var logFileConfig = new FileLogDestinationConfig();
@@ -95,8 +104,19 @@ namespace HostService
         private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
         {
             _logger.Log(LogMessageSeverity.Information, "Ctrl+C pressed, shutting down server...");
+            StopService();
+        }
+
+        private static void StopService()
+        {
+            _logger.Log(LogMessageSeverity.Information, "Stopping service.");
             _stopService.Set();
-            _serviceStopped.WaitOne();
+            _logger.Log(LogMessageSeverity.Information, "Waiting for service to exit.");
+
+            if(!_serviceStopped.WaitOne(TimeSpan.FromMinutes(5)))
+            {
+                Environment.Exit(-1); //timeout on shutdown!
+            }
         }
 
         #endregion

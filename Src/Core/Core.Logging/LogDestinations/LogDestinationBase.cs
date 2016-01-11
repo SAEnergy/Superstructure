@@ -53,7 +53,6 @@ namespace Core.Logging.LogDestinations
                     if (!IsRunning)
                     {
                         _logDestinationWorkerThread = new Thread(new ThreadStart(LogDestinationWorker));
-                        _logDestinationWorkerThread.IsBackground = true;
 
                         _logDestinationWorkerThread.Start();
                     }
