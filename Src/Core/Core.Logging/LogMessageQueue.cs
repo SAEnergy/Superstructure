@@ -1,6 +1,7 @@
 ﻿using Core.Interfaces.Logging;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace Core.Logging
@@ -11,6 +12,7 @@ namespace Core.Logging
 
         private TimeSpan _queueTimeOut = new TimeSpan(0, 0, 0, 0, 100); // milliseconds
         private const int _queueBatchSize = 50;
+        private const int _defaultMaxQueueSize = 5000;
 
         private Queue<LogMessage> _logQueue;
 
@@ -26,6 +28,10 @@ namespace Core.Logging
             }
         }
 
+        public bool IsBlocking { get; set; }
+
+        public int MaxQueueSize { get; set; }
+
         #endregion
 
         #region Constructor
@@ -33,6 +39,7 @@ namespace Core.Logging
         public LogMessageQueue()
         {
             _logQueue = new Queue<LogMessage>();
+            MaxQueueSize = _defaultMaxQueueSize;
         }
 
         #endregion
@@ -41,6 +48,8 @@ namespace Core.Logging
 
         public void EnqueueMessages(List<LogMessage> messages)
         {
+            CheckQueue();
+
             lock(_logQueue)
             {
                 foreach(var message in messages)
@@ -52,6 +61,8 @@ namespace Core.Logging
 
         public void EnqueueMessage(LogMessage message)
         {
+            CheckQueue();
+
             lock (_logQueue)
             {
                 _logQueue.Enqueue(message);
@@ -83,6 +94,48 @@ namespace Core.Logging
             }
 
             return list;
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void CheckQueue()
+        {
+            if(_logQueue.Count > MaxQueueSize)
+            {
+                if(IsBlocking)
+                {
+                    while(_logQueue.Count > MaxQueueSize)
+                    {
+                        //may want to move this message in the future
+                        _logQueue.Enqueue(CreateLogMessage(LogMessageSeverity.Warning, string.Format("This LogDestination's internal queue size of {0} has been overwhelmed. Blocking processing.", MaxQueueSize)));
+                        Thread.Sleep(_queueTimeOut);
+                    }
+                }
+                else
+                {
+                    lock(_logQueue)
+                    {
+                        _logQueue.Clear();
+                        _logQueue.Enqueue(CreateLogMessage(LogMessageSeverity.Warning, string.Format("This LogDestination's internal queue size of {0} has been overwhelmed.  This has not been configured to block, so messages have been lost.", MaxQueueSize)));
+                    }
+                }
+            }
+        }
+
+        private LogMessage CreateLogMessage(LogMessageSeverity severity, string message, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFilePath = "",
+            [CallerLineNumber] int callerLineNumber = -1)
+        {
+            var logMessage = new LogMessage();
+
+            logMessage.CallerName = callerName;
+            logMessage.FilePath = callerFilePath;
+            logMessage.Message = message;
+            logMessage.Severity = severity;
+            logMessage.LineNumber = callerLineNumber;
+
+            return logMessage;
         }
 
         #endregion

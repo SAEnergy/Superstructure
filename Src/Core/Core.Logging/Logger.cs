@@ -42,7 +42,7 @@ namespace Core.Logging
         public Logger()
         {
             _destinations = new List<ILogDestination>();
-            _loggerQueue = new LogMessageQueue();
+            _loggerQueue = new LogMessageQueue() { IsBlocking = true };
             InternalLogger = this;
         }
 

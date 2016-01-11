@@ -27,7 +27,7 @@ namespace Core.Logging.LogDestinations
 
         protected LogDestinationBase()
         {
-            _destinationQueue = new LogMessageQueue();
+            _destinationQueue = new LogMessageQueue() { IsBlocking = true }; //default all log destinations to block
         }
 
         #endregion

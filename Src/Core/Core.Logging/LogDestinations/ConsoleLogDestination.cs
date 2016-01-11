@@ -13,7 +13,7 @@ namespace Core.Logging.LogDestinations
 
         public ConsoleLogDestination()
         {
-
+            _destinationQueue.IsBlocking = false;
         }
 
         #endregion
