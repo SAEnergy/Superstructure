@@ -34,7 +34,7 @@ namespace Core.Services.Test
             user.UserId = 5;
             user.UserName = "Weeeeee";
 
-            Assert.IsTrue(service.Update(0, user));
+            Assert.IsTrue(service.Update(1, user));
 
             var newUser = service.Find<User>(5);
             Assert.IsNotNull(newUser);
@@ -47,10 +47,10 @@ namespace Core.Services.Test
         {
             var service = BuildMeAMockService(_folder);
 
-            var user = service.Find<User>(0);
+            var user = service.Find<User>(1);
 
             Assert.IsNotNull(user);
-            Assert.AreEqual(0, user.UserId);
+            Assert.AreEqual(1, user.UserId);
             Assert.AreEqual("Bobby", user.UserName);
 
             var notFound = service.Find<User>(-1);
@@ -63,7 +63,7 @@ namespace Core.Services.Test
             var service = BuildMeAMockService(_folder);
 
             var user = service.Find<User>(u => u.UserName == "Bobby");
-            var userAlso = service.Find<User>(u => u.UserId == 0);
+            var userAlso = service.Find<User>(u => u.UserId == 1);
             var userNotFound = service.Find<User>(u => u.UserName == "NotFound");
 
             Assert.IsNotNull(user);
@@ -71,7 +71,7 @@ namespace Core.Services.Test
 
             var user1 = user.FirstOrDefault();
             Assert.IsNotNull(user1);
-            Assert.AreEqual(0, user1.UserId);
+            Assert.AreEqual(1, user1.UserId);
             Assert.AreEqual("Bobby", user1.UserName);
 
             Assert.IsNotNull(userAlso);
@@ -79,7 +79,7 @@ namespace Core.Services.Test
 
             var user2 = userAlso.FirstOrDefault();
             Assert.IsNotNull(user2);
-            Assert.AreEqual(0, user2.UserId);
+            Assert.AreEqual(1, user2.UserId);
             Assert.AreEqual("Bobby", user2.UserName);
 
             Assert.IsNull(userNotFound);
@@ -90,13 +90,13 @@ namespace Core.Services.Test
         {
             var service = BuildMeAMockService(_folder);
 
-            var user = service.Find<User>(0);
+            var user = service.Find<User>(1);
             Assert.IsNotNull(user);
 
             Assert.IsTrue(service.Delete(user));
 
             service.ResetDataSource();
-            Assert.IsTrue(service.Delete<User>(0));
+            Assert.IsTrue(service.Delete<User>(1));
 
             service.ResetDataSource();
             Assert.IsFalse(service.Delete<User>(5));
@@ -107,22 +107,22 @@ namespace Core.Services.Test
         {
             var service = BuildMeAMockService(_folder);
 
-            var user = service.Find<User>(0);
+            var user = service.Find<User>(1);
             Assert.IsNotNull(user);
 
-            Assert.IsTrue(service.Delete<User>(u => u.UserId == 0));
+            Assert.IsTrue(service.Delete<User>(u => u.UserId == 1));
 
             service.ResetDataSource();
             Assert.IsTrue(service.Delete<User>(u => u.UserName == "Bobby"));
 
             service.ResetDataSource();
-            Assert.IsTrue(service.Delete<User>(u => u.UserName == "Bobby" && u.UserId == 0));
+            Assert.IsTrue(service.Delete<User>(u => u.UserName == "Bobby" && u.UserId == 1));
 
             service.ResetDataSource();
-            Assert.IsTrue(service.Delete<User>(u => u.UserName == "Bobby" && u.UserId != 1));
+            Assert.IsTrue(service.Delete<User>(u => u.UserName == "Bobby" && u.UserId != 5));
 
             service.ResetDataSource();
-            Assert.IsFalse(service.Delete<User>(u => u.UserId == 1));
+            Assert.IsFalse(service.Delete<User>(u => u.UserId == 5));
         }
 
         #region Private Methods

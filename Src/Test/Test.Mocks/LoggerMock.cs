@@ -15,7 +15,7 @@ namespace Test.Mocks
 
         public void AddLogDestination(ILogDestination logDestination)
         {
-            throw new NotImplementedException();
+            //ignore
         }
 
         public void Log(LogMessage logMessage, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1)
@@ -30,17 +30,17 @@ namespace Test.Mocks
 
         public void RemoveLogDestination(ILogDestination logDestination)
         {
-            throw new NotImplementedException();
+            //ignore
         }
 
         public void Start()
         {
-            throw new NotImplementedException();
+            //ignore
         }
 
         public void Stop()
         {
-            throw new NotImplementedException();
+            //ignore
         }
     }
 }

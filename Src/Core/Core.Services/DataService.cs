@@ -3,6 +3,7 @@ using Core.Interfaces.Logging;
 using Core.Interfaces.Services;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 
 namespace Core.Services
@@ -105,6 +106,11 @@ namespace Core.Services
             {
                 var set = db.Set<T>();
                 results = set.Where(where).ToList();
+
+                if(results != null)
+                {
+                    results = results.Count > 0 ? results : null;
+                }
             }
 
             return results;
@@ -133,14 +139,12 @@ namespace Core.Services
 
             using (ServerContext db = new ServerContext())
             {
-                T dbObj = null;
-
                 var set = db.Set<T>();
-                dbObj = set.Find(key);
+                T dbObj = set.Attach(obj);
 
                 if (dbObj != null)
                 {
-                    dbObj = obj;
+                    db.Entry(dbObj).State = EntityState.Modified;
                     result = db.SaveChanges() > 0;
                 }
             }

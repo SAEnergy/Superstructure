@@ -21,7 +21,7 @@ namespace Test.Mocks
         private Dictionary<Type, List<object>> _dataSource;
         private Dictionary<Type, List<object>> _dataSourceOriginal;
 
-        private static int _keyCounter = 0;
+        private static int _keyCounter = 1;
 
         #endregion
 
