@@ -44,7 +44,7 @@ namespace Core.Services.Test
             string oldName = user.UserName;
             user.UserName = "Weeee" + Guid.NewGuid(); //Allows unit test to run over and over again without failing
 
-            Assert.IsTrue(service.Update(user.UserId, user));
+            Assert.IsTrue(service.Update(user));
 
             var newUser = service.Find<User>(u => u.UserName == user.UserName).FirstOrDefault();
             Assert.IsNotNull(newUser);

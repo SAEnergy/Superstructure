@@ -145,11 +145,11 @@ namespace Test.Mocks
             return true;
         }
 
-        public bool Update<T>(int key, T obj) where T : class
+        public bool Update<T>(T obj) where T : class
         {
             var objs = FindOrCreate<T>();
 
-            var objFind = Find<T>(key);
+            var objFind = Find<T>(GetKeyValue(obj));
 
             if (objFind != null)
             {

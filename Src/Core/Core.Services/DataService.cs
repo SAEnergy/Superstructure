@@ -31,16 +31,17 @@ namespace Core.Services
         {
             bool retVal = false;
 
-            var list = Find<T>(where);
-
-            foreach (T obj in list)
+            using (ServerContext db = new ServerContext())
             {
-                retVal = Delete<T>(obj); //not efficent
+                var set = db.Set<T>();
+                var results = set.Where(where).ToList();
 
-                if (!retVal)
+                foreach(var result in results)
                 {
-                    break;
+                    set.Remove(result);
                 }
+
+                retVal = db.SaveChanges() > 0;
             }
 
             return retVal;
@@ -70,16 +71,17 @@ namespace Core.Services
         {
             bool retVal = false;
 
-            var obj = Find<T>(key);
-
             using (ServerContext db = new ServerContext())
             {
                 var set = db.Set<T>();
-                set.Attach(obj);
-                set.Remove(obj);
+                var obj = set.Find(key);
 
-                //indicates at least one object was removed, if you have cascading deletes it may be greater than 1.
-                retVal = db.SaveChanges() > 0;
+                if (obj != null)
+                {
+                    set.Remove(obj);
+                    //indicates at least one object was removed, if you have cascading deletes it may be greater than 1.
+                    retVal = db.SaveChanges() > 0;
+                }
             }
 
             return retVal;
@@ -133,7 +135,7 @@ namespace Core.Services
             return retVal;
         }
 
-        public bool Update<T>(int key, T obj) where T : class
+        public bool Update<T>(T obj) where T : class
         {
             bool result = false;
 

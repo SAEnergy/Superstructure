@@ -30,13 +30,15 @@ namespace Core.Services.Test
         {
             var service = BuildMeAMockService(_folder);
 
+            service.ResetDataSource();
+
             var user = new User();
-            user.UserId = 5;
+            user.UserId = 1;
             user.UserName = "Weeeeee";
 
-            Assert.IsTrue(service.Update(1, user));
+            Assert.IsTrue(service.Update(user));
 
-            var newUser = service.Find<User>(5);
+            var newUser = service.Find<User>(1);
             Assert.IsNotNull(newUser);
             Assert.AreEqual(user.UserName, newUser.UserName);
             Assert.AreEqual(user.UserId, newUser.UserId);

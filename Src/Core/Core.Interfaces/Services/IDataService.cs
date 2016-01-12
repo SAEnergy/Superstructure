@@ -11,7 +11,7 @@ namespace Core.Interfaces.Services
 
         bool Delete<T>(Func<T, bool> where) where T : class;
 
-        bool Update<T>(int key, T obj) where T : class;
+        bool Update<T>(T obj) where T : class;
 
         bool Insert<T>(T obj) where T : class;
 
