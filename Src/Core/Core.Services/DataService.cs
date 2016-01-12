@@ -79,7 +79,6 @@ namespace Core.Services
                 if (obj != null)
                 {
                     set.Remove(obj);
-                    //indicates at least one object was removed, if you have cascading deletes it may be greater than 1.
                     retVal = db.SaveChanges() > 0;
                 }
             }

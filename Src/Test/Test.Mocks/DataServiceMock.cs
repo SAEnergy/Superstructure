@@ -225,13 +225,13 @@ namespace Test.Mocks
             }
         }
 
-        public int GetKeyValue<T>(T obj)
+        private int GetKeyValue<T>(T obj)
         {
             var prop = GetKeyProperty<T>();
             return (int)prop.GetValue(obj);
         }
 
-        public void SetKey<T>(T obj)
+        private void SetKey<T>(T obj)
         {
             var prop = GetKeyProperty<T>();
             prop.SetValue(obj, _keyCounter++);
@@ -367,12 +367,12 @@ namespace Test.Mocks
             }
         }
 
-        public object Clone(object source, Type type)
+        private object Clone(object source, Type type)
         {
             return Deserialize(Serialize(source), type);
         }
 
-        public string Serialize(object obj)
+        private string Serialize(object obj)
         {
             using (MemoryStream memoryStream = new MemoryStream())
             using (StreamReader reader = new StreamReader(memoryStream))
@@ -384,7 +384,7 @@ namespace Test.Mocks
             }
         }
 
-        public object Deserialize(string xml, Type toType)
+        private object Deserialize(string xml, Type toType)
         {
             using (Stream stream = new MemoryStream())
             {
