@@ -31,7 +31,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,6 +52,16 @@
       <Project>{bdb06c43-2402-444e-a9e0-72c88174fed7}</Project>
       <Name>Core.Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Core\Core.Models\Core.Models.csproj">
+      <Project>{803e539b-3687-4465-b272-e50816df453f}</Project>
+      <Name>Core.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="DataServiceData\DataServiceMockTest\Core.Models.Persistent.User.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

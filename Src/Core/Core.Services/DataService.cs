@@ -65,6 +65,25 @@ namespace Core.Services
             return retVal;
         }
 
+        public bool Delete<T>(int key) where T : class
+        {
+            bool retVal = false;
+
+            var obj = Find<T>(key);
+
+            using (ServerContext db = new ServerContext())
+            {
+                var set = db.Set<T>();
+                set.Attach(obj);
+                set.Remove(obj);
+
+                //indicates at least one object was removed, if you have cascading deletes it may be greater than 1.
+                retVal = db.SaveChanges() > 0;
+            }
+
+            return retVal;
+        }
+
         public T Find<T>(int key) where T : class
         {
             T result = null;

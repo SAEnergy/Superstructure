@@ -5,6 +5,8 @@ namespace Core.Interfaces.Services
 {
     public interface IDataService
     {
+        bool Delete<T>(int key) where T : class;
+
         bool Delete<T>(T obj) where T : class;
 
         bool Delete<T>(Func<T, bool> where) where T : class;

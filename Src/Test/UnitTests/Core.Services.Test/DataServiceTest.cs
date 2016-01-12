@@ -17,7 +17,7 @@ namespace Core.Services.Test
         }
 
         [TestMethod]
-        public void InsertTest()
+        public void DataServiceTest_InsertTest()
         {
             var service = BuildMeADaService();
 
@@ -28,27 +28,27 @@ namespace Core.Services.Test
         }
 
         [TestMethod]
-        public void UpdateTest()
+        public void DataServiceTest_UpdateTest()
         {
         }
 
         [TestMethod]
-        public void FindTest()
+        public void DataServiceTest_FindTest()
         {
         }
 
         [TestMethod]
-        public void FindWhereTest()
+        public void DataServiceTest_FindWhereTest()
         {
         }
 
         [TestMethod]
-        public void DeleteTest()
+        public void DataServiceTest_DeleteTest()
         {
         }
 
         [TestMethod]
-        public void DeleteWhereTest()
+        public void DataServiceTest_DeleteWhereTest()
         {
         }
 
