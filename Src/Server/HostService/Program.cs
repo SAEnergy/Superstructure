@@ -37,34 +37,34 @@ namespace HostService
 
             _logger.AddLogDestination(new FileLogDestination(logFileConfig));
 
-            _logger.Log(LogMessageSeverity.Information, string.Format("Server starting up local time - {0}", DateTime.Now));
+            _logger.Log(string.Format("Server starting up local time - {0}", DateTime.Now));
 
             if (Environment.UserInteractive)
             {
                 _logger.AddLogDestination(new ConsoleLogDestination());
 
-                _logger.Log(LogMessageSeverity.Information, "Detected User Interactive session.");
+                _logger.Log("Detected User Interactive session.");
 
                 Console.CancelKeyPress += Console_CancelKeyPress;
 
-                _logger.Log(LogMessageSeverity.Information, "Press Ctrl+C to shut down server.");
+                _logger.Log("Press Ctrl+C to shut down server.");
             }
 
             _logger.Start();
 
-            _logger.Log(LogMessageSeverity.Information, "Starting up HostService");
+            _logger.Log("Starting up HostService");
 
             _hostService = new HostService();
 
-            _logger.Log(LogMessageSeverity.Information, "HostService running.");
+            _logger.Log("HostService running.");
 
             _stopService.WaitOne();
 
-            _logger.Log(LogMessageSeverity.Information, "Server shutting down...");
+            _logger.Log("Server shutting down...");
 
             _hostService.Stop();
 
-            _logger.Log(LogMessageSeverity.Information, "Server shut down.");
+            _logger.Log("Server shut down.");
 
             //last this to do is shut down logging system
             _logger.Stop();
@@ -75,8 +75,8 @@ namespace HostService
 
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            _logger.Log(LogMessageSeverity.Critical, "Unhandled exception in HostService");
-            _logger.Log(LogMessageSeverity.Critical, e.ExceptionObject.ToString());
+            _logger.Log("Unhandled exception in HostService", LogMessageSeverity.Critical);
+            _logger.Log(e.ExceptionObject.ToString(), LogMessageSeverity.Critical);
             StopService();
         }
 
@@ -103,15 +103,15 @@ namespace HostService
 
         private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
         {
-            _logger.Log(LogMessageSeverity.Information, "Ctrl+C pressed, shutting down server...");
+            _logger.Log("Ctrl+C pressed, shutting down server...");
             StopService();
         }
 
         private static void StopService()
         {
-            _logger.Log(LogMessageSeverity.Information, "Stopping service.");
+            _logger.Log("Stopping service.");
             _stopService.Set();
-            _logger.Log(LogMessageSeverity.Information, "Waiting for service to exit.");
+            _logger.Log("Waiting for service to exit.");
 
             if(!_serviceStopped.WaitOne(TimeSpan.FromMinutes(5)))
             {

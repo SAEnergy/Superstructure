@@ -162,7 +162,7 @@ namespace Core.Logging.LogDestinations
 
             if (!Directory.Exists(expandedDirectory))
             {
-                _logger.Log(LogMessageSeverity.Information, string.Format("Creating directory \"{0}\" to store logs.", _config.LogDirectory));
+                _logger.Log(string.Format("Creating directory \"{0}\" to store logs.", _config.LogDirectory));
 
                 Directory.CreateDirectory(expandedDirectory);
             }
@@ -185,7 +185,7 @@ namespace Core.Logging.LogDestinations
 
                 if (stream != null)
                 {
-                    _logger.Log(LogMessageSeverity.Information, string.Format("FileLogDestination now logging to \"{0}\".", fileName));
+                    _logger.Log(string.Format("FileLogDestination now logging to \"{0}\".", fileName));
 
                     retVal = new Tuple<StreamWriter, int, string>(stream, currentNumber, fileName);
                     break;
@@ -220,12 +220,12 @@ namespace Core.Logging.LogDestinations
                 }
                 catch (Exception ex)
                 {
-                    _logger.Log(LogMessageSeverity.Error, string.Format("Error in FileLogDestination \"{0}\"", ex.Message));
+                    _logger.Log(string.Format("Error in FileLogDestination \"{0}\"", ex.Message), LogMessageSeverity.Error);
                 }
 
                 if (!successful)
                 {
-                    _logger.Log(LogMessageSeverity.Critical, string.Format("Failed to open file \"{0}\".  Retry number {1}/{2}", fileName, retryCount, RETRY_COUNT));
+                    _logger.Log(string.Format("Failed to open file \"{0}\".  Retry number {1}/{2}", fileName, retryCount, RETRY_COUNT), LogMessageSeverity.Critical);
                     Thread.Sleep(_retryWait);
                 }
             }

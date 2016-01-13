@@ -60,7 +60,7 @@ namespace Core.Logging
 
             lock(_destinations)
             {
-                Log(LogMessageSeverity.Information, string.Format("LogDestination of type \"{0}\" added.", logDestination.GetType().Name));
+                Log(string.Format("LogDestination of type \"{0}\" added.", logDestination.GetType().Name));
 
                 _destinations.Add(logDestination);
             }
@@ -79,11 +79,30 @@ namespace Core.Logging
             }
         }
 
-        public void Log(LogMessageSeverity severity, string message, [CallerMemberName] string callerName = "",
+        public void Log(string message, [CallerMemberName] string callerName = "",
+            [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1)
+        {
+            Log(message, LogMessageCategory.General, LogMessageSeverity.Information, callerName, callerFilePath, callerLineNumber);
+        }
+
+        public void Log(string message, LogMessageSeverity severity, [CallerMemberName] string callerName = "",
+            [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1)
+        {
+            Log(message, LogMessageCategory.General, severity, callerName, callerFilePath, callerLineNumber);
+        }
+
+        public void Log(string message, LogMessageCategory category, [CallerMemberName] string callerName = "",
+            [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1)
+        {
+            Log(message, category, LogMessageSeverity.Information, callerName, callerFilePath, callerLineNumber);
+        }
+
+        public void Log(string message, LogMessageCategory category, LogMessageSeverity severity, [CallerMemberName] string callerName = "",
             [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1)
         {
             var logMessage = new LogMessage();
 
+            logMessage.Category = category;
             logMessage.Severity = severity;
             logMessage.Message = message;
             logMessage.CallerName = callerName;
@@ -92,6 +111,8 @@ namespace Core.Logging
 
             _loggerQueue.EnqueueMessage(logMessage);
         }
+
+
 
         public void RemoveLogDestination(ILogDestination logDestination)
         {
@@ -104,7 +125,7 @@ namespace Core.Logging
             {
                 if (!IsRunning)
                 {
-                    Log(LogMessageSeverity.Information, string.Format("Logger starting.", this.GetType().Name));
+                    Log(string.Format("Logger starting.", this.GetType().Name));
 
                     lock (_destinations)
                     {
@@ -127,7 +148,7 @@ namespace Core.Logging
             {
                 if (IsRunning)
                 {
-                    Log(LogMessageSeverity.Information, string.Format("Logger stopping.", this.GetType().Name));
+                    Log(string.Format("Logger stopping.", this.GetType().Name));
 
                     IsRunning = false;
 
@@ -174,7 +195,7 @@ namespace Core.Logging
         {
             if (IsRunning)
             {
-                Log(LogMessageSeverity.Warning, "Process exiting, shutting down logging system...");
+                Log("Process exiting, shutting down logging system...", LogMessageSeverity.Warning);
                 Stop();
             }
         }

@@ -48,7 +48,7 @@ namespace Core.Settings.BaseClasses
         {
             SetConfigurationFile();
 
-            _logger.Log(LogMessageSeverity.Information, string.Format("Loading configuration file from \"{0}\".", ConfigurationFile));
+            _logger.Log(string.Format("Loading configuration file from \"{0}\".", ConfigurationFile));
 
             var config = ConfigurationManager.OpenMappedExeConfiguration(new ExeConfigurationFileMap() { ExeConfigFilename = ConfigurationFile }, ConfigurationUserLevel.None);
 
@@ -69,14 +69,14 @@ namespace Core.Settings.BaseClasses
 
         public void Print()
         {
-            _logger.Log(LogMessageSeverity.Information, "Printing Configurations:");
+            _logger.Log("Printing Configurations:");
 
             foreach (PropertyInfo info in FindConfigurationAttributes().Select(s => s.Item1))
             {
                 var val = info.GetValue(this);
                 string message = string.Format("*{0} = {1}", info.Name, val == null ? "[NULL]" : val.ToString());
 
-                _logger.Log(LogMessageSeverity.Information, message);
+                _logger.Log(message);
             }
         }
 
@@ -123,7 +123,7 @@ namespace Core.Settings.BaseClasses
             }
             else
             {
-                _logger.Log(LogMessageSeverity.Error, "SetAttributeDefault called with null parameters!");
+                _logger.Log("SetAttributeDefault called with null parameters!", LogMessageSeverity.Error);
             }
         }
 
@@ -139,7 +139,7 @@ namespace Core.Settings.BaseClasses
             }
             catch
             {
-                _logger.Log(LogMessageSeverity.Error, string.Format("Error: Cannot change value to type {0} for AppSetting with key \"{1}\"", info.PropertyType.Name, setting.Item2.KeyName));
+                _logger.Log(string.Format("Error: Cannot change value to type {0} for AppSetting with key \"{1}\"", info.PropertyType.Name, setting.Item2.KeyName), LogMessageSeverity.Error);
             }
         }
 

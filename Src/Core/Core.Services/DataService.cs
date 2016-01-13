@@ -164,7 +164,7 @@ namespace Core.Services
             if (obj == null)
             {
                 retVal = false;
-                _logger.Log(LogMessageSeverity.Error, "Null value detected sent to DataService...");
+                _logger.Log("Null value detected sent to DataService...", LogMessageSeverity.Error);
             }
 
             return retVal;

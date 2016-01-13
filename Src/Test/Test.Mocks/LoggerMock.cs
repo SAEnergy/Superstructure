@@ -1,6 +1,7 @@
 ﻿using Core.Interfaces.Logging;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
+using System;
 
 namespace Test.Mocks
 {
@@ -18,7 +19,22 @@ namespace Test.Mocks
             Trace.TraceInformation(logMessage.Message);
         }
 
-        public void Log(LogMessageSeverity severity, string message, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1)
+        public void Log(string message, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1)
+        {
+            Log(message, LogMessageCategory.General, LogMessageSeverity.Information, callerName, callerFilePath, callerLineNumber);
+        }
+
+        public void Log(string message, LogMessageCategory category, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1)
+        {
+            Log(message, category, LogMessageSeverity.Information, callerName, callerFilePath, callerLineNumber);
+        }
+
+        public void Log(string message, LogMessageSeverity severity, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1)
+        {
+            Log(message, LogMessageCategory.General, severity, callerName, callerFilePath, callerLineNumber);
+        }
+
+        public void Log(string message, LogMessageCategory category, LogMessageSeverity severity, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1)
         {
             Trace.TraceInformation(message);
         }

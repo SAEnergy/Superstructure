@@ -16,6 +16,9 @@ namespace Core.Interfaces.Logging
         public LogMessageSeverity Severity { get; set; }
 
         [DataMember]
+        public LogMessageCategory Category { get; set; }
+
+        [DataMember]
         public string FilePath { get; set; }
 
         [DataMember]

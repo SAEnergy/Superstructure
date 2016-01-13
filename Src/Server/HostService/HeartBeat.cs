@@ -33,7 +33,7 @@ namespace HostService
         {
             _logger = IoCContainer.Instance.Resolve<ILogger>();
 
-            _logger.Log(LogMessageSeverity.Information, "Heartbeat created.");
+            _logger.Log("Heartbeat created.");
             _heartBeatThread = new Thread(new ThreadStart(heartBeatWorker));
 
             Start();
@@ -57,7 +57,7 @@ namespace HostService
         {
             if (IsRunning)
             {
-                _logger.Log(LogMessageSeverity.Information, "Server heartbeat stopping.");
+                _logger.Log("Server heartbeat stopping.");
 
                 IsRunning = false;
                 _shutDown.Set();
@@ -74,17 +74,17 @@ namespace HostService
         {
             IsRunning = true;
 
-            _logger.Log(LogMessageSeverity.Information, "Server heartbeat running.");
+            _logger.Log("Server heartbeat running.");
 
             while (IsRunning)
             {
                 if (!_shutDown.WaitOne(_heartBeatSpeed))
                 {
-                    _logger.Log(LogMessageSeverity.Information, string.Format("Heartbeat - {0}", DateTime.Now));
+                    _logger.Log(string.Format("Heartbeat - {0}", DateTime.Now));
                 }
             }
 
-            _logger.Log(LogMessageSeverity.Information, "Server heartbeat stopped.");
+            _logger.Log("Server heartbeat stopped.");
         }
 
         #endregion

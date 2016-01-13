@@ -48,7 +48,7 @@ namespace Core.Logging.LogDestinations
                 {
                     _logger = Logger.InternalLogger;
 
-                    _logger.Log(LogMessageSeverity.Information, string.Format("LogDestination of type \"{0}\" starting.", this.GetType().Name));
+                    _logger.Log(string.Format("LogDestination of type \"{0}\" starting.", this.GetType().Name));
 
                     if (!IsRunning)
                     {

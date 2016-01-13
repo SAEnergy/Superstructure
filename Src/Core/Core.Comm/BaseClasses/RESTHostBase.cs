@@ -36,12 +36,12 @@ namespace Core.Comm.BaseClasses
 
         public void Start()
         {
-            Logger.Log(LogMessageSeverity.Information, string.Format("Host interface of type \"{0}\" starting...", InterfaceType.Name));
+            Logger.Log(string.Format("Host interface of type \"{0}\" starting...", InterfaceType.Name));
         }
 
         public void Stop()
         {
-            Logger.Log(LogMessageSeverity.Information, string.Format("Host interface of type \"{0}\" stopping...", InterfaceType.Name));
+            Logger.Log(string.Format("Host interface of type \"{0}\" stopping...", InterfaceType.Name));
         }
 
         #endregion

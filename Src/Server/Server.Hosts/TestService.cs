@@ -13,7 +13,7 @@ namespace Server.Hosts
     {
         public string Test()
         {
-            Logger.Log(LogMessageSeverity.Information, "Test Called.");
+            Logger.Log("Test Called.");
 
             return "Hello";
         }

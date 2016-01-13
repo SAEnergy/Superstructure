@@ -33,7 +33,7 @@ namespace Core.Services
 
         public void RestartAll()
         {
-            _logger.Log(LogMessageSeverity.Information, "HostManager restarting all hosts...");
+            _logger.Log("HostManager restarting all hosts...");
 
             StopAll();
             StartAll();
@@ -41,13 +41,13 @@ namespace Core.Services
 
         public void StartAll()
         {
-            _logger.Log(LogMessageSeverity.Information, "HostManager starting all hosts...");
+            _logger.Log("HostManager starting all hosts...");
 
             _hosts = FindAllHosts();
 
             foreach(var host in _hosts.Values)
             {
-                _logger.Log(LogMessageSeverity.Information, string.Format("HostManager starting host of type \"{0}\".", host.GetType().Name));
+                _logger.Log(string.Format("HostManager starting host of type \"{0}\".", host.GetType().Name));
 
                 host.Start();
             }
@@ -55,11 +55,11 @@ namespace Core.Services
 
         public void StopAll()
         {
-            _logger.Log(LogMessageSeverity.Information, "HostManager stopping all hosts...");
+            _logger.Log("HostManager stopping all hosts...");
 
             foreach (var host in _hosts.Values)
             {
-                _logger.Log(LogMessageSeverity.Information, string.Format("HostManager stopping host of type \"{0}\".", host.GetType().Name));
+                _logger.Log(string.Format("HostManager stopping host of type \"{0}\".", host.GetType().Name));
 
                 host.Stop();
             }
@@ -77,13 +77,13 @@ namespace Core.Services
 
             if (!_hosts.TryGetValue(typeof(T), out host))
             {
-                _logger.Log(LogMessageSeverity.Error, string.Format("HostManager cannot find host with interface type of \"{0}\".", typeof(T).Name));
+                _logger.Log(string.Format("HostManager cannot find host with interface type of \"{0}\".", typeof(T).Name), LogMessageSeverity.Error);
             }
             else
             {
                 if (host != null)
                 {
-                    _logger.Log(LogMessageSeverity.Error, string.Format("HostManager starting host with interface type of \"{0}\".", typeof(T).Name));
+                    _logger.Log(string.Format("HostManager starting host with interface type of \"{0}\".", typeof(T).Name), LogMessageSeverity.Error);
 
                     host.Start();
                 }
@@ -96,13 +96,13 @@ namespace Core.Services
 
             if (!_hosts.TryGetValue(typeof(T), out host))
             {
-                _logger.Log(LogMessageSeverity.Error, string.Format("HostManager cannot find host with interface type of \"{0}\".", typeof(T).Name));
+                _logger.Log(string.Format("HostManager cannot find host with interface type of \"{0}\".", typeof(T).Name), LogMessageSeverity.Error);
             }
             else
             {
                 if (host != null)
                 {
-                    _logger.Log(LogMessageSeverity.Error, string.Format("HostManager stopping host with interface type of \"{0}\".", typeof(T).Name));
+                    _logger.Log(string.Format("HostManager stopping host with interface type of \"{0}\".", typeof(T).Name), LogMessageSeverity.Error);
 
                     host.Stop();
                 }
@@ -127,7 +127,7 @@ namespace Core.Services
 
                 foreach (Type type in types)
                 {
-                    _logger.Log(LogMessageSeverity.Information, string.Format("HostManager creating host of type \"{0}\".", type));
+                    _logger.Log(string.Format("HostManager creating host of type \"{0}\".", type));
 
                     IHost host = Activator.CreateInstance(type) as IHost;
 
