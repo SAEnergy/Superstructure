@@ -14,7 +14,7 @@ namespace Test.Mocks
             //ignore
         }
 
-        public void Log(LogMessage logMessage, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1)
+        public void Log(LogMessage logMessage)
         {
             Trace.TraceInformation(logMessage.Message);
         }

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HostService", "Src\Server\HostService\HostService.csproj", "{392799A9-DA4A-4552-8F44-FAD887BA9D34}"
 EndProject
@@ -48,6 +48,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client.Main", "Src\Client\Client.Main\Client.Main.csproj", "{1BEE0DF1-F56B-4E20-A9DC-B2A9F4D0A5B3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client.Base", "Src\Client\Client.Base\Client.Base.csproj", "{98C98907-35D1-40B3-970B-53B38DD3CB4A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Scheduler", "Src\Core\Core.Scheduler\Core.Scheduler.csproj", "{93F677EE-2190-4F16-BF5A-2BD44437327D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -119,6 +121,10 @@ Global
 		{98C98907-35D1-40B3-970B-53B38DD3CB4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98C98907-35D1-40B3-970B-53B38DD3CB4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98C98907-35D1-40B3-970B-53B38DD3CB4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93F677EE-2190-4F16-BF5A-2BD44437327D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93F677EE-2190-4F16-BF5A-2BD44437327D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93F677EE-2190-4F16-BF5A-2BD44437327D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93F677EE-2190-4F16-BF5A-2BD44437327D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -142,5 +148,6 @@ Global
 		{7A4DB1DE-80C5-4D1A-9851-0A9B5AB05999} = {8E18CE31-B102-47C1-B06A-319FE55B9043}
 		{1BEE0DF1-F56B-4E20-A9DC-B2A9F4D0A5B3} = {4A268B4F-6F2F-4225-ABCD-CDED70CF33D0}
 		{98C98907-35D1-40B3-970B-53B38DD3CB4A} = {4A268B4F-6F2F-4225-ABCD-CDED70CF33D0}
+		{93F677EE-2190-4F16-BF5A-2BD44437327D} = {FA0A3D8E-6753-49DB-AF8F-E5938FF494D8}
 	EndGlobalSection
 EndGlobal

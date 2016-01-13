@@ -1,7 +1,9 @@
 ﻿using Core.Interfaces.IoC;
 using Core.Interfaces.Logging;
+using Core.Interfaces.Scheduler;
 using Core.Interfaces.Services;
 using Core.Logging;
+using Core.Scheduler;
 using Core.Services;
 
 namespace HostService
