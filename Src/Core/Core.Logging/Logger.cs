@@ -1,6 +1,7 @@
 ﻿using Core.Interfaces.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
@@ -13,6 +14,10 @@ namespace Core.Logging
         private List<ILogDestination> _destinations;
         private Thread _logWorker;
         private LogMessageQueue _loggerQueue;
+
+        private readonly string _processName;
+        private readonly string _machineName;
+        private readonly int _processId;
 
         private static object _syncObject = new object();
 
@@ -44,6 +49,14 @@ namespace Core.Logging
             _destinations = new List<ILogDestination>();
             _loggerQueue = new LogMessageQueue() { IsBlocking = true };
             InternalLogger = this;
+
+            _machineName = Environment.MachineName;
+
+            var process = Process.GetCurrentProcess();
+
+            _processName = process.ProcessName;
+            _processId = process.Id;
+
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
         }
 
@@ -104,6 +117,9 @@ namespace Core.Logging
             logMessage.CallerName = callerName;
             logMessage.FilePath = callerFilePath;
             logMessage.LineNumber = callerLineNumber;
+            logMessage.MachineName = _machineName;
+            logMessage.ProcessId = _processId;
+            logMessage.ProcessName = _processName;
 
             _loggerQueue.EnqueueMessage(logMessage);
         }
