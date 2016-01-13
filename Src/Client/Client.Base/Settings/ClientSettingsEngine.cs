@@ -13,7 +13,7 @@ namespace Client.Base
 
         public static void Load()
         {
-            // todo: list of plugins should be populated by plugin system
+            // todo : List of plugins should be populated by plugin system.
             SettingTypes.Add(typeof(WindowPositionSettings));
 
             foreach (Type t in SettingTypes)
@@ -21,13 +21,13 @@ namespace Client.Base
                 Instances.Add((ClientSettingsBase)Activator.CreateInstance(t));
             }
 
-            // todo: Unserialize from settings engine
+            // todo : Unserialize from settings engine.
 
         }
 
         public static void Save()
         {
-            // todo: serialize to settings engine
+            // todo : Serialize to settings engine.
         }
 
         public static T GetInstance<T>() where T : ClientSettingsBase

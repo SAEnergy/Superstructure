@@ -27,6 +27,8 @@ namespace Core.Interfaces.Logging
         [DataMember]
         public int LineNumber { get; set; }
 
+        // todo : Need to populate process ID and command line.
+
         [DataMember]
         public int ProcessId { get; set; }
 
