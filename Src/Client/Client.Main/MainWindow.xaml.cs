@@ -6,11 +6,17 @@ namespace Client.Main
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : GlassWindow
+    public partial class MainWindow : DialogBase
     {
-        public MainWindow()
+        public MainWindow() : base(null)
         {
             InitializeComponent();
+        }
+
+        private void OpenTestDialog(object sender, RoutedEventArgs e)
+        {
+            TestDialog dlg = new TestDialog(this);
+            dlg.ShowDialog();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Client.Base;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +14,15 @@ namespace Client.Main
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            ClientSettingsEngine.Load();
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            ClientSettingsEngine.Save();
+        }
+
     }
 }

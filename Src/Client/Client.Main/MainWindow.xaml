@@ -1,4 +1,4 @@
-﻿<base:GlassWindow 
+﻿<base:DialogBase 
     x:Class="Client.Main.MainWindow"
     xmlns:base="clr-namespace:Client.Base;assembly=Client.Base"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -21,7 +21,7 @@
         </Grid.RowDefinitions>
         <Border BorderThickness="1" Background="White" Opacity="1" Margin="0"/>
         <Border BorderThickness="1" Background="White" Opacity="0.75" Margin="0" Grid.Row="1"/>
-        <Label Margin="20">YO!</Label>
+        <Button Click="OpenTestDialog" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5" Margin="10">Test Dialog</Button>
         <Label Margin="20" Grid.Row="1">I am translucent and show the users' accent color!</Label>
     </Grid>
-</base:GlassWindow>
+</base:DialogBase>
