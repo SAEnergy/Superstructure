@@ -66,15 +66,11 @@ namespace Core.Logging
             }
         }
 
-        public void Log(LogMessage logMessage, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFilePath = "",
-            [CallerLineNumber] int callerLineNumber = -1)
+        //pass through
+        public void Log(LogMessage logMessage)
         {
             if (logMessage != null)
             {
-                logMessage.CallerName = callerName;
-                logMessage.FilePath = callerFilePath;
-                logMessage.LineNumber = callerLineNumber;
-
                 _loggerQueue.EnqueueMessage(logMessage);
             }
         }
@@ -111,8 +107,6 @@ namespace Core.Logging
 
             _loggerQueue.EnqueueMessage(logMessage);
         }
-
-
 
         public void RemoveLogDestination(ILogDestination logDestination)
         {
