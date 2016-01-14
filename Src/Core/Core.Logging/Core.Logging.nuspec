@@ -8,9 +8,9 @@
     <owners>$owner$</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <copyright>$nugetcopyright$</copyright>
-    <projectUrl>https://github.com/SAEnergy/Infrastructure</projectUrl>
-    <licenseUrl>https://github.com/SAEnergy/Infrastructure/blob/master/LICENSE.md</licenseUrl>
-    <iconUrl>https://github.com/SAEnergy/Infrastructure/blob/master/.nuget/NuGet.ico</iconUrl>
+	<projectUrl>$GitHubUrl$</projectUrl>
+    <licenseUrl>$LicenseUrl$</licenseUrl>
+	<iconUrl>$NugetIconUrl$</iconUrl>
     <dependencies />
   </metadata>
 </package>
