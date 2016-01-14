@@ -3,14 +3,14 @@
   <metadata>
     <id>$id$</id>
     <version>$version$</version>
-    <description>$description$</description>
-    <authors>Simple Answers Energy, Inc.</authors>
-    <owners>$author$</owners>
+    <description>Core Logging</description>
+    <authors>$author$</authors>
+    <owners>$owner$</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <copyright>$copyright$</copyright>
-	<projectUrl>https://github.com/SAEnergy/Infrastructure</projectUrl>
+    <projectUrl>https://github.com/SAEnergy/Infrastructure</projectUrl>
     <licenseUrl>https://github.com/SAEnergy/Infrastructure/blob/master/LICENSE.md</licenseUrl>
-	<iconUrl>https://github.com/SAEnergy/Infrastructure/blob/master/.nuget/NuGet.ico</iconUrl>
+    <iconUrl>https://github.com/SAEnergy/Infrastructure/blob/master/.nuget/NuGet.ico</iconUrl>
     <dependencies />
   </metadata>
 </package>
