@@ -11,10 +11,10 @@
     <copyright>Copyright (c) 2016 Simple Answers Energy, Inc.</copyright>
 	<projectUrl>https://github.com/SAEnergy/Infrastructure</projectUrl>
     <licenseUrl>https://github.com/SAEnergy/Infrastructure/blob/master/LICENSE.md</licenseUrl>
+	<dependencies>
+      <dependency id="EntityFramework" version="6.1.3" />
+    </dependencies>
   </metadata>
-  <dependencies>
-    <dependency id="EntityFramework" version="6.1.3" />
-  </dependencies>
   <files>
     <file src="Out\Run\Release\Core.*.dll" target="lib" />
   </files>

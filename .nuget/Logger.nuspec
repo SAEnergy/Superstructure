@@ -13,4 +13,7 @@
     <licenseUrl>https://github.com/SAEnergy/Infrastructure/blob/master/LICENSE.md</licenseUrl>
     <dependencies />
   </metadata>
+  <files>
+    <file src="Out\Run\Release\Core.Logging.dll" target="lib" />
+  </files>
 </package>
