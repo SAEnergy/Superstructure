@@ -27,6 +27,67 @@ namespace HostService
 
         public static void Main(string[] args)
         {
+            if(Environment.UserInteractive)
+            {
+                StartService(args);
+            }
+            else
+            {
+                System.ServiceProcess.ServiceBase.Run(new HostServiceBase());
+            }
+
+
+        }
+
+        public static void WindowsServiceStart()
+        {
+            StartService(null);
+        }
+
+        public static void WindowsServiceStop()
+        {
+            StopService();
+        }
+
+
+
+
+        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            _logger.Log("Unhandled exception in HostService", LogMessageSeverity.Critical);
+            _logger.Log(e.ExceptionObject.ToString(), LogMessageSeverity.Critical);
+            StopService();
+        }
+
+        private static FileLogDestinationConfig GetLogConfiguration()
+        {
+            var logFileConfig = new FileLogDestinationConfig();
+
+            //hardcode for now
+            logFileConfig.LogDirectory = Configuration.Instance.LogDirectory;
+            logFileConfig.LogFileExtension = Configuration.Instance.LogFileExtension;
+            logFileConfig.LogFilePrefix = Configuration.Instance.LogFilePrefix;
+            logFileConfig.LogMessageFormatter = BuildFormatter(Configuration.Instance.LogMessageFormatter);
+            logFileConfig.MaxLogFileSize = Configuration.Instance.MaxLogFileSize;
+            logFileConfig.MaxLogFileCount = Configuration.Instance.MaxLogFileCount;
+
+            return logFileConfig;
+        }
+
+        private static ILogMessageFormatter BuildFormatter(string typeName)
+        {
+            //hard code this for now
+            return new CSVLogMessageFormatter();
+        }
+
+        private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
+        {
+            _logger.Log("Ctrl+C pressed, shutting down server...");
+            StopService();
+        }
+
+        private static void StartService(string[] args)
+        {
             BootStrapper.Configure(IoCContainer.Instance);
 
             _logger = IoCContainer.Instance.Resolve<ILogger>();
@@ -73,39 +134,7 @@ namespace HostService
             _serviceStopped.Set();
         }
 
-        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
-        {
-            _logger.Log("Unhandled exception in HostService", LogMessageSeverity.Critical);
-            _logger.Log(e.ExceptionObject.ToString(), LogMessageSeverity.Critical);
-            StopService();
-        }
 
-        private static FileLogDestinationConfig GetLogConfiguration()
-        {
-            var logFileConfig = new FileLogDestinationConfig();
-
-            //hardcode for now
-            logFileConfig.LogDirectory = Configuration.Instance.LogDirectory;
-            logFileConfig.LogFileExtension = Configuration.Instance.LogFileExtension;
-            logFileConfig.LogFilePrefix = Configuration.Instance.LogFilePrefix;
-            logFileConfig.LogMessageFormatter = BuildFormatter(Configuration.Instance.LogMessageFormatter);
-            logFileConfig.MaxLogFileSize = Configuration.Instance.MaxLogFileSize;
-            logFileConfig.MaxLogFileCount = Configuration.Instance.MaxLogFileCount;
-
-            return logFileConfig;
-        }
-
-        private static ILogMessageFormatter BuildFormatter(string typeName)
-        {
-            //hard code this for now
-            return new CSVLogMessageFormatter();
-        }
-
-        private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
-        {
-            _logger.Log("Ctrl+C pressed, shutting down server...");
-            StopService();
-        }
 
         private static void StopService()
         {
