@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <description>$description$</description>
+    <authors>Simple Answers Energy, Inc.</authors>
+    <owners>$author$</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <copyright>$copyright$</copyright>
+	<projectUrl>https://github.com/SAEnergy/Infrastructure</projectUrl>
+    <licenseUrl>https://github.com/SAEnergy/Infrastructure/blob/master/LICENSE.md</licenseUrl>
+	<iconUrl>https://github.com/SAEnergy/Infrastructure/blob/master/.nuget/NuGet.ico</iconUrl>
+    <dependencies />
+  </metadata>
+</package>
