@@ -27,16 +27,14 @@ namespace HostService
 
         public static void Main(string[] args)
         {
-            //if(Environment.UserInteractive)
-            //{
+            if(Environment.UserInteractive)
+            {
                 StartService(args);
-            //}
-            //else
-            //{
-            //    System.ServiceProcess.ServiceBase.Run(new HostServiceBase());
-            //}
-
-
+            }
+            else
+            {
+                System.ServiceProcess.ServiceBase.Run(new HostServiceBase());
+            }
         }
 
         public static void WindowsServiceStart()
