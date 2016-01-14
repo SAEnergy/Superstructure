@@ -16,6 +16,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="Out\Run\Release\Core.*.dll" target="lib" />
+    <file src="..\Out\Run\Release\Core.*.dll" target="lib" />
   </files>
 </package>
