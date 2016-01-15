@@ -3,11 +3,11 @@
   <metadata>
     <id>SAE.Core.Infrastructure</id>
 	<version>$version$</version>
-    <title>Core Infrastructure that can be used to build enterprise services.</title>
+    <title>Core Infrastructure</title>
     <authors>$author$</authors>
     <owners>$owner$</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Core infrastructure</description>
+    <description>Core Infrastructure that can be used to build enterprise services.</description>
     <copyright>$nugetcopyright$</copyright>
 	<projectUrl>$GitHubUrl$</projectUrl>
     <licenseUrl>$LicenseUrl$</licenseUrl>
