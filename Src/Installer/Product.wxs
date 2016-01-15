@@ -12,7 +12,7 @@
    -->
 
     <!-- Full version number to display -->
-    <?define VersionNumber="!(bind.FileVersion.HostServiceExe)" ?>
+    <?define VersionNumber="0.1.0" ?>
 
     <!--
    Upgrade code HAS to be the same for all updates.
@@ -169,9 +169,7 @@
                             <RemoveFile Id="RemoveFilesFromAppDirectory" Name="*.*" On="uninstall" />
                         </Component>
 
-                        <Component Id="hostServiceExeComp" Guid="*" Win64="$(var.Win64)">
-
-                            <File Source="$(var.hostServiceSourcePath)" Id="HostServiceExe" KeyPath="yes" />
+                        <!--<Component Id="hostServiceExeComp" Guid="923BB459-2B8C-4394-B5B3-D82E0D63584C" Win64="$(var.Win64)">
 
                             <ServiceInstall Id="ServiceInstaller" Account="LocalSystem" Description="!(loc.ServiceDescription)" DisplayName="!(loc.ServiceDisplayName)" ErrorControl="normal"
                                             LoadOrderGroup="NetworkProvider" Name="HostService" Start="disabled" Type="ownProcess" Vital="yes" />
@@ -180,9 +178,7 @@
 
                         </Component>
 
-                        <Component Id="hostServiceConfigComp" Guid="*" Win64="$(var.Win64)">
-
-                            <File Source="$(var.sourceDir)HostService.exe.config" Id="hostServiceConfig" KeyPath="yes"/>
+                        <Component Id="hostServiceConfigComp" Guid="5901ADA4-CB47-400B-8337-537A7E684114" Win64="$(var.Win64)">
 
                             <util:XmlFile
                                 Id="LogDirectory"
@@ -229,7 +225,7 @@
                                 Value="[WIXUI_SERVERPORT]"
                                 Permanent="yes" />
 
-                        </Component>
+                        </Component>-->
 
                     </Directory>
                 </Directory>
@@ -257,8 +253,9 @@
             <!-- A feature block for the main (GUI) program and all its dependencies -->
             <Feature Id="MainProgram" Title="!(loc.FeatureMainProgramTitle)" Description="!(loc.FeatureMainProgramDescription)" Level="1">
                 <ComponentRef Id="INSTALLDIR_comp" />
-                <ComponentRef Id="hostServiceExeComp" />
-                <ComponentRef Id="hostServiceConfigComp" />
+                <ComponentGroupRef Id="FilesComponentGroup"/>
+                <!--<ComponentRef Id="hostServiceExeComp" />
+                <ComponentRef Id="hostServiceConfigComp" />-->
 
                 <!-- Registry entries -->
                 <ComponentRef Id="RegValInstallLocation_comp" />

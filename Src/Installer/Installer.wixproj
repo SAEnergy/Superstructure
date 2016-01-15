@@ -14,15 +14,14 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>$(SolutionDir)Out\Installer\$(Configuration)\$(Platform)</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\$(Platform)</IntermediateOutputPath>
-    <DefineConstants>Debug;</DefineConstants>
+    <DefineConstants>Debug;SourceLocation=$(SolutionDir)Out\Run\$(Configuration)\</DefineConstants>
     <Cultures>
     </Cultures>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>$(SolutionDir)Out\Installer\$(Configuration)\$(Platform)</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\$(Platform)</IntermediateOutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants>SourceLocation=$(SolutionDir)Out\Run\$(Configuration)\</DefineConstants>
     <Cultures>
     </Cultures>
     <SuppressPdbOutput>True</SuppressPdbOutput>
@@ -30,15 +29,14 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <OutputPath>$(SolutionDir)Out\Installer\$(Configuration)\$(Platform)</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\$(Platform)</IntermediateOutputPath>
-    <DefineConstants>Debug;</DefineConstants>
+    <DefineConstants>Debug;SourceLocation=$(SolutionDir)Out\Run\$(Configuration)\</DefineConstants>
     <Cultures>
     </Cultures>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
     <OutputPath>$(SolutionDir)Out\Installer\$(Configuration)\$(Platform)</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\$(Platform)</IntermediateOutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants>SourceLocation=$(SolutionDir)Out\Run\$(Configuration)\</DefineConstants>
     <Cultures>
     </Cultures>
     <SuppressPdbOutput>True</SuppressPdbOutput>
@@ -80,4 +78,16 @@
 	<Target Name="AfterBuild">
 	</Target>
 	-->
+  <Target Name="BeforeBuild">
+    <ItemGroup>
+      <HarvestDirectory Include="$(SolutionDir)Out\Run\$(Configuration)\">
+        <DirectoryRefId>INSTALLDIR</DirectoryRefId>
+        <SuppressRootDirectory>true</SuppressRootDirectory>
+        <SuppressCom>true</SuppressCom>
+        <SuppressRegistry>true</SuppressRegistry>
+        <ComponentGroupName>FilesComponentGroup</ComponentGroupName>
+        <PreprocessorVariable>var.SourceLocation</PreprocessorVariable>
+      </HarvestDirectory>
+    </ItemGroup>
+  </Target>
 </Project>
