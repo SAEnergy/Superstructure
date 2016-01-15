@@ -16,12 +16,13 @@ namespace LoggerTest.App
         private ManualResetEvent _stopped;
 
         public int SleepTimeInMilliseconds { get; set; }
+        public bool VeryAbusive { get; set; }
+        public bool SuperAbusive { get; set; }
+        public bool UltraAbusive { get; set; }
 
         public LogAbuser(ILogger logger)
         {
             _logger = logger;
-
-            Start();
         }
 
         public void Start()
@@ -30,6 +31,25 @@ namespace LoggerTest.App
 
             abuseThread = new Thread(new ThreadStart(AbusiveWorker));
             abuseThread.Start();
+
+
+            if (VeryAbusive)
+            {
+                ThreadPool.QueueUserWorkItem(new WaitCallback(AbusiveWorkerNumber), (object)"");
+                ThreadPool.QueueUserWorkItem(new WaitCallback(AbusiveWorkerNegativeNumber), (object)"\t");
+                ThreadPool.QueueUserWorkItem(new WaitCallback(AbusiveWorkerLetterUpper), (object)"\t\t");
+                ThreadPool.QueueUserWorkItem(new WaitCallback(AbusiveWorkerLetterLower), (object)"\t\t\t");
+            }
+
+            if (SuperAbusive)
+            {
+                ThreadPool.QueueUserWorkItem(new WaitCallback(AbusiveWorker), (object)"");
+
+                ThreadPool.QueueUserWorkItem(new WaitCallback(AbusiveWorkerNumber), (object)"");
+                ThreadPool.QueueUserWorkItem(new WaitCallback(AbusiveWorkerNegativeNumber), (object)"\t");
+                ThreadPool.QueueUserWorkItem(new WaitCallback(AbusiveWorkerLetterUpper), (object)"\t\t");
+                ThreadPool.QueueUserWorkItem(new WaitCallback(AbusiveWorkerLetterLower), (object)"\t\t\t");
+            }
         }
 
         public void Stop()
@@ -37,6 +57,82 @@ namespace LoggerTest.App
             _isRunning = false;
 
             _stopped.WaitOne();
+        }
+
+        private void AbusiveWorkerNumber(object o)
+        {
+            long count = 0;
+            _isRunning = true;
+
+            while (_isRunning)
+            {
+                count++;
+                _logger.Log(o.ToString() + count.ToString());
+                if(!UltraAbusive)
+                    Thread.Sleep(SleepTimeInMilliseconds);
+            }
+        }
+
+
+        private void AbusiveWorkerLetterUpper(object o)
+        {
+            string s = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            int index = 0;
+            _isRunning = true;
+
+            while (_isRunning)
+            {
+                _logger.Log(o.ToString() + s[index].ToString(), LogMessageSeverity.Warning);
+                if (!UltraAbusive)
+                    Thread.Sleep(SleepTimeInMilliseconds);
+
+                index++;
+                if (index == 26)
+                    index = 0;
+
+            }
+        }
+
+        private void AbusiveWorkerLetterLower(object o)
+        {
+            string s = "abcdefghijklmnopqrstuvwxyz";
+            int index = 0;
+            _isRunning = true;
+
+            while (_isRunning)
+            {
+                _logger.Log(o.ToString() + s[index].ToString());
+                if (!UltraAbusive)
+                    Thread.Sleep(SleepTimeInMilliseconds);
+
+                index++;
+                if (index == 26)
+                    index = 0;
+
+            }
+
+            _stopped.Set();
+        }
+
+
+        private void AbusiveWorkerNegativeNumber(object o)
+        {
+            long count = 0;
+            _isRunning = true;
+
+            while (_isRunning)
+            {
+                count--;
+                _logger.Log(o.ToString() + count.ToString(), LogMessageSeverity.Error);
+                if (!UltraAbusive)
+                    Thread.Sleep(SleepTimeInMilliseconds);
+
+            }
+        }
+
+        private void AbusiveWorker(object o)
+        {
+            AbusiveWorker();
         }
 
         private void AbusiveWorker()
@@ -59,7 +155,9 @@ namespace LoggerTest.App
 
                 _logger.Log("Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", LogMessageSeverity.Critical);
 
-                Thread.Sleep(SleepTimeInMilliseconds);
+                if (!UltraAbusive)
+                    Thread.Sleep(SleepTimeInMilliseconds);
+
             }
 
             _stopped.Set();

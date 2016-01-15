@@ -33,8 +33,8 @@ namespace LoggerTest.App
             config.LogFileExtension = "csv";
             config.LogFilePrefix = "TestLog";
             config.LogMessageFormatter = new CSVLogMessageFormatter();
-            config.MaxLogFileCount = 4;
-            config.MaxLogFileSize = 5;
+            config.MaxLogFileCount = 10;
+            config.MaxLogFileSize = 10;
 
             _logger.AddLogDestination(new FileLogDestination(config));
 
@@ -45,6 +45,18 @@ namespace LoggerTest.App
             _abuser = new LogAbuser(_logger);
 
             _abuser.SleepTimeInMilliseconds = 5000;
+
+            foreach (string s in args)
+            {
+                if (s == "very")
+                    _abuser.VeryAbusive = true;
+
+                if (s == "super")
+                    _abuser.SuperAbusive = true;
+
+                if (s == "ultra")
+                    _abuser.UltraAbusive = true;
+            }
 
             _abuser.Start();
 
