@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package>
   <metadata>
-    <id>$id$</id>
+    <id>SAE.Core.Logging</id>
     <version>$version$</version>
-    <description>Core Logging</description>
+    <description>Lightweight and fast logging system with extensible destinations.</description>
     <authors>$author$</authors>
     <owners>$owner$</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>

@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
-    <id>Infrastructure</id>
+    <id>SAE.Core.Infrastructure</id>
 	<version>$version$</version>
-    <title>Core Infrastructure</title>
+    <title>Core Infrastructure that can be used to build enterprise services.</title>
     <authors>$author$</authors>
     <owners>$owner$</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
