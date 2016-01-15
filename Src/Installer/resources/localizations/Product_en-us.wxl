@@ -24,6 +24,12 @@
     <String Id="ServiceDescription">Host Service Description</String>
 
     <String Id="ServerDlgTitle">{\WixUI_Font_Title}Host Service Configuration</String>
-    <String Id="ServerDlgDescription">Target servers for uberAgent's data</String>
-    <String Id="ServerDlgServerLabel">Specify to which Splunk Indexers or Forwarders uberAgent should send its data.&#13;&#10;If multiple targets are specified, uberAgent load-balances between them.&#13;&#10;&#13;&#10;Format:&#13;&#10;    server1:port1, server2:port2, ...&#13;&#10;Default:&#13;&#10;    localhost:19500&#13;&#10;    (requires locally installed Universal Forwarder)</String>
+    
+    <String Id="ServerDlgDescription">Host Service Configuration File Setup</String>
+
+    <String Id ="ServerPortDlgLabel">Service Port Number</String>
+    <String Id ="ServerLogFileCountDlgLabel">Log File Count</String>
+    <String Id ="ServerLogFileSizeDlgLabel">Log File Size(in megabytes)</String>
+    <String Id ="ServerLogFileFolderDlgLabel">Log File Folder</String>
+    <String Id ="ServerLogFilePrefixDlgLabel">Log File Prefix</String>
 </WixLocalization>

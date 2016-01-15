@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
 
     <!--
    Unattended setup: The following variables can be set:
@@ -174,15 +174,42 @@
                             <File Source="$(var.hostServiceSourcePath)" Id="HostServiceExe" KeyPath="yes" />
 
                             <ServiceInstall Id="ServiceInstaller" Account="LocalSystem" Description="!(loc.ServiceDescription)" DisplayName="!(loc.ServiceDisplayName)" ErrorControl="normal"
-                                            LoadOrderGroup="NetworkProvider" Name="HostService" Start="auto" Type="ownProcess" Vital="yes" />
+                                            LoadOrderGroup="NetworkProvider" Name="HostService" Start="disabled" Type="ownProcess" Vital="yes" />
 
-                            <ServiceControl Id="ServiceControl" Name="HostService" Start="install" Stop="both" Remove="uninstall" />
+                            <ServiceControl Id="ServiceControl" Name="HostService" Stop="both" Remove="uninstall" />
 
                         </Component>
 
                         <Component Id="hostServiceConfigComp" Guid="*" Win64="$(var.Win64)">
 
                             <File Source="$(var.sourceDir)HostService.exe.config" Id="hostServiceConfig" KeyPath="yes"/>
+
+                            <util:XmlFile
+                                Id="LogDirectory"
+                                Action="setValue"
+                                File="$(var.sourceDir)HostService.exe.config"
+                                ElementPath="/configuration/appSettings/add[\[]@key='LogDirectory'[\]]"
+                                Name="value"
+                                Value="[WIXUI_LOGFILEFOLDER]"
+                                Permanent="yes" />
+
+                             <util:XmlFile
+                                Id="MaxLogFileSize"
+                                Action="setValue"
+                                File="$(var.sourceDir)HostService.exe.config"
+                                ElementPath="/configuration/appSettings/add[\[]@key='MaxLogFileSize'[\]]"
+                                Name="value"
+                                Value="[WIXUI_LOGFILESIZE]"
+                                Permanent="yes" />
+
+                            <util:XmlFile
+                                Id="MaxLogFileCount"
+                                Action="setValue"
+                                File="$(var.sourceDir)HostService.exe.config"
+                                ElementPath="/configuration/appSettings/add[\[]@key='MaxLogFileCount'[\]]"
+                                Name="value"
+                                Value="[WIXUI_LOGFILECOUNT]"
+                                Permanent="yes" />
 
                         </Component>
 
@@ -227,6 +254,10 @@
         </UI>
 
         <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
-
+        <Property Id="WIXUI_SERVERPORT" Value="9595"/>
+        <Property Id="WIXUI_LOGFILEFOLDER" Value="%PROGRAMDATA%\HostService\Logs" />
+        <Property Id="WIXUI_LOGFILECOUNT" Value="10" />
+        <Property Id="WIXUI_LOGFILESIZE" Value="10" />
+        <Property Id="WIXUI_LOGFILEPREFIX" Value="HostService" />
     </Product>
 </Wix>
