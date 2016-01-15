@@ -211,6 +211,24 @@
                                 Value="[WIXUI_LOGFILECOUNT]"
                                 Permanent="yes" />
 
+                            <util:XmlFile
+                                Id="LogFilePrefix"
+                                Action="setValue"
+                                File="$(var.sourceDir)HostService.exe.config"
+                                ElementPath="/configuration/appSettings/add[\[]@key='LogFilePrefix'[\]]"
+                                Name="value"
+                                Value="[WIXUI_LOGFILEPREFIX]"
+                                Permanent="yes" />
+
+                            <util:XmlFile
+                                Id="PortNumber"
+                                Action="setValue"
+                                File="$(var.sourceDir)HostService.exe.config"
+                                ElementPath="/configuration/appSettings/add[\[]@key='PortNumber'[\]]"
+                                Name="value"
+                                Value="[WIXUI_SERVERPORT]"
+                                Permanent="yes" />
+
                         </Component>
 
                     </Directory>

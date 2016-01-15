@@ -33,7 +33,7 @@ namespace HostService
             }
         }
 
-        [Configuration(DefaultValue = ".\\Logs")]
+        [Configuration(DefaultValue = "%PROGRAMDATA%\\HostService\\Logs")]
         public string LogDirectory { get; set; }
 
         [Configuration(DefaultValue = "csv")]
