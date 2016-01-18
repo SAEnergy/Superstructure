@@ -68,6 +68,7 @@
   <ItemGroup>
     <Content Include="resources\images\app.ico" />
     <Content Include="resources\license.rtf" />
+    <None Include="Transforms.xslt" />
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
   <!--
@@ -87,6 +88,7 @@
         <SuppressRegistry>true</SuppressRegistry>
         <ComponentGroupName>FilesComponentGroup</ComponentGroupName>
         <PreprocessorVariable>var.SourceLocation</PreprocessorVariable>
+        <Transforms>$(ProjectDir)Transforms.xslt</Transforms>
       </HarvestDirectory>
     </ItemGroup>
   </Target>
