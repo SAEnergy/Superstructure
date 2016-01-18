@@ -31,7 +31,7 @@
         <util:XmlFile
             Id="LogDirectory"
             Action="setValue"
-            File="$(var.SourceLocation)HostService.exe.config"
+            File="[INSTALLDIR]HostService.exe.config"
             ElementPath="/configuration/appSettings/add[\[]@key='LogDirectory'[\]]"
             Name="value"
             Value="[WIXUI_LOGFILEFOLDER]"
@@ -41,7 +41,7 @@
         <util:XmlFile
            Id="MaxLogFileSize"
            Action="setValue"
-           File="$(var.SourceLocation)HostService.exe.config"
+           File="[INSTALLDIR]HostService.exe.config"
            ElementPath="/configuration/appSettings/add[\[]@key='MaxLogFileSize'[\]]"
            Name="value"
            Value="[WIXUI_LOGFILESIZE]"
@@ -51,7 +51,7 @@
         <util:XmlFile
             Id="MaxLogFileCount"
             Action="setValue"
-            File="$(var.SourceLocation)HostService.exe.config"
+            File="[INSTALLDIR]HostService.exe.config"
             ElementPath="/configuration/appSettings/add[\[]@key='MaxLogFileCount'[\]]"
             Name="value"
             Value="[WIXUI_LOGFILECOUNT]"
@@ -61,7 +61,7 @@
         <util:XmlFile
             Id="LogFilePrefix"
             Action="setValue"
-            File="$(var.SourceLocation)HostService.exe.config"
+            File="[INSTALLDIR]HostService.exe.config"
             ElementPath="/configuration/appSettings/add[\[]@key='LogFilePrefix'[\]]"
             Name="value"
             Value="[WIXUI_LOGFILEPREFIX]"
@@ -71,7 +71,7 @@
         <util:XmlFile
             Id="PortNumber"
             Action="setValue"
-            File="$(var.SourceLocation)HostService.exe.config"
+            File="[INSTALLDIR]HostService.exe.config"
             ElementPath="/configuration/appSettings/add[\[]@key='PortNumber'[\]]"
             Name="value"
             Value="[WIXUI_SERVERPORT]"
