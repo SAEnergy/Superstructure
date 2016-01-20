@@ -52,8 +52,8 @@
         <WixVariable Id="WixUILicenseRtf" Value="dummy" />
 
         <!-- UI customization, uncomment and add banner and dialog files to images folder -->
-        <!--<WixVariable Id="WixUIBannerBmp" Value="resources\images\BannerTop.bmp" />
-        <WixVariable Id="WixUIDialogBmp" Value="resources\images\Dialog.bmp" />-->
+        <WixVariable Id="WixUIBannerBmp" Value="resources\images\BannerTop.bmp" />
+        <WixVariable Id="WixUIDialogBmp" Value="resources\images\Dialog.bmp" />
 
         <!-- Define icons (ID should not be longer than 18 chars and must end with ".exe") -->
         <Icon Id="Icon.exe" SourceFile="resources\images\app.ico" />
