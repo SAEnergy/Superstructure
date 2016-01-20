@@ -1,4 +1,5 @@
 ﻿using Core.Interfaces.Base;
+using System;
 using System.Runtime.CompilerServices;
 
 namespace Core.Interfaces.Logging
@@ -14,6 +15,8 @@ namespace Core.Interfaces.Logging
         void Log(string message, LogMessageCategory category, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1);
 
         void Log(string message, LogMessageCategory category, LogMessageSeverity severity, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1);
+
+        void HandleLoggingException(string message, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1);
 
         void AddLogDestination(ILogDestination logDestination);
 

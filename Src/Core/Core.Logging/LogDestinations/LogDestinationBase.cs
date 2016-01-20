@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Runtime.CompilerServices;
 
 namespace Core.Logging.LogDestinations
 {
@@ -48,7 +49,7 @@ namespace Core.Logging.LogDestinations
                 {
                     _logger = Logger.InternalLogger;
 
-                    _logger.Log(string.Format("LogDestination of type \"{0}\" starting.", this.GetType().Name));
+                    //_logger.Log(string.Format("LogDestination of type \"{0}\" starting.", this.GetType().Name));
 
                     if (!IsRunning)
                     {
@@ -103,6 +104,11 @@ namespace Core.Logging.LogDestinations
                     ReportMessages(messages);
                 }
             }
+        }
+
+        public void HandleLoggingException(LogMessage message)
+        {
+            _destinationQueue.HandleLoggingException(message);
         }
 
         #endregion

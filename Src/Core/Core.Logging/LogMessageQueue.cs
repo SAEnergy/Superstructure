@@ -11,7 +11,7 @@ namespace Core.Logging
         #region Fields
 
         private TimeSpan _queueTimeOut = new TimeSpan(0, 0, 0, 0, 100); // milliseconds
-        private const int _queueBatchSize = 50;
+        private const int _defaultQueueBatchSize = 50;
         private const int _defaultMaxQueueSize = 5000;
 
         private Queue<LogMessage> _logQueue;
@@ -31,6 +31,7 @@ namespace Core.Logging
         public bool IsBlocking { get; set; }
 
         public int MaxQueueSize { get; set; }
+        public int BatchSize { get; set; }
 
         #endregion
 
@@ -40,6 +41,7 @@ namespace Core.Logging
         {
             _logQueue = new Queue<LogMessage>();
             MaxQueueSize = _defaultMaxQueueSize;
+            BatchSize = _defaultQueueBatchSize;
         }
 
         #endregion
@@ -69,13 +71,22 @@ namespace Core.Logging
             }
         }
 
+        public void HandleLoggingException(LogMessage message)
+        {
+            lock (_logQueue)
+            {
+                _logQueue.Enqueue(message);
+            }
+        }
+
+
         public List<LogMessage> DequeueMessages()
         {
             var list = new List<LogMessage>();
-            var sleepTime = Math.Max(_queueTimeOut.Milliseconds / _queueBatchSize, 1); //regardless of what a silly user might set, don't let the sleep get below 1 millisecond
+            var sleepTime = Math.Max(_queueTimeOut.Milliseconds / BatchSize, 1); //regardless of what a silly user might set, don't let the sleep get below 1 millisecond
             var timeOutTime = DateTime.UtcNow.Add(_queueTimeOut);
 
-            while (list.Count < _queueBatchSize && DateTime.UtcNow < timeOutTime)
+            while (list.Count < BatchSize && DateTime.UtcNow < timeOutTime)
             {
                 if (_logQueue.Count > 0)
                 {
@@ -83,7 +94,7 @@ namespace Core.Logging
                     lock (_logQueue)
                     {
                         //while we have a lock on the queue, burn threw it till we empty it or fill ourselves up
-                        while (list.Count < _queueBatchSize && _logQueue.Count > 0)
+                        while (list.Count < BatchSize && _logQueue.Count > 0)
                         {
                             list.Add(_logQueue.Dequeue());
                         }
@@ -106,7 +117,8 @@ namespace Core.Logging
             {
                 if(IsBlocking)
                 {
-                    while(_logQueue.Count > MaxQueueSize)
+                    _logQueue.Enqueue(CreateLogMessage(LogMessageSeverity.Warning, string.Format("This LogDestination's internal queue size of {0} has been overwhelmed.  Waiting for queue to empty.", MaxQueueSize)));
+                    while (_logQueue.Count > (MaxQueueSize / 2)) // wait for queue to be half empty to prevent full message queue spam
                     {
                         Thread.Sleep(_queueTimeOut);
                     }

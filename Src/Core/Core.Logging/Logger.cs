@@ -109,6 +109,14 @@ namespace Core.Logging
         public void Log(string message, LogMessageCategory category, LogMessageSeverity severity, [CallerMemberName] string callerName = "",
             [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1)
         {
+
+
+            _loggerQueue.EnqueueMessage(CreateMessage(message, category, severity, callerName, callerFilePath, callerLineNumber));
+        }
+
+        protected LogMessage CreateMessage(string message, LogMessageCategory category, LogMessageSeverity severity, [CallerMemberName] string callerName = "",
+            [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1)
+        {
             var logMessage = new LogMessage();
 
             logMessage.Category = category;
@@ -121,7 +129,7 @@ namespace Core.Logging
             logMessage.ProcessId = _processId;
             logMessage.ProcessName = _processName;
 
-            _loggerQueue.EnqueueMessage(logMessage);
+            return logMessage;
         }
 
         public void RemoveLogDestination(ILogDestination logDestination)
@@ -190,12 +198,14 @@ namespace Core.Logging
 
                 if (messages.Count > 0)
                 {
+                    List<ILogDestination> dests = new List<ILogDestination>();
                     lock (_destinations)
                     {
-                        foreach (var destination in _destinations)
-                        {
-                            destination.ProcessMessages(messages);
-                        }
+                        dests.AddRange(_destinations);
+                    }
+                    foreach (var destination in dests)
+                    {
+                        destination.ProcessMessages(messages);
                     }
                 }
             }
@@ -207,6 +217,20 @@ namespace Core.Logging
             {
                 Log("Process exiting, shutting down logging system...", LogMessageSeverity.Warning);
                 Stop();
+            }
+        }
+
+        public void HandleLoggingException(string message, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1)
+        {
+            LogMessage lm = CreateMessage(message, LogMessageCategory.General, LogMessageSeverity.Error, callerName, callerFilePath, callerLineNumber);
+            List<ILogDestination> dests = new List<ILogDestination>();
+            lock (_destinations)
+            {
+                dests.AddRange(_destinations);
+            }
+            foreach (var destination in dests)
+            {
+                destination.HandleLoggingException(lm);
             }
         }
 

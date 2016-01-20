@@ -14,6 +14,11 @@ namespace Test.Mocks
             //ignore
         }
 
+        public void HandleLoggingException(string message, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1)
+        {
+            Trace.TraceInformation(message);
+        }
+
         public void Log(LogMessage logMessage)
         {
             Trace.TraceInformation(logMessage.Message);

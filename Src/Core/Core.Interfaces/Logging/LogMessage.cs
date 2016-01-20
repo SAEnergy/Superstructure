@@ -29,5 +29,10 @@ namespace Core.Interfaces.Logging
         {
             TimeStamp = DateTime.Now;
         }
+
+        public override string ToString()
+        {
+            return TimeStamp.ToLongTimeString() + " - " + Message;
+        }
     }
 }
