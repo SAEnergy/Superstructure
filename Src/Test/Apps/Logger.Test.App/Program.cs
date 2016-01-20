@@ -38,6 +38,15 @@ namespace LoggerTest.App
 
             _logger.AddLogDestination(new FileLogDestination(config));
 
+
+            TCPLogDestinationConfig tcp_config = new TCPLogDestinationConfig();
+
+            tcp_config.LogMessageFormatter = new CSVLogMessageFormatter();
+            tcp_config.HostName = "testboxen";
+            tcp_config.Port = 40514;
+
+            //_logger.AddLogDestination(new TCPLogDestination(tcp_config));
+
             _logger.Start();
 
             Console.CancelKeyPress += Console_CancelKeyPress;

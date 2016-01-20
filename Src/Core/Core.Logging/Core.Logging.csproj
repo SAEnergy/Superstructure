@@ -41,9 +41,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LogDestinationConfigs\FileLogDestinationConfig.cs" />
+    <Compile Include="LogDestinationConfigs\TCPLogDestinationConfig.cs" />
     <Compile Include="LogDestinations\LogDestinationBase.cs" />
     <Compile Include="LogDestinations\ConsoleLogDestination.cs" />
     <Compile Include="LogDestinations\FileLogDestination.cs" />
+    <Compile Include="LogDestinations\TCPLogDestination.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="LogMessageFormatters\CSVLogMessageFormatter.cs" />
     <Compile Include="LogMessageQueue.cs" />
