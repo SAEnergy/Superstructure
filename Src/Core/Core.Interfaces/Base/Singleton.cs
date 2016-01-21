@@ -56,7 +56,7 @@ namespace Core.Interfaces.Base
 
         #endregion
 
-        #region Private Methods
+        #region Private and Protected Methods
 
         private void VerfiySingletonPattern()
         {
@@ -65,7 +65,9 @@ namespace Core.Interfaces.Base
                 throw new NotSupportedException("The base singleton generic type must be an interface type.");
             }
 
-            if(GetType().GetMethod(CREATEINSTANCEMETHODNAME).ReturnType != typeof(T))
+            var info = GetCreateInstanceMethod();
+
+            if (info != null && info.ReturnType != typeof(T))
             {
                 throw new NotSupportedException(string.Format("The base singleton \"{0}\" must have a return type that matches the generic parameter of type \"{1}\"", CREATEINSTANCEMETHODNAME, typeof(T).FullName));
             }

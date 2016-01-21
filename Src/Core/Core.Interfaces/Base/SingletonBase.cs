@@ -30,7 +30,7 @@ namespace Core.Interfaces.Base
             }
         }
 
-        private MethodInfo GetCreateInstanceMethod()
+        protected MethodInfo GetCreateInstanceMethod()
         {
             return GetType().GetMethod(CREATEINSTANCEMETHODNAME, BindingFlags.Public | BindingFlags.Static);
         }
