@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<!--XML File for storing Data-->
+<Data>
+    <Users>
+        <User>
+            <UserId>1</UserId>
+            <UserName>Bobby</UserName>
+        </User>
+        <User>
+            <UserId>2</UserId>
+            <UserName>BobbyDelete</UserName>
+        </User>
+        <User>
+            <UserId>3</UserId>
+            <UserName>BobbyDeleteWhere</UserName>
+        </User>
+        <User>
+            <UserId>999</UserId>
+            <UserName>BobbyInsertAfter</UserName>
+        </User>
+    </Users>
+</Data>

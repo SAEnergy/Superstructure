@@ -23,7 +23,7 @@ namespace HostService
 
         #endregion
 
-        #region Main
+        #region Public Methods
 
         public static void Main(string[] args)
         {
@@ -47,8 +47,9 @@ namespace HostService
             StopService();
         }
 
+        #endregion
 
-
+        #region Private Methods
 
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
@@ -131,8 +132,6 @@ namespace HostService
             //last thing that happens ever
             _serviceStopped.Set();
         }
-
-
 
         private static void StopService()
         {

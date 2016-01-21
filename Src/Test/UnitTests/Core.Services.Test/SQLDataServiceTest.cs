@@ -10,20 +10,20 @@ using System.Linq;
 namespace Core.Services.Test
 {
     [TestClass]
-    public class DataServiceTest
+    public class SQLDataServiceTest
     {
         [ClassInitialize]
         public static void Init(TestContext context)
         {
-            DataService.CreateInstance(new LoggerMock());
+            SQLDataService.CreateInstance(new LoggerMock());
 
             DatabaseSettings.Instance.ConnectionString = string.Format("Data Source={0}\\HostServiceTestDb.sdf", Environment.CurrentDirectory);
         }
 
         [TestMethod]
-        public void DataServiceTest_InsertTest()
+        public void SQLDataServiceTest_InsertTest()
         {
-            var service = DataService.Instance;
+            var service = SQLDataService.Instance;
 
             var newUser = new User();
             newUser.UserName = "Bobby";
@@ -32,9 +32,9 @@ namespace Core.Services.Test
         }
 
         [TestMethod]
-        public void DataServiceTest_UpdateTest()
+        public void SQLDataServiceTest_UpdateTest()
         {
-            var service = DataService.Instance;
+            var service = SQLDataService.Instance;
 
             InsertIfNeeded(service);
 
@@ -58,9 +58,9 @@ namespace Core.Services.Test
         }
 
         [TestMethod]
-        public void DataServiceTest_FindTest()
+        public void SQLDataServiceTest_FindTest()
         {
-            var service = DataService.Instance;
+            var service = SQLDataService.Instance;
 
             InsertIfNeeded(service);
 
@@ -78,9 +78,9 @@ namespace Core.Services.Test
         }
 
         [TestMethod]
-        public void DataServiceTest_FindWhereTest()
+        public void SQLDataServiceTest_FindWhereTest()
         {
-            var service = DataService.Instance;
+            var service = SQLDataService.Instance;
 
             InsertIfNeeded(service);
 
@@ -98,9 +98,9 @@ namespace Core.Services.Test
         }
 
         [TestMethod]
-        public void DataServiceTest_DeleteTest()
+        public void SQLDataServiceTest_DeleteTest()
         {
-            var service = DataService.Instance;
+            var service = SQLDataService.Instance;
 
             InsertIfNeeded(service);
 
@@ -119,9 +119,9 @@ namespace Core.Services.Test
         }
 
         [TestMethod]
-        public void DataServiceTest_DeleteWhereTest()
+        public void SQLDataServiceTest_DeleteWhereTest()
         {
-            var service = DataService.Instance;
+            var service = SQLDataService.Instance;
 
             InsertIfNeeded(service);
 

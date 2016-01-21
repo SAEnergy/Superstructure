@@ -146,7 +146,7 @@ namespace Core.Logging
             {
                 if (!IsRunning)
                 {
-                    Log(string.Format("Logger starting.", this.GetType().Name));
+                    Log("Logger starting.");
 
                     lock (_destinations)
                     {
@@ -169,7 +169,7 @@ namespace Core.Logging
             {
                 if (IsRunning)
                 {
-                    Log(string.Format("Logger stopping.", this.GetType().Name));
+                    Log("Logger stopping.");
 
                     IsRunning = false;
 

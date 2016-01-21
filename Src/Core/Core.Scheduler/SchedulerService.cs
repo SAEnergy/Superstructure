@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Core.Scheduler
@@ -16,6 +17,10 @@ namespace Core.Scheduler
 
         private readonly ILogger _logger;
         private readonly IDataService _dataService;
+
+        private Thread _schedulerWorker;
+
+        private static object _syncObject = new object();
 
         #endregion
 
@@ -44,12 +49,32 @@ namespace Core.Scheduler
 
         public void Start()
         {
-            throw new NotImplementedException();
+            lock (_syncObject)
+            {
+                if (!IsRunning)
+                {
+                    _logger.Log("Scheduler starting...");
+
+                    _schedulerWorker = new Thread(new ThreadStart(SchedulerWorker));
+
+                    _schedulerWorker.Start();
+                }
+            }
         }
 
         public void Stop()
         {
-            throw new NotImplementedException();
+            lock (_syncObject)
+            {
+                if (IsRunning)
+                {
+                    _logger.Log("Scheduler stopping.");
+
+                    IsRunning = false;
+
+                    _schedulerWorker.Join();
+                }
+            }
         }
 
         public bool AddJob(IJob job)
@@ -60,6 +85,24 @@ namespace Core.Scheduler
         public bool DeleteJob(IJob job)
         {
             throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void SchedulerWorker()
+        {
+            IsRunning = true;
+
+            while (IsRunning)
+            {
+                //find scheduled job
+
+                //execute start it
+
+                Thread.Sleep(100); //configure this
+            }
         }
 
         #endregion
