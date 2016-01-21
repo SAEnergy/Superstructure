@@ -1,4 +1,5 @@
-﻿using Core.Interfaces.Logging;
+﻿using Core.Interfaces.Base;
+using Core.Interfaces.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,7 +8,7 @@ using System.Threading;
 
 namespace Core.Logging
 {
-    public class Logger : ILogger
+    public class Logger : Singleton<ILogger>, ILogger
     {
         #region Fields
 
@@ -36,19 +37,16 @@ namespace Core.Logging
             }
         }
 
-        internal static ILogger InternalLogger { get; private set; }
-
         public bool IsRunning { get; private set; }
 
         #endregion
 
         #region Constructor
 
-        public Logger()
+        private Logger()
         {
             _destinations = new List<ILogDestination>();
             _loggerQueue = new LogMessageQueue() { IsBlocking = true };
-            InternalLogger = this;
 
             _machineName = Environment.MachineName;
 
@@ -63,6 +61,11 @@ namespace Core.Logging
         #endregion
 
         #region Public Methods
+
+        public static ILogger CreateInstance()
+        {
+            return Instance = new Logger();
+        }
 
         public void AddLogDestination(ILogDestination logDestination)
         {

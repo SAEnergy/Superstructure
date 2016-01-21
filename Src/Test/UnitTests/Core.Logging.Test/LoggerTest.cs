@@ -14,17 +14,31 @@ namespace Core.Logging.Test
     [TestClass]
     public class LoggerTest : IDisposable
     {
-        private Logger _log;
-        private TestLogDestination _dest = new TestLogDestination();
+        private static ILogger _log;
+        private static TestLogDestination _dest = new TestLogDestination();
 
-        public LoggerTest()
+        [ClassInitialize]
+        public static void Init(TestContext context)
         {
-            _log = new Logger();
+            _log = Logger.CreateInstance();
             _log.AddLogDestination(_dest);
+            _log.Start();
+        }
+
+        [TestInitialize]
+        public void InitializeTest()
+        {
             _log.Start();
 
             Thread.Sleep(1000);
-            //_log.Flush();
+
+            _dest.Messages.Clear();
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            _log.Stop();
 
             _dest.Messages.Clear();
         }
@@ -41,7 +55,8 @@ namespace Core.Logging.Test
                 _log.Log("I am the very model of a modern major general.");
             }
             _log.Stop();
-            Assert.IsTrue(_dest.Messages.Count > 100);
+
+            Assert.IsTrue(_dest.Messages.Count >= 100, "Count is " + _dest.Messages.Count);
         }
 
         [TestMethod]

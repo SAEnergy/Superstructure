@@ -1,4 +1,5 @@
 ﻿using Core.Database;
+using Core.Interfaces.Base;
 using Core.Interfaces.Logging;
 using Core.Interfaces.Services;
 using System;
@@ -8,7 +9,7 @@ using System.Linq;
 
 namespace Core.Services
 {
-    public class DataService : IDataService
+    public class DataService : Singleton<IDataService>, IDataService
     {
         #region Fields
 
@@ -18,7 +19,7 @@ namespace Core.Services
 
         #region Constructor
 
-        public DataService(ILogger logger)
+        private DataService(ILogger logger)
         {
             _logger = logger;
         }
@@ -26,6 +27,11 @@ namespace Core.Services
         #endregion
 
         #region Public Methods
+
+        public static IDataService CreateInstance(ILogger logger)
+        {
+            return Instance = new DataService(logger);
+        }
 
         public bool Delete<T>(Func<T, bool> where) where T : class
         {

@@ -44,6 +44,8 @@
   <ItemGroup>
     <Compile Include="Base\IRunnable.cs" />
     <Compile Include="Base\IHost.cs" />
+    <Compile Include="Base\SingletonBase.cs" />
+    <Compile Include="Base\Singleton.cs" />
     <Compile Include="IoC\Enums.cs" />
     <Compile Include="IoC\IIoCContainer.cs" />
     <Compile Include="Logging\Enums.cs" />

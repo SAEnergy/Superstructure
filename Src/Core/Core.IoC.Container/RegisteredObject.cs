@@ -1,4 +1,5 @@
-﻿using Core.Interfaces.IoC;
+﻿using Core.Interfaces.Base;
+using Core.Interfaces.IoC;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace Core.IoC.Container
             ConcreteType = concreteType;
             ObjectLifeCycle = lifeCycle;
 
-            VerifyConstructor();
+            VerifyImplementation();
         }
 
         #endregion
@@ -43,13 +44,27 @@ namespace Core.IoC.Container
         {
             object obj = ObjectLifeCycle == LifeCycle.Singleton ? _singleton : null;
 
-            if(obj == null || ObjectLifeCycle == LifeCycle.Transient)
+            if(ObjectLifeCycle == LifeCycle.Transient)
             {
                 ConstructorInfo info = ConcreteType.GetConstructors().First();
                 obj = info.Invoke(BuildParameters(info));
+            }
+            else if(ObjectLifeCycle == LifeCycle.Singleton && obj == null)
+            {
+                MethodInfo info = ConcreteType.GetMethod(SingletonBase.CREATEINSTANCEMETHODNAME, BindingFlags.Public | BindingFlags.Static);
+                obj = info.Invoke(null, BuildParameters(info));
 
-                _singleton = ObjectLifeCycle == LifeCycle.Singleton ? obj : null; // do not keep a copy of transient objects!
+                if(obj == null)
+                {
+                    throw new NullReferenceException(string.Format("Singleton method \"{0}\" did not return an instance of type {1}.", SingletonBase.CREATEINSTANCEMETHODNAME, ConcreteType.FullName));
+                }
 
+                _singleton = obj;
+            }
+
+            if (obj == null)
+            {
+                throw new NullReferenceException(string.Format("IoC container Failed to create instance of type \"{0}\".", ConcreteType.FullName));
             }
 
             return obj;
@@ -59,17 +74,78 @@ namespace Core.IoC.Container
 
         #region Private Methods
 
-        private void VerifyConstructor()
+        private void VerifyImplementation()
+        {
+            switch (ObjectLifeCycle)
+            {
+                case LifeCycle.Singleton:
+                    VerifySingleton();
+                    break;
+                case LifeCycle.Transient:
+                    VerifyTransient();
+                    break;
+                default:
+                    throw new NotSupportedException(string.Format("LifeCycle \"{0}\" not yet supported.", ObjectLifeCycle.ToString()));
+            }
+        }
+
+        private void VerifySingleton()
+        {
+            if(ConcreteType.GetConstructors().Length > 0)
+            {
+                throw new NotSupportedException(string.Format("Singleton of type \"{0}\" cannot have a public constructor.", ConcreteType.FullName));
+            }
+
+            if(ConcreteType.GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance).Length != 1)
+            {
+                throw new NotSupportedException(string.Format("Singleton of type \"{0}\" must have one, and only one private constructor", ConcreteType.FullName));
+            }
+
+            if (!CheckBaseType())
+            {
+                throw new NotSupportedException("IoC singletons must inherit from Singleton<T>");
+            }
+        }
+
+        private void VerifyTransient()
         {
             if (ConcreteType.GetConstructors().Length != 1)
             {
-                throw new Exception("IoC concrete classes can only have one constructor.");
+                throw new NotSupportedException("IoC concrete classes must have one, and only one public constructor.");
             }
+        }
+
+        private bool CheckBaseType()
+        {
+            bool rc = false;
+
+            var baseType = ConcreteType.BaseType;
+
+            while(baseType != null)
+            {
+                if (baseType.IsGenericType)
+                {
+                    var genericType = baseType.GetGenericTypeDefinition();
+
+                    if (genericType != null && genericType == typeof(Singleton<>))
+                    {
+                        if (baseType.GetGenericArguments().FirstOrDefault() == InterfaceType)
+                        {
+                            rc = true;
+                            break;
+                        }
+                    }
+                }
+
+                baseType = baseType.BaseType;
+            }
+
+            return rc;
         }
 
         //this can get nasty, we cannot build parameters if there is a circular dependency
         //we will need to safe guard against this in the future if needed...
-        private object[] BuildParameters(ConstructorInfo info)
+        private object[] BuildParameters(MethodBase info)
         {
             List<object> retVal = null;
 

@@ -12,16 +12,18 @@ namespace Core.Services.Test
     [TestClass]
     public class DataServiceTest
     {
-        [TestInitialize]
-        public void Init()
+        [ClassInitialize]
+        public static void Init(TestContext context)
         {
+            DataService.CreateInstance(new LoggerMock());
+
             DatabaseSettings.Instance.ConnectionString = string.Format("Data Source={0}\\HostServiceTestDb.sdf", Environment.CurrentDirectory);
         }
 
         [TestMethod]
         public void DataServiceTest_InsertTest()
         {
-            var service = BuildMeADaService();
+            var service = DataService.Instance;
 
             var newUser = new User();
             newUser.UserName = "Bobby";
@@ -32,7 +34,7 @@ namespace Core.Services.Test
         [TestMethod]
         public void DataServiceTest_UpdateTest()
         {
-            var service = BuildMeADaService();
+            var service = DataService.Instance;
 
             InsertIfNeeded(service);
 
@@ -58,7 +60,7 @@ namespace Core.Services.Test
         [TestMethod]
         public void DataServiceTest_FindTest()
         {
-            var service = BuildMeADaService();
+            var service = DataService.Instance;
 
             InsertIfNeeded(service);
 
@@ -78,7 +80,7 @@ namespace Core.Services.Test
         [TestMethod]
         public void DataServiceTest_FindWhereTest()
         {
-            var service = BuildMeADaService();
+            var service = DataService.Instance;
 
             InsertIfNeeded(service);
 
@@ -98,7 +100,7 @@ namespace Core.Services.Test
         [TestMethod]
         public void DataServiceTest_DeleteTest()
         {
-            var service = BuildMeADaService();
+            var service = DataService.Instance;
 
             InsertIfNeeded(service);
 
@@ -119,7 +121,7 @@ namespace Core.Services.Test
         [TestMethod]
         public void DataServiceTest_DeleteWhereTest()
         {
-            var service = BuildMeADaService();
+            var service = DataService.Instance;
 
             InsertIfNeeded(service);
 
@@ -139,13 +141,6 @@ namespace Core.Services.Test
 
                 Assert.IsTrue(service.Insert<User>(newUser));
             }
-        }
-
-        private IDataService BuildMeADaService()
-        {
-            ILogger mockLogger = new LoggerMock();
-
-            return new DataService(mockLogger);
         }
 
         #endregion

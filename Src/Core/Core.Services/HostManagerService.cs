@@ -9,7 +9,7 @@ using System.Reflection;
 
 namespace Core.Services
 {
-    public class HostManagerService : IHostManagerService
+    public class HostManagerService : Singleton<IHostManagerService>, IHostManagerService
     {
         #region Fields
 
@@ -22,7 +22,7 @@ namespace Core.Services
 
         #region Constructor
 
-        public HostManagerService(ILogger logger)
+        private HostManagerService(ILogger logger)
         {
             _logger = logger;
         }
@@ -30,6 +30,11 @@ namespace Core.Services
         #endregion
 
         #region Public Methods
+
+        public static IHostManagerService CreateInstance(ILogger logger)
+        {
+            return Instance = new HostManagerService(logger);
+        }
 
         public void RestartAll()
         {

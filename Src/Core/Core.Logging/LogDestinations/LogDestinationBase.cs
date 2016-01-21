@@ -45,9 +45,9 @@ namespace Core.Logging.LogDestinations
             lock(syncObject)
             {
                 //we want to be able to log internally if something goes wrong
-                if (Logger.InternalLogger != null)
+                if (Logger.Instance != null)
                 {
-                    _logger = Logger.InternalLogger;
+                    _logger = Logger.Instance;
 
                     //_logger.Log(string.Format("LogDestination of type \"{0}\" starting.", this.GetType().Name));
 

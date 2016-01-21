@@ -1,4 +1,5 @@
-﻿using Core.Interfaces.Logging;
+﻿using Core.Interfaces.Base;
+using Core.Interfaces.Logging;
 using Core.Interfaces.Scheduler;
 using Core.Interfaces.Services;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Core.Scheduler
 {
-    public class SchedulerService : ISchedulerService
+    public class SchedulerService : Singleton<ISchedulerService>, ISchedulerService
     {
         #region Fields
 
@@ -26,7 +27,7 @@ namespace Core.Scheduler
 
         #region Constructor
 
-        public SchedulerService(ILogger logger, IDataService dataService)
+        private SchedulerService(ILogger logger, IDataService dataService)
         {
             _logger = logger;
             _dataService = dataService;
@@ -35,6 +36,11 @@ namespace Core.Scheduler
         #endregion
 
         #region Public Methods
+
+        public static ISchedulerService CreateInstance(ILogger logger, IDataService dataService)
+        {
+            return Instance = new SchedulerService(logger, dataService);
+        }
 
         public void Start()
         {

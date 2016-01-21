@@ -23,7 +23,7 @@ namespace LoggerTest.App
 
         static void Main(string[] args)
         {
-            _logger = new Logger();
+            _logger = Logger.CreateInstance();
 
             _logger.AddLogDestination(new ConsoleLogDestination());
 
