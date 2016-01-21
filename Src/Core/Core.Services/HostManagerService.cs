@@ -9,7 +9,7 @@ using System.Reflection;
 
 namespace Core.Services
 {
-    public class HostManagerService : Singleton<IHostManagerService>, IHostManagerService
+    public sealed class HostManagerService : Singleton<IHostManagerService>, IHostManagerService
     {
         #region Fields
 

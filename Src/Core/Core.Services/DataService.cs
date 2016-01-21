@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Core.Services
 {
-    public class DataService : Singleton<IDataService>, IDataService
+    public sealed class DataService : Singleton<IDataService>, IDataService
     {
         #region Fields
 

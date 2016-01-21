@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Core.Scheduler
 {
-    public class SchedulerService : Singleton<ISchedulerService>, ISchedulerService
+    public sealed class SchedulerService : Singleton<ISchedulerService>, ISchedulerService
     {
         #region Fields
 

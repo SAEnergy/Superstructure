@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace Core.Logging
 {
-    public class Logger : Singleton<ILogger>, ILogger
+    public sealed class Logger : Singleton<ILogger>, ILogger
     {
         #region Fields
 
