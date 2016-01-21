@@ -33,9 +33,9 @@ namespace Core.Services
 
         #region Properties
 
-        public static string Folder { get; set; } = defaultFolder;
+        public static string Folder { get; set; }
 
-        public static string FileName { get; set; } = defaultFileName;
+        public static string FileName { get; set; }
 
         #endregion
 
@@ -43,6 +43,9 @@ namespace Core.Services
 
         private XMLDataService(ILogger logger)
         {
+            Folder = string.IsNullOrEmpty(Folder) ? defaultFolder : Folder;
+            FileName = string.IsNullOrEmpty(FileName) ? defaultFileName : FileName;
+
             _logger = logger;
         }
 
