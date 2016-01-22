@@ -13,13 +13,17 @@ namespace Core.Models.Persistent
 
         public DateTime Created { get; set; }
 
-        public JobActionType ActionType { get; set; } 
+        public JobActionType ActionType { get; set; }
 
-        public string CommandLineArgument { get; set; }
+        public string FileName { get; set; }
 
-        public string RunFolder { get; set; }
+        public string Arguments { get; set; }
+
+        public string WorkingDirectory { get; set; }
 
         public bool CaptureOutput { get; set; }
+
+        public bool KillProcOnCancel { get; set; }
 
         public JobRunState RunState { get; set; }
 

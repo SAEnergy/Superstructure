@@ -170,12 +170,17 @@ namespace Core.Scheduler.Jobs
             {
                 var task = new Task<bool>(() => Execute(ct), ct);
 
+                _logger.Log(string.Format("Starting job \"{0}\".", Configuration.Name));
+
                 lock (_taskList)
                 {
                     _taskList.Add(task);
-                }
 
-                _logger.Log(string.Format("Starting job \"{0}\".", Configuration.Name));
+                    if (_taskList.Count > 1)
+                    {
+                        _logger.Log(string.Format("Running {0} jobs simultaneously by the name of \"{1}\"", _taskList.Count, Configuration.Name), LogMessageSeverity.Warning);
+                    }
+                }
 
                 var watch = new Stopwatch();
 

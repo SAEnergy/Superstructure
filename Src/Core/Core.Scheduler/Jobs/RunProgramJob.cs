@@ -1,17 +1,16 @@
 ﻿using Core.Interfaces.Logging;
-using Core.Interfaces.Scheduler;
 using Core.Models.Persistent;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Diagnostics;
+using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Core.Scheduler.Jobs
 {
     public sealed class RunProgramJob : BaseJob
     {
+        private TimeSpan _processWaitTimer = TimeSpan.FromSeconds(1);
+
         public RunProgramJob(ILogger logger, JobConfiguration config) : base(logger, config)
         {
 
@@ -19,19 +18,106 @@ namespace Core.Scheduler.Jobs
 
         public override bool Execute(CancellationToken ct)
         {
-            Random rnd = new Random();
+            bool rc = false;
 
-            int sleepTime = rnd.Next(2000, 10000);
+            var proc = CreateProcess();
 
-            _logger.Log(string.Format("SLEEEPING for {0}", sleepTime));
-
-            for (int i = 0; i < 100; i++)
+            if (proc != null)
             {
-                ct.ThrowIfCancellationRequested();
-                Thread.Sleep(sleepTime / 100);
+                proc.Start();
+                StartCapturingOutput(proc);
+
+                while (!proc.WaitForExit((int)_processWaitTimer.TotalMilliseconds))
+                {
+                    if (ct.IsCancellationRequested)
+                    {
+                        //if we are not going to kill the proc, then leave it to do it's thing
+                        if (Configuration.KillProcOnCancel)
+                        {
+                            _logger.Log(string.Format("Job \"{0}\" is configured to kill process on cancel.  Killing proces...", Configuration.Name), LogMessageSeverity.Error);
+
+                            proc.Kill();
+                        }
+
+                        StopCapturingOutput(proc);
+
+                        ct.ThrowIfCancellationRequested();
+                    }
+                }
+
+                proc.WaitForExit(); //according to MSDN call this even after the timeout above and returned true
+
+                StopCapturingOutput(proc);
+
+                rc = proc.ExitCode == 0;
+            }
+            else
+            {
+                _logger.Log(string.Format("Unable to start process for job \"{0}\".", Configuration.Name), LogMessageSeverity.Error);
             }
 
-            return true;
+            return rc;
+        }
+
+        private Process CreateProcess()
+        {
+            Process proc = null;
+
+            string path = Path.GetFullPath(Environment.ExpandEnvironmentVariables(Configuration.WorkingDirectory));
+
+            string fileName = string.Format("{0}\\{1}", path, Configuration.FileName);
+
+            if (File.Exists(fileName))
+            {
+                var info = new ProcessStartInfo();
+                info.FileName = fileName;
+                info.WorkingDirectory = path;
+                info.Arguments = Configuration.Arguments;
+                info.CreateNoWindow = true;
+                info.UseShellExecute = false;
+                info.RedirectStandardOutput = Configuration.CaptureOutput;
+                info.RedirectStandardError = Configuration.CaptureOutput;
+
+                proc = new Process();
+                proc.StartInfo = info;
+
+                if (Configuration.CaptureOutput)
+                {
+                    proc.OutputDataReceived += (sender, args) =>
+                    {
+                        _logger.Log(string.Format("Job \"{0}\": {1}", Configuration.Name, args.Data));
+                    };
+
+                    proc.ErrorDataReceived += (sender, args) =>
+                    {
+                        _logger.Log(string.Format("Job \"{0}\": {1}", Configuration.Name, args.Data), LogMessageSeverity.Error);
+                    };
+                }
+            }
+            else
+            {
+                _logger.Log(string.Format("Job \"{0}\" misconfigured.  Unable to locate file \"{1}\" in directory \"{2}.", Configuration.Name, Configuration.FileName, path), LogMessageSeverity.Error);
+            }
+
+            return proc;
+        }
+
+        private void StartCapturingOutput(Process proc)
+        {
+            if (Configuration.CaptureOutput)
+            {
+                proc.BeginOutputReadLine();
+                proc.BeginErrorReadLine();
+            }
+        }
+
+        private void StopCapturingOutput(Process proc)
+        {
+            if (Configuration.CaptureOutput)
+            {
+                proc.CancelOutputRead();
+                proc.CancelErrorRead();
+            }
         }
     }
 }
