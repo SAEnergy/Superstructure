@@ -11,12 +11,16 @@ namespace Core.Interfaces.Scheduler
     {
         JobStatus Status { get; }
 
-        JobConfiguration Configuration { get; set; }
+        JobConfiguration Configuration { get; }
 
-        bool Run();
+        bool TryRun();
 
-        bool Cancel();
+        bool ForceRun();
 
-        bool Pause();
+        bool TryCancel();
+
+        bool TryPause();
+
+        void UpdateConfiguration(JobConfiguration newConfig);
     }
 }

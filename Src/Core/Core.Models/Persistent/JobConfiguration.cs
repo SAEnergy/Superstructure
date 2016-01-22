@@ -1,19 +1,25 @@
 ﻿using Core.Models.ComplexTypes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace Core.Models.Persistent
 {
     public class JobConfiguration
     {
+        [Key]
+        public int JobConfigurationId { get; set; }
+
         public string Name { get; set; }
 
         public DateTime Created { get; set; }
 
         public JobActionType ActionType { get; set; } 
+
+        public string CommandLineArgument { get; set; }
+
+        public string RunFolder { get; set; }
+
+        public bool CaptureOutput { get; set; }
 
         public JobRunState RunState { get; set; }
 
@@ -25,11 +31,19 @@ namespace Core.Models.Persistent
 
         public TimeSpanBool RepeatEvery { get; set; }
 
-        public bool Block { get; set; }
+        public bool SimultaneousExecutions { get; set; }
 
         public TimeSpanBool Timeout { get; set; }
 
         public AuditInfo AuditInfo { get; set; }
+
+        public JobConfiguration()
+        {
+            //initialize objects
+            AuditInfo = new AuditInfo();
+            Timeout = new TimeSpanBool();
+            RepeatEvery = new TimeSpanBool();
+        }
     }
 
     public enum JobActionType

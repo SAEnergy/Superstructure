@@ -1,4 +1,5 @@
-﻿using Core.Interfaces.Scheduler;
+﻿using Core.Interfaces.Logging;
+using Core.Interfaces.Scheduler;
 using Core.Models.Persistent;
 using Core.Scheduler.Jobs;
 using System;
@@ -20,6 +21,12 @@ namespace Core.Scheduler
 
         #endregion
 
+        #region Properties
+
+        public static ILogger Logger { get; set; }
+
+        #endregion
+
         #region Public Methods
 
         public static IJob Create(JobConfiguration config)
@@ -34,18 +41,19 @@ namespace Core.Scheduler
                 {
                     if(type != null)
                     {
-                        retVal = Activator.CreateInstance(type) as IJob;
+                        Logger.Log(string.Format("Creating job of type \"{0}\".", type.Name));
 
-                        if(retVal != null)
-                        {
-                            retVal.Configuration = config;
-                        }
+                        retVal = Activator.CreateInstance(type, Logger, config) as IJob;
                     }
+                }
+                else
+                {
+                    Logger.Log(string.Format("Action type \"{0}\" not supported.  This job will not be created.", config.ActionType), LogMessageSeverity.Error);
                 }
             }
             else
             {
-                throw new ArgumentNullException("config");
+                Logger.Log("Job cannot be created without a configuration", LogMessageSeverity.Error);
             }
 
             return retVal;

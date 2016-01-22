@@ -22,8 +22,8 @@ namespace Core.Services
 
         private readonly ILogger _logger;
 
-        private const string defaultFolder = ".\\Data";
-        private const string defaultFileName = "DataService.xml";
+        private const string defaultFolder = "%PROGRAMDATA%\\HostService";
+        private const string defaultFileName = "Data.xml";
 
         private static object _syncObject = new object();
 
@@ -315,27 +315,44 @@ namespace Core.Services
         private void SetKey<T>(T obj, int keyValue)
         {
             var prop = GetKeyProperty<T>();
-            prop.SetValue(obj, keyValue);
+
+            if (prop != null)
+            {
+                prop.SetValue(obj, keyValue);
+            }
         }
 
         private int GetKeyValue<T>(T obj)
         {
+            int retVal = -1;
+
             var prop = GetKeyProperty<T>();
-            return Convert.ToInt32(prop.GetValue(obj));
+
+            if (prop != null)
+            {
+                retVal = Convert.ToInt32(prop.GetValue(obj));
+            }
+
+            return retVal;
         }
 
         private PropertyInfo GetKeyProperty<T>()
         {
             Type type = typeof(T);
 
-            var keyAtty = type.GetProperties().Where(p => p.CustomAttributes.Any(a => a.GetType() == typeof(KeyAttribute))).FirstOrDefault();
+            var prop = type.GetProperties().Where(p => p.CustomAttributes.Any(a => a.GetType() == typeof(KeyAttribute))).FirstOrDefault();
 
-            if (keyAtty == null)
+            if (prop == null)
             {
-                keyAtty = type.GetProperty(GetKeyPropertyName(type));
+                prop = type.GetProperty(GetKeyPropertyName(type));
             }
 
-            return keyAtty;
+            if(prop == null)
+            {
+                _logger.Log(string.Format("Unable to find primary key property!  Check implementation for type \"{0}\", must have a property named \"{1}\" or [Key] attribute.", type.Name, GetKeyPropertyName(type)), LogMessageSeverity.Critical);
+            }
+
+            return prop;
         }
 
         private string GetKeyPropertyName(Type type)

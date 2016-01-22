@@ -1,6 +1,7 @@
 ﻿using Core.Interfaces.IoC;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Core.IoC.Container
 {
@@ -52,6 +53,11 @@ namespace Core.IoC.Container
         #endregion
 
         #region Public Methods
+
+        public List<Type> GetRegisteredTypes()
+        {
+            return _registeredObjects.Keys.ToList();
+        }
 
         public void Register<TInterfaceType, TConcreteType>()
         {

@@ -54,9 +54,6 @@ namespace HostService
         [Configuration(DefaultValue = 9595)]
         public int PortNumber { get; set; }
 
-        [Configuration(DefaultValue = "%PROGRAMDATA%\\HostService")]
-        public string XMLDataServiceFolder { get; set; }
-
         #endregion
 
         private Configuration() : base (IoCContainer.Instance.Resolve<ILogger>())
