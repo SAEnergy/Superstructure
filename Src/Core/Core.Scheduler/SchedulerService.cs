@@ -128,13 +128,13 @@ namespace Core.Scheduler
                 Thread.Sleep(_schedulerCheckSpeed);
             }
 
-            //lock (_jobs)
-            //{
-            //    foreach (var job in _jobs)
-            //    {
-            //        job.TryCancel();
-            //    }
-            //}
+            lock (_jobs)
+            {
+                foreach (var job in _jobs)
+                {
+                    job.TryCancel();
+                }
+            }
 
             _logger.Log("Scheduler stopped.");
         }

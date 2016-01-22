@@ -17,12 +17,21 @@ namespace Core.Scheduler.Jobs
 
         }
 
-        public override void Execute()
+        public override bool Execute(CancellationToken ct)
         {
             Random rnd = new Random();
 
-            _logger.Log("SLEEEPING");
-            Thread.Sleep(rnd.Next(100,10000));
+            int sleepTime = rnd.Next(2000, 10000);
+
+            _logger.Log(string.Format("SLEEEPING for {0}", sleepTime));
+
+            for (int i = 0; i < 100; i++)
+            {
+                ct.ThrowIfCancellationRequested();
+                Thread.Sleep(sleepTime / 100);
+            }
+
+            return true;
         }
     }
 }

@@ -15,11 +15,15 @@ namespace Core.Scheduler.Jobs
     {
         #region Fields
 
+        private TimeSpan _cancelWaitCycle = TimeSpan.FromMilliseconds(250);
+
         protected readonly ILogger _logger;
         protected DateTime _lastRunTime;
         protected TimeSpan _lastRunDuration;
 
-        private List<Thread> _workerThreads;
+        private List<Task> _taskList;
+
+        private CancellationTokenSource cancelSource;
 
         #endregion
 
@@ -29,7 +33,16 @@ namespace Core.Scheduler.Jobs
 
         public JobStatus Status { get; protected set; }
 
-        public bool IsExecuting { get; protected set; }
+        public bool IsExecuting
+        {
+            get
+            {
+                lock(_taskList)
+                {
+                    return _taskList.Count > 0;
+                }
+            }
+        }
 
         #endregion
 
@@ -39,6 +52,8 @@ namespace Core.Scheduler.Jobs
         {
             _logger = logger;
             Configuration = config;
+            _taskList = new List<Task>();
+            cancelSource = new CancellationTokenSource();
 
             _logger.Log(string.Format("Job name \"{0}\" created of type \"{1}\".", config.Name, GetType()));
         }
@@ -49,7 +64,27 @@ namespace Core.Scheduler.Jobs
 
         public bool TryCancel()
         {
-            throw new NotImplementedException();
+            bool rc = false;
+
+            if(cancelSource != null)
+            {
+                if (IsExecuting)
+                {
+                    _logger.Log(string.Format("Job name \"{0}\" canceling all executing tasks.  ", Configuration.Name), LogMessageSeverity.Warning);
+
+                    cancelSource.Cancel();
+
+                    while(IsExecuting)
+                    {
+                        _logger.Log(string.Format("Job name \"{0}\" waiting on tasks to cancel...", Configuration.Name), LogMessageSeverity.Warning);
+                        Thread.Sleep(_cancelWaitCycle);
+                    }
+
+                    _logger.Log(string.Format("Job name \"{0}\" all tasks have been canceled.", Configuration.Name));
+                }
+            }
+
+            return rc;
         }
 
         public bool TryPause()
@@ -65,7 +100,7 @@ namespace Core.Scheduler.Jobs
             {
                 if(CheckSchedule())
                 {
-                    TryExecute();
+                    TryExecute(cancelSource.Token);
                 }
             }
 
@@ -78,7 +113,7 @@ namespace Core.Scheduler.Jobs
 
             if (Configuration.RunState != JobRunState.Disabled)
             {
-                TryExecute();
+                TryExecute(cancelSource.Token);
             }
             else
             {
@@ -93,7 +128,7 @@ namespace Core.Scheduler.Jobs
             throw new NotImplementedException();
         }
 
-        public abstract void Execute();
+        public abstract bool Execute(CancellationToken ct);
 
         #endregion
 
@@ -129,25 +164,50 @@ namespace Core.Scheduler.Jobs
             return retVal;
         }
 
-        private async void TryExecute()
+        private async void TryExecute(CancellationToken ct)
         {
             if(!IsExecuting || Configuration.SimultaneousExecutions)
             {
-                _logger.Log(string.Format("Starting job \"{0}\".", Configuration.Name));
+                var task = new Task<bool>(() => Execute(ct), ct);
 
-                IsExecuting = true; //is executing only works with non-simulatenous executions
+                lock (_taskList)
+                {
+                    _taskList.Add(task);
+                }
+
+                _logger.Log(string.Format("Starting job \"{0}\".", Configuration.Name));
 
                 var watch = new Stopwatch();
 
                 watch.Start();
 
-                await Task.Run(() => Execute());
+                bool rc = false;
+
+                try
+                {
+                    task.Start();
+
+                    rc = await task;
+                }
+                catch(OperationCanceledException)
+                {
+                    _logger.Log(string.Format("Job \"{0}\" canceled.", Configuration.Name), LogMessageSeverity.Warning);
+                }
+                catch(Exception ex)
+                {
+                    _logger.Log(string.Format("Job \"{0}\" failed! Error - {1}.", Configuration.Name, ex.Message),LogMessageSeverity.Error);
+                }
 
                 watch.Stop();
 
-                _logger.Log(string.Format("Job \"{0}\" completed, run time = {1:hh\\:mm\\:ss}", Configuration.Name, watch.Elapsed));
+                lock (_taskList)
+                {
+                    _taskList.Remove(task);
+                }
 
-                IsExecuting = false;
+                string message = rc ? "completed successfully" : "failed to complete successfully";
+
+                _logger.Log(string.Format("Job \"{0}\" {1}, run time = {2:hh\\:mm\\:ss}", Configuration.Name, message, watch.Elapsed), rc ? LogMessageSeverity.Information : LogMessageSeverity.Error);
             }
             else
             {
