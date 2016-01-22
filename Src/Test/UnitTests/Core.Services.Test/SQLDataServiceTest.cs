@@ -15,15 +15,13 @@ namespace Core.Services.Test
         [ClassInitialize]
         public static void Init(TestContext context)
         {
-            SQLDataService.CreateInstance(new LoggerMock());
-
             DatabaseSettings.Instance.ConnectionString = string.Format("Data Source={0}\\HostServiceTestDb.sdf", Environment.CurrentDirectory);
         }
 
         [TestMethod]
         public void SQLDataServiceTest_InsertTest()
         {
-            var service = SQLDataService.Instance;
+            var service = new SQLDataService(new LoggerMock());
 
             var newUser = new User();
             newUser.UserName = "Bobby";
@@ -34,7 +32,7 @@ namespace Core.Services.Test
         [TestMethod]
         public void SQLDataServiceTest_UpdateTest()
         {
-            var service = SQLDataService.Instance;
+            var service = new SQLDataService(new LoggerMock());
 
             InsertIfNeeded(service);
 
@@ -60,7 +58,7 @@ namespace Core.Services.Test
         [TestMethod]
         public void SQLDataServiceTest_FindTest()
         {
-            var service = SQLDataService.Instance;
+            var service = new SQLDataService(new LoggerMock());
 
             InsertIfNeeded(service);
 
@@ -80,7 +78,7 @@ namespace Core.Services.Test
         [TestMethod]
         public void SQLDataServiceTest_FindWhereTest()
         {
-            var service = SQLDataService.Instance;
+            var service = new SQLDataService(new LoggerMock());
 
             InsertIfNeeded(service);
 
@@ -100,7 +98,7 @@ namespace Core.Services.Test
         [TestMethod]
         public void SQLDataServiceTest_DeleteTest()
         {
-            var service = SQLDataService.Instance;
+            var service = new SQLDataService(new LoggerMock());
 
             InsertIfNeeded(service);
 
@@ -121,7 +119,7 @@ namespace Core.Services.Test
         [TestMethod]
         public void SQLDataServiceTest_DeleteWhereTest()
         {
-            var service = SQLDataService.Instance;
+            var service = new SQLDataService(new LoggerMock());
 
             InsertIfNeeded(service);
 

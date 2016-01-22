@@ -15,8 +15,8 @@ namespace HostService
             #region Singletons
 
             container.Register<ILogger, Logger>();
-            container.Register<IDataService, XMLDataService>();
-            //container.Register<IDataService, SQLDataService>();
+            container.Register<IDataService, XMLDataService>(LifeCycle.Transient);
+            //container.Register<IDataService, SQLDataService>(LifeCycle.Transient);
             container.Register<IHostManagerService, HostManagerService>();
             container.Register<ISchedulerService, SchedulerService>();
 

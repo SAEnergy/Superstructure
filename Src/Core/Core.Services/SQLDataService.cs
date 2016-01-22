@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Core.Services
 {
-    public sealed class SQLDataService : Singleton<IDataService>, IDataService
+    public sealed class SQLDataService : IDataService
     {
         #region Fields
 
@@ -19,7 +19,7 @@ namespace Core.Services
 
         #region Constructor
 
-        private SQLDataService(ILogger logger)
+        public SQLDataService(ILogger logger)
         {
             _logger = logger;
         }
@@ -27,11 +27,6 @@ namespace Core.Services
         #endregion
 
         #region Public Methods
-
-        public static IDataService CreateInstance(ILogger logger)
-        {
-            return Instance = new SQLDataService(logger);
-        }
 
         public bool Delete<T>(Func<T, bool> where) where T : class
         {

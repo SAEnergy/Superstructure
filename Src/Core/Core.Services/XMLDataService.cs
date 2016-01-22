@@ -14,7 +14,7 @@ using System.Xml.Serialization;
 
 namespace Core.Services
 {
-    public sealed class XMLDataService : Singleton<IDataService>, IDataService
+    public sealed class XMLDataService : IDataService
     {
         #region Fields
 
@@ -41,7 +41,7 @@ namespace Core.Services
 
         #region Constructor
 
-        private XMLDataService(ILogger logger)
+        public XMLDataService(ILogger logger)
         {
             Folder = string.IsNullOrEmpty(Folder) ? defaultFolder : Folder;
             FileName = string.IsNullOrEmpty(FileName) ? defaultFileName : FileName;
@@ -52,11 +52,6 @@ namespace Core.Services
         #endregion
 
         #region Public Methods
-
-        public static IDataService CreateInstance(ILogger logger)
-        {
-            return Instance = new XMLDataService(logger);
-        }
 
         public bool Delete<T>(Func<T, bool> where) where T : class
         {

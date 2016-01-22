@@ -11,8 +11,6 @@ namespace Core.Services.Test
     [TestClass]
     public class XMLDataServiceTest
     {
-        private static IDataService _service = XMLDataService.CreateInstance(new LoggerMock());
-
         [ClassInitialize]
         public static void Init(TestContext context)
         {
@@ -29,12 +27,14 @@ namespace Core.Services.Test
         [TestMethod]
         public void XMLDataServiceTest_InsertTest()
         {
+            var service = new XMLDataService(new LoggerMock());
+
             var newUser = new User();
             newUser.UserName = "Bobby";
 
-            Assert.IsTrue(_service.Insert(newUser));
+            Assert.IsTrue(service.Insert(newUser));
 
-            var realNewUser = _service.Find<User>(1000);
+            var realNewUser = service.Find<User>(1000);
             Assert.IsNotNull(realNewUser);
             Assert.AreEqual("Bobby", realNewUser.UserName);
         }
@@ -42,37 +42,45 @@ namespace Core.Services.Test
         [TestMethod]
         public void XMLDataServiceTest_DeleteTest()
         {
+            var service = new XMLDataService(new LoggerMock());
+
             var newUser = new User();
             newUser.UserId = 1;
             newUser.UserName = "Bobby";
 
-            Assert.IsTrue(_service.Delete(newUser));
-            var realNewUser = _service.Find<User>(1);
+            Assert.IsTrue(service.Delete(newUser));
+            var realNewUser = service.Find<User>(1);
             Assert.IsNull(realNewUser);
         }
 
         [TestMethod]
         public void XMLDataServiceTest_DeleteWhereTest()
         {
-            Assert.IsTrue(_service.Delete<User>(x => x.UserName == "BobbyDeleteWhere"));
+            var service = new XMLDataService(new LoggerMock());
 
-            var realUser = _service.Find<User>(3);
+            Assert.IsTrue(service.Delete<User>(x => x.UserName == "BobbyDeleteWhere"));
+
+            var realUser = service.Find<User>(3);
             Assert.IsNull(realUser);
         }
 
         [TestMethod]
         public void XMLDataServiceTest_DeleteKeyTest()
         {
-            Assert.IsTrue(_service.Delete<User>(2));
+            var service = new XMLDataService(new LoggerMock());
 
-            var realUser = _service.Find<User>(2);
+            Assert.IsTrue(service.Delete<User>(2));
+
+            var realUser = service.Find<User>(2);
             Assert.IsNull(realUser);
         }
 
         [TestMethod]
         public void XMLDataServiceTest_FindKeyTest()
         {
-            var user = _service.Find<User>(999);
+            var service = new XMLDataService(new LoggerMock());
+
+            var user = service.Find<User>(999);
 
             Assert.IsNotNull(user);
             Assert.AreEqual(999, user.UserId);
@@ -82,7 +90,9 @@ namespace Core.Services.Test
         [TestMethod]
         public void XMLDataServiceTest_FindWhereTest()
         {
-            var list = _service.Find<User>(u => u.UserName == "BobbyInsertAfter");
+            var service = new XMLDataService(new LoggerMock());
+
+            var list = service.Find<User>(u => u.UserName == "BobbyInsertAfter");
 
             Assert.IsNotNull(list);
             Assert.AreEqual(1, list.Count);
