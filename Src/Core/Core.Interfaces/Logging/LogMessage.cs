@@ -27,7 +27,7 @@ namespace Core.Interfaces.Logging
 
         public LogMessage()
         {
-            TimeStamp = DateTime.Now;
+            TimeStamp = DateTime.UtcNow.ToLocalTime();
         }
 
         public override string ToString()

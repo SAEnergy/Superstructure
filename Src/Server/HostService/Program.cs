@@ -97,7 +97,7 @@ namespace HostService
 
             _logger.AddLogDestination(new FileLogDestination(logFileConfig));
 
-            _logger.Log(string.Format("Server starting up local time - {0}", DateTime.Now));
+            _logger.Log(string.Format("Server starting up local time - {0}", DateTime.UtcNow.ToLocalTime()));
 
             if (Environment.UserInteractive)
             {

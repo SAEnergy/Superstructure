@@ -27,6 +27,8 @@ namespace Core.Models.Persistent
 
         public JobRunState RunState { get; set; }
 
+        public int StartTimeInSeconds { get; set; } //consider changing this to TimeSpan, problem is TimeSpan is not xml serializable...
+
         public JobTriggerType TriggerType { get; set; }
 
         public JobTriggerDays TriggerDays { get; set; }

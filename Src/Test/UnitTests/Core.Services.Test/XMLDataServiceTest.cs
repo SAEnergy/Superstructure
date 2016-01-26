@@ -14,7 +14,7 @@ namespace Core.Services.Test
         [ClassInitialize]
         public static void Init(TestContext context)
         {
-            string timeStamp = string.Format("{0:yyyy-MM-dd_hh-mm-ss-tt}", DateTime.Now);
+            string timeStamp = string.Format("{0:yyyy-MM-dd_hh-mm-ss-tt}", DateTime.UtcNow);
 
             string fileName = string.Format("RunTime_{0}.xml", timeStamp);
 

@@ -18,8 +18,6 @@ namespace Core.Scheduler.Jobs
         private TimeSpan _cancelWaitCycle = TimeSpan.FromMilliseconds(250);
 
         protected readonly ILogger _logger;
-        protected DateTime _lastRunTime;
-        protected TimeSpan _lastRunDuration;
 
         private List<Task> _taskList;
 
@@ -29,9 +27,15 @@ namespace Core.Scheduler.Jobs
 
         #region Properties
 
-        public JobConfiguration Configuration { get; protected set; }
+        public JobConfiguration Configuration { get; private set; }
 
-        public JobStatus Status { get; protected set; }
+        public JobStatus Status { get; private set; }
+
+        public DateTime LastStartTime { get; private set; }
+
+        public TimeSpan LastRunDuration { get; private set; }
+
+        public DateTime NextRunTime { get; private set; }
 
         public bool IsExecuting
         {
@@ -50,10 +54,12 @@ namespace Core.Scheduler.Jobs
 
         protected BaseJob(ILogger logger, JobConfiguration config)
         {
+            Status = JobStatus.Unknown;
             _logger = logger;
             Configuration = config;
             _taskList = new List<Task>();
             cancelSource = new CancellationTokenSource();
+            NextRunTime = DateTime.UtcNow.Add(CalculateNextRunWaitTime());
 
             _logger.Log(string.Format("Job name \"{0}\" created of type \"{1}\".", config.Name, GetType()));
         }
@@ -70,6 +76,8 @@ namespace Core.Scheduler.Jobs
             {
                 if (IsExecuting)
                 {
+                    Status = JobStatus.Cancelling;
+
                     _logger.Log(string.Format("Job name \"{0}\" canceling all executing tasks.  ", Configuration.Name), LogMessageSeverity.Warning);
 
                     cancelSource.Cancel();
@@ -80,6 +88,7 @@ namespace Core.Scheduler.Jobs
                         Thread.Sleep(_cancelWaitCycle);
                     }
 
+                    Status = JobStatus.Cancelled;
                     _logger.Log(string.Format("Job name \"{0}\" all tasks have been canceled.", Configuration.Name));
                 }
             }
@@ -101,6 +110,8 @@ namespace Core.Scheduler.Jobs
                 if(CheckSchedule())
                 {
                     TryExecute(cancelSource.Token);
+
+                    NextRunTime = DateTime.UtcNow.Add(CalculateNextRunWaitTime());
                 }
             }
 
@@ -136,12 +147,48 @@ namespace Core.Scheduler.Jobs
 
         private bool CheckSchedule()
         {
-            bool retVal = false;
+            return NextRunTime < DateTime.UtcNow && (!IsExecuting || Configuration.SimultaneousExecutions);
+        }
 
-            switch(Configuration.TriggerType)
+        private TimeSpan CalculateNextRunWaitTime()
+        {
+            var secondsInDay = (int)Math.Floor(TimeSpan.FromDays(1).TotalSeconds);
+
+            int seconds = Configuration.StartTimeInSeconds;
+
+            if(Configuration.StartTimeInSeconds > secondsInDay)
+            {
+                _logger.Log(string.Format("Job by the name of \"{0}\" start time set to more that one days worth of seconds, defaulting to start running at midnight.", Configuration.Name), LogMessageSeverity.Warning);
+                seconds = 0;
+            }
+
+            DateTime startTime = DateTime.Today.Add(TimeSpan.FromSeconds(seconds));
+
+            TimeSpan offset = startTime.Subtract(DateTime.UtcNow.ToLocalTime());
+
+            if(offset.TotalSeconds < 0)
+            {
+                offset = offset.Add(TimeSpan.FromDays(1));
+            }
+
+            TimeSpan result = offset;
+
+            switch (Configuration.TriggerType)
             {
                 case JobTriggerType.Continuously:
-                    retVal = true;
+
+                    if (Configuration.RepeatEvery.Enabled)
+                    {
+                        var repeatSeconds = Configuration.RepeatEvery.TimeInSeconds;
+
+                        if(Configuration.RepeatEvery.TimeInSeconds < 1)
+                        {
+                            _logger.Log(string.Format("Job by the name of \"{0}\" start time set to repeat faster than every 1 second, defaulting to run every 1 second.", Configuration.Name), LogMessageSeverity.Warning);
+                            repeatSeconds = 1;
+                        }
+
+                        result = TimeSpan.FromSeconds(offset.TotalSeconds % repeatSeconds); //this is the wait time till the next repeat
+                    }
                     break;
 
                 case JobTriggerType.Daily:
@@ -161,7 +208,9 @@ namespace Core.Scheduler.Jobs
                     break;
             }
 
-            return retVal;
+            _logger.Log(string.Format("Job by the name of \"{0}\" scheduled to run in {1} day(s), {2} hours {3} minutes and {4} seconds.", Configuration.Name, result.Days, result.Hours, result.Minutes, result.Seconds));
+
+            return result;
         }
 
         private async void TryExecute(CancellationToken ct)
@@ -190,7 +239,10 @@ namespace Core.Scheduler.Jobs
 
                 try
                 {
+                    LastStartTime = DateTime.UtcNow.ToLocalTime();
+
                     task.Start();
+                    Status = JobStatus.Running;
 
                     rc = await task;
                 }
@@ -205,10 +257,14 @@ namespace Core.Scheduler.Jobs
 
                 watch.Stop();
 
+                LastRunDuration = watch.Elapsed;
+
                 lock (_taskList)
                 {
                     _taskList.Remove(task);
                 }
+
+                Status = rc ? JobStatus.Success : JobStatus.Error;
 
                 string message = rc ? "completed successfully" : "failed to complete successfully";
 

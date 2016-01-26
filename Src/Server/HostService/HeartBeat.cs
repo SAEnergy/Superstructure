@@ -80,7 +80,7 @@ namespace HostService
             {
                 if (!_shutDown.WaitOne(_heartBeatSpeed))
                 {
-                    _logger.Log(string.Format("Heartbeat - {0}", DateTime.Now));
+                    _logger.Log(string.Format("Heartbeat - {0}", DateTime.UtcNow.ToLocalTime()));
                 }
             }
 
