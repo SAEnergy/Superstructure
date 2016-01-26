@@ -37,6 +37,8 @@ namespace Core.Models.Persistent
 
         public TimeSpanBool RepeatEvery { get; set; }
 
+        public bool RunImmediatelyIfRunTimeMissed { get; set; }
+
         public bool SimultaneousExecutions { get; set; }
 
         public TimeSpanBool Timeout { get; set; }

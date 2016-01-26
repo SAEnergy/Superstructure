@@ -15,7 +15,7 @@ namespace Core.Scheduler.Jobs
     {
         #region Fields
 
-        private TimeSpan _cancelWaitCycle = TimeSpan.FromMilliseconds(250);
+        private TimeSpan _cancelWaitCycle = TimeSpan.FromMilliseconds(500);
 
         protected readonly ILogger _logger;
 
@@ -36,6 +36,8 @@ namespace Core.Scheduler.Jobs
         public TimeSpan LastRunDuration { get; private set; }
 
         public DateTime NextRunTime { get; private set; }
+
+        public bool MissedLastRunTime { get; private set; }
 
         public bool IsExecuting
         {
@@ -107,11 +109,14 @@ namespace Core.Scheduler.Jobs
 
             if(Configuration.RunState == JobRunState.Automatic)
             {
-                if(CheckSchedule())
+                if(NextRunTime < DateTime.UtcNow || Configuration.RunImmediatelyIfRunTimeMissed && MissedLastRunTime)
                 {
                     TryExecute(cancelSource.Token);
 
-                    NextRunTime = DateTime.UtcNow.Add(CalculateNextRunWaitTime());
+                    if (!MissedLastRunTime || !Configuration.RunImmediatelyIfRunTimeMissed)
+                    {
+                        NextRunTime = DateTime.UtcNow.Add(CalculateNextRunWaitTime());
+                    }
                 }
             }
 
@@ -147,7 +152,7 @@ namespace Core.Scheduler.Jobs
 
         private bool CheckSchedule()
         {
-            return NextRunTime < DateTime.UtcNow && (!IsExecuting || Configuration.SimultaneousExecutions);
+            return NextRunTime < DateTime.UtcNow;
         }
 
         private TimeSpan CalculateNextRunWaitTime()
@@ -215,8 +220,14 @@ namespace Core.Scheduler.Jobs
 
         private async void TryExecute(CancellationToken ct)
         {
-            if(!IsExecuting || Configuration.SimultaneousExecutions)
+            if (!IsExecuting || Configuration.SimultaneousExecutions)
             {
+                if(MissedLastRunTime)
+                {
+                    _logger.Log(string.Format("Job \"{0}\" missed last run time, executing late...", Configuration.Name), LogMessageSeverity.Warning);
+                    MissedLastRunTime = false;
+                }
+
                 var task = new Task<bool>(() => Execute(ct), ct);
 
                 _logger.Log(string.Format("Starting job \"{0}\".", Configuration.Name));
@@ -272,7 +283,12 @@ namespace Core.Scheduler.Jobs
             }
             else
             {
-                _logger.Log(string.Format("Job \"{0}\" attempting to execute, but is already running.", Configuration.Name), LogMessageSeverity.Warning);
+                //only message about it once
+                if(!MissedLastRunTime)
+                {
+                    _logger.Log(string.Format("Job \"{0}\" attempting to execute, but is already running.", Configuration.Name), LogMessageSeverity.Warning);
+                }
+                MissedLastRunTime = true;
             }
         }
 
