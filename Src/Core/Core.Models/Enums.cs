@@ -8,8 +8,9 @@ namespace Core.Models
 {
     public enum ArchiveState
     {
-        Active,
+        New,
         Modified,
+        Restored,
         Deleted
     }
 }

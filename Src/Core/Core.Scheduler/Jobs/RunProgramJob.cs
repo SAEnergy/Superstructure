@@ -9,12 +9,22 @@ namespace Core.Scheduler.Jobs
 {
     public sealed class RunProgramJob : BaseJob
     {
+        #region Fields
+
         private TimeSpan _processWaitTimer = TimeSpan.FromSeconds(1);
+
+        #endregion
+
+        #region Constructor
 
         public RunProgramJob(ILogger logger, JobConfiguration config) : base(logger, config)
         {
 
         }
+
+        #endregion
+
+        #region Public Methods
 
         public override bool Execute(CancellationToken ct)
         {
@@ -58,6 +68,10 @@ namespace Core.Scheduler.Jobs
 
             return rc;
         }
+
+        #endregion
+
+        #region Private Methods
 
         private Process CreateProcess()
         {
@@ -119,5 +133,7 @@ namespace Core.Scheduler.Jobs
                 proc.CancelErrorRead();
             }
         }
+
+        #endregion
     }
 }

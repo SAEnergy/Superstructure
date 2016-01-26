@@ -52,7 +52,7 @@ namespace Core.Models.Persistent
 
     public enum JobActionType
     {
-        Unknown,
+        NotConfigured,
         RunProgram
     }
 
@@ -75,7 +75,7 @@ namespace Core.Models.Persistent
     [Flags]
     public enum JobTriggerDays
     {
-        None = 0,
+        NotConfigured = 0,
         Sunday = 1,
         Monday = 2,
         Tuesday = 4,
@@ -83,13 +83,13 @@ namespace Core.Models.Persistent
         Thursday = 16,
         Friday = 32,
         Saturday = 64,
-        All = 128
+        All = 127
     }
 
     [Flags]
     public enum JobTriggerMonths
     {
-        None = 0,
+        NotConfigured = 0,
         January = 1,
         February = 2,
         March = 4,
@@ -102,6 +102,6 @@ namespace Core.Models.Persistent
         October = 512,
         November = 1024,
         December = 2048,
-        All = 4096
+        All = 4095
     }
 }

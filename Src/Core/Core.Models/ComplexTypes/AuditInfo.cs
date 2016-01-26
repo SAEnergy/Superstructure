@@ -14,6 +14,8 @@ namespace Core.Models.ComplexTypes
 
         public DateTime ModifiedDate { get; set; }
 
+        public bool IsArchived { get; set; }
+
         public ArchiveState State { get; set; }
     }
 }

@@ -85,7 +85,7 @@ namespace Core.Scheduler
 
         public List<JobConfiguration> GetJobs()
         {
-            return _dataService.Find<JobConfiguration>(j => j.AuditInfo.State == ArchiveState.Active);
+            return _dataService.Find<JobConfiguration>(j => !j.AuditInfo.IsArchived);
         }
 
         public bool AddJob(JobConfiguration job)
