@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Linq;
 
 namespace Core.Logging
 {
@@ -12,13 +13,19 @@ namespace Core.Logging
     {
         #region Fields
 
-        private List<ILogDestination> _destinations;
         private Thread _logWorker;
-        private LogMessageQueue _loggerQueue;
+        private List<ILogDestination> _destinations = new List<ILogDestination>();
+        private Queue<LogMessage> _messageQueue = new Queue<LogMessage>();
+        private Queue<LogMessage> _tempQueue = new Queue<LogMessage>();
+        private ManualResetEvent _messagesReady = new ManualResetEvent(false);
+        private ManualResetEvent _queueEmpty = new ManualResetEvent(false);
 
+        private TimeSpan _queueTimeOut = TimeSpan.FromMilliseconds(100);
+        private const int _defaultMaxQueueSize = 5000;
         private readonly string _processName;
         private readonly string _machineName;
         private readonly int _processId;
+        private const int _blockSize = 64;
 
         private static object _syncObject = new object();
 
@@ -37,7 +44,9 @@ namespace Core.Logging
             }
         }
 
+        public int MaxQueueSize { get; set; }
         public bool IsRunning { get; private set; }
+        public bool IsPaused { get; private set; }
 
         #endregion
 
@@ -45,8 +54,7 @@ namespace Core.Logging
 
         private Logger()
         {
-            _destinations = new List<ILogDestination>();
-            _loggerQueue = new LogMessageQueue() { IsBlocking = true };
+            MaxQueueSize = _defaultMaxQueueSize;
 
             _machineName = Environment.MachineName;
 
@@ -87,7 +95,21 @@ namespace Core.Logging
         {
             if (logMessage != null)
             {
-                _loggerQueue.EnqueueMessage(logMessage);
+                while (true)
+                {
+                    lock (_messageQueue)
+                    {
+                        Queue<LogMessage> queue = IsPaused ? _tempQueue : _messageQueue;
+                        if (queue.Count < MaxQueueSize)
+                        {
+                            queue.Enqueue(logMessage);
+                            _messagesReady.Set();
+                            return;
+                        }
+                    }
+                    // wait for queue to have room and keep trying
+                    Thread.Sleep(100);
+                }
             }
         }
 
@@ -112,12 +134,10 @@ namespace Core.Logging
         public void Log(string message, LogMessageCategory category, LogMessageSeverity severity, [CallerMemberName] string callerName = "",
             [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1)
         {
-
-
-            _loggerQueue.EnqueueMessage(CreateMessage(message, category, severity, callerName, callerFilePath, callerLineNumber));
+           Log(CreateMessage(message, category, severity, callerName, callerFilePath, callerLineNumber));
         }
 
-        protected LogMessage CreateMessage(string message, LogMessageCategory category, LogMessageSeverity severity, [CallerMemberName] string callerName = "",
+        private LogMessage CreateMessage(string message, LogMessageCategory category, LogMessageSeverity severity, [CallerMemberName] string callerName = "",
             [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1)
         {
             var logMessage = new LogMessage();
@@ -171,6 +191,7 @@ namespace Core.Logging
                 {
                     Log("Logger stopping.");
 
+                    Flush();
                     IsRunning = false;
 
                     _logWorker.Join();
@@ -186,6 +207,31 @@ namespace Core.Logging
             }
         }
 
+        public void Flush()
+        {
+            Pause();
+
+            while(true)
+            {
+                _queueEmpty.WaitOne(_queueTimeOut);
+                lock (_messageQueue)
+                {
+                    if (_messageQueue.Count == 0) { break; }
+                }
+            }
+            List<ILogDestination> dests = new List<ILogDestination>();
+            lock (_destinations)
+            {
+                dests.AddRange(_destinations);
+            }
+            foreach (ILogDestination dest in dests)
+            {
+                dest.Flush();
+            }
+
+            Resume();
+        }
+
         #endregion
 
         #region Private Methods
@@ -194,22 +240,45 @@ namespace Core.Logging
         {
             IsRunning = true;
 
-            while (IsRunning || !_loggerQueue.IsQueueEmpty)
+            while (IsRunning)
             {
-                //will block for max of the timespan timeout, or return a list the size of the batch size constant
-                var messages = _loggerQueue.DequeueMessages();
+                _messagesReady.WaitOne(_queueTimeOut);
+                _messagesReady.Reset();
+
+                int beforeQueue = 0;
+                int messageSize = 0;
+
+
+                List<LogMessage> messages = null;
+
+                lock (_messageQueue)
+                {
+                    beforeQueue = _messageQueue.Count;
+                    messages = _messageQueue.ToArray().Take(_blockSize).ToList();
+                    messageSize = messages.Count;
+                }
 
                 if (messages.Count > 0)
                 {
-                    List<ILogDestination> dests = new List<ILogDestination>();
+                    IEnumerable<ILogDestination> dests = null;
                     lock (_destinations)
                     {
-                        dests.AddRange(_destinations);
+                        dests = LogDestinations;
                     }
                     foreach (var destination in dests)
                     {
                         destination.ProcessMessages(messages);
                     }
+                }
+                lock (_messageQueue)
+                {
+                    if (messageSize > _messageQueue.Count) { System.Diagnostics.Debug.Assert(false); }
+                    for (int x=0;x<messages.Count;x++)
+                    {
+                        _messageQueue.Dequeue();
+                    }
+                    Console.WriteLine("" + beforeQueue + messageSize);
+                    if (_messageQueue.Count == 0) { _queueEmpty.Set(); }
                 }
             }
         }
@@ -234,6 +303,23 @@ namespace Core.Logging
             foreach (var destination in dests)
             {
                 destination.HandleLoggingException(lm);
+            }
+        }
+
+        public void Pause()
+        {
+            IsPaused = true;
+        }
+
+        public void Resume()
+        {
+            IsPaused = false;
+            lock(_messageQueue)
+            {
+                foreach (LogMessage message in _tempQueue)
+                {
+                    _messageQueue.Enqueue(message);
+                }
             }
         }
 

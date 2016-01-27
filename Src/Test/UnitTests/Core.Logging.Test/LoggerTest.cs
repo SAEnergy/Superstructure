@@ -3,6 +3,7 @@ using Core.Logging.LogDestinations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -16,6 +17,7 @@ namespace Core.Logging.Test
     {
         private static ILogger _log;
         private static TestLogDestination _dest = new TestLogDestination();
+        private Random _randy = new Random();
 
         [ClassInitialize]
         public static void Init(TestContext context)
@@ -39,7 +41,6 @@ namespace Core.Logging.Test
         public void TestCleanup()
         {
             _log.Stop();
-
             _dest.Messages.Clear();
         }
 
@@ -47,39 +48,107 @@ namespace Core.Logging.Test
         {
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(15000)]
         public void LoggerDeadlockTest()
         {
-            for(int x=0;x<100;x++)
-            {
-                _log.Log("I am the very model of a modern major general.");
-            }
-            _log.Stop();
+            _dest.GenerateErrrorsWhileProcessing = true;
+            _dest.MaxQueueSize = 1;
+            _dest.BatchSize = 1;
 
-            Assert.IsTrue(_dest.Messages.Count >= 100, "Count is " + _dest.Messages.Count);
+            for (int x = 0; x < 10; x++)
+            {
+                _log.Log(RandomString());
+            }
+            _log.Flush();
+
+            Assert.IsTrue(_dest.Messages.Count >= 10, "Count is " + _dest.Messages.Count);
+        }
+
+        [TestMethod]
+        public void LoggerProperBlockingTest()
+        {
+            int messageCount = 100;
+            int sleepTime = 100;
+
+            _dest.SleepTime = sleepTime;
+            _dest.MaxQueueSize = 1;
+            _dest.BatchSize = 1;
+
+            Stopwatch time = Stopwatch.StartNew();
+
+            for (int x = 0; x < messageCount; x++)
+            {
+                _log.Log(RandomString());
+            }
+
+            _log.Flush();
+
+            Assert.IsTrue(time.ElapsedMilliseconds >= messageCount * sleepTime);
         }
 
         [TestMethod]
         public void LoggerOrderingTest()
         {
+            int messageCount = 10000;
+            List<string> messages = new List<string>();
+
+            for (int x = 0; x < messageCount; x++)
+            {
+                string s = RandomString();
+                messages.Add(s);
+                _log.Log(s);
+            }
+
+            _log.Flush();
+
+            for(int x=0;x<messageCount;x++)
+            {
+                Assert.AreEqual(messages[x], _dest.Messages[x].Message);
+            }
         }
 
         [TestMethod]
         public void LoggerCallerSourceTest()
         {
             _log.Log("hello");
-            _log.Stop();
+            _log.Flush();
             Assert.AreEqual("LoggerCallerSourceTest", _dest.Messages[0].CallerName);
+        }
+
+        private string RandomString(int len = 1024)
+        {
+            char[] chars = new char[len];
+            for(int x=0;x< len; x++)
+            {
+                chars[x] = (char)(_randy.Next(26) + 'A');
+            }
+            return new string(chars);
         }
 
     }
 
     class TestLogDestination : LogDestinationBase
     {
+
+        public bool GenerateErrrorsWhileProcessing { get; set; }
+
+        public int MaxQueueSize
+        {
+            get { return _destinationQueue.MaxQueueSize; }
+            set { _destinationQueue.MaxQueueSize = value; }
+        }
+
+        public int BatchSize
+        {
+            get { return _destinationQueue.BatchSize; }
+            set { _destinationQueue.BatchSize = value; }
+        }
+
+        public int SleepTime { get; set; }
+
+
         public TestLogDestination()
         {
-            _destinationQueue.MaxQueueSize = 1;
-            _destinationQueue.BatchSize = 1;
             _destinationQueue.IsBlocking = true;
         }
 
@@ -88,7 +157,21 @@ namespace Core.Logging.Test
         public override void ReportMessages(List<LogMessage> messages)
         {
             Messages.AddRange(messages);
-            Thread.Sleep(10);
+            if (GenerateErrrorsWhileProcessing && Messages.Count % 2 == 0)
+            {
+                _logger.HandleLoggingException("It done broke!");
+            }
+            Thread.Sleep(SleepTime);
+        }
+
+        protected override void MessagesBlocked(object sender, EventArgs e)
+        {
+            // don't generate messages
+        }
+
+        protected override void MessagesDropped(object sender, EventArgs e)
+        {
+            // don't generate messages
         }
     }
 }

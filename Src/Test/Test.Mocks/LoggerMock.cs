@@ -58,5 +58,17 @@ namespace Test.Mocks
         {
             //ignore
         }
+
+        public void Flush()
+        {
+        }
+
+        public void Pause()
+        {
+        }
+
+        public void Resume()
+        {
+        }
     }
 }

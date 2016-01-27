@@ -23,7 +23,9 @@ namespace Core.Logging.LogDestinations
 
         private void WriteLine(string msg)
         {
-            Console.WriteLine(msg);
+            Console.Write(msg);
+            Console.ResetColor();
+            Console.WriteLine();
         }
 
         private void WriteLineInformation(LogMessage message)
@@ -31,7 +33,6 @@ namespace Core.Logging.LogDestinations
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.White;
             WriteLine(message.Message);
-            Console.ResetColor();
         }
 
         private void WriteLineWarning(LogMessage message)
@@ -39,7 +40,6 @@ namespace Core.Logging.LogDestinations
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.Yellow;
             WriteLine(message.Message);
-            Console.ResetColor();
         }
 
         private void WriteLineError(LogMessage message)
@@ -47,7 +47,6 @@ namespace Core.Logging.LogDestinations
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.Red;
             WriteLine(message.Message);
-            Console.ResetColor();
         }
 
         private void WriteLineCritical(LogMessage message)
@@ -55,8 +54,6 @@ namespace Core.Logging.LogDestinations
             Console.BackgroundColor = ConsoleColor.Red;
             Console.ForegroundColor = ConsoleColor.Yellow;
             WriteLine(message.Message);
-            Console.ResetColor();
-
         }
 
         private void WriteLineNone(LogMessage message)

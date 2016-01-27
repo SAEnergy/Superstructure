@@ -7,6 +7,8 @@ namespace Core.Interfaces.Logging
 {
     public interface ILogDestination : IRunnable
     {
+        void Flush();
+
         void ProcessMessages(List<LogMessage> messages);
 
         void HandleLoggingException(LogMessage message);

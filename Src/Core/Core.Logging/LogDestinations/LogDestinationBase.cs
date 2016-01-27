@@ -13,6 +13,7 @@ namespace Core.Logging.LogDestinations
         protected LogMessageQueue _destinationQueue;
         protected Thread _logDestinationWorkerThread;
         protected ILogger _logger;
+        protected ManualResetEvent _queueEmpty = new ManualResetEvent(false);
 
         private object syncObject = new object();
 
@@ -29,6 +30,18 @@ namespace Core.Logging.LogDestinations
         protected LogDestinationBase()
         {
             _destinationQueue = new LogMessageQueue() { IsBlocking = true }; //default all log destinations to block
+            _destinationQueue.MessagesDropped += MessagesDropped;
+            _destinationQueue.MessagesBlocked += MessagesBlocked;
+        }
+
+        protected virtual void MessagesBlocked(object sender, EventArgs e)
+        {
+            _logger.HandleLoggingException(string.Format("This LogDestination's internal queue size of {0} has been overwhelmed.  Waiting for queue to empty.", _destinationQueue.MaxQueueSize));
+        }
+
+        protected virtual void MessagesDropped(object sender, EventArgs e)
+        {
+            _logger.HandleLoggingException(string.Format("This LogDestination's internal queue size of {0} has been overwhelmed.  This has not been configured to block, so messages have been lost.", _destinationQueue.MaxQueueSize));
         }
 
         #endregion
@@ -37,6 +50,7 @@ namespace Core.Logging.LogDestinations
 
         public void ProcessMessages(List<LogMessage> messages)
         {
+            _queueEmpty.Reset();
             _destinationQueue.EnqueueMessages(messages);
         }
 
@@ -71,6 +85,8 @@ namespace Core.Logging.LogDestinations
             {
                 if (IsRunning)
                 {
+                    Flush();
+
                     IsRunning = false;
 
                     _logDestinationWorkerThread.Join();
@@ -103,12 +119,23 @@ namespace Core.Logging.LogDestinations
                 {
                     ReportMessages(messages);
                 }
+
+                if (_destinationQueue.IsQueueEmpty) { _queueEmpty.Set(); }
             }
         }
 
         public void HandleLoggingException(LogMessage message)
         {
             _destinationQueue.HandleLoggingException(message);
+        }
+        
+        public void Flush()
+        {
+            while(true)
+            {
+                _queueEmpty.WaitOne(100);
+                if(_destinationQueue.IsQueueEmpty) { break; }
+            }
         }
 
         #endregion

@@ -21,5 +21,11 @@ namespace Core.Interfaces.Logging
         void AddLogDestination(ILogDestination logDestination);
 
         void RemoveLogDestination(ILogDestination logDestination);
+
+        void Flush();
+
+        void Pause();
+
+        void Resume();
     }
 }

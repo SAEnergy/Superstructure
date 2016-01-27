@@ -10,7 +10,7 @@ namespace Core.Logging
     {
         #region Fields
 
-        private TimeSpan _queueTimeOut = new TimeSpan(0, 0, 0, 0, 100); // milliseconds
+        private TimeSpan _queueTimeOut = TimeSpan.FromMilliseconds(100);
         private const int _defaultQueueBatchSize = 50;
         private const int _defaultMaxQueueSize = 5000;
 
@@ -20,11 +20,17 @@ namespace Core.Logging
 
         #region Properties
 
+        public event EventHandler MessagesDropped;
+        public event EventHandler MessagesBlocked;
+
         public bool IsQueueEmpty
         {
             get
             {
-                return _logQueue.Count == 0;
+                lock (_logQueue)
+                {
+                    return _logQueue.Count == 0;
+                }
             }
         }
 
@@ -52,9 +58,9 @@ namespace Core.Logging
         {
             CheckQueue();
 
-            lock(_logQueue)
+            lock (_logQueue)
             {
-                foreach(var message in messages)
+                foreach (var message in messages)
                 {
                     _logQueue.Enqueue(message);
                 }
@@ -113,11 +119,11 @@ namespace Core.Logging
 
         private void CheckQueue()
         {
-            if(_logQueue.Count > MaxQueueSize)
+            if (_logQueue.Count > MaxQueueSize)
             {
-                if(IsBlocking)
+                if (IsBlocking)
                 {
-                    _logQueue.Enqueue(CreateLogMessage(LogMessageSeverity.Warning, string.Format("This LogDestination's internal queue size of {0} has been overwhelmed.  Waiting for queue to empty.", MaxQueueSize)));
+                    if (MessagesBlocked != null) { MessagesBlocked(this, null); }
                     while (_logQueue.Count > (MaxQueueSize / 2)) // wait for queue to be half empty to prevent full message queue spam
                     {
                         Thread.Sleep(_queueTimeOut);
@@ -125,10 +131,10 @@ namespace Core.Logging
                 }
                 else
                 {
-                    lock(_logQueue)
+                    lock (_logQueue)
                     {
                         _logQueue.Clear();
-                        _logQueue.Enqueue(CreateLogMessage(LogMessageSeverity.Warning, string.Format("This LogDestination's internal queue size of {0} has been overwhelmed.  This has not been configured to block, so messages have been lost.", MaxQueueSize)));
+                        if (MessagesDropped != null) { MessagesDropped(this, null); }
                     }
                 }
             }
