@@ -27,7 +27,7 @@ namespace Core.Logging.Test
             SingletonHelper.Clean(typeof(Logger));
         }
 
-        [TestMethod, Timeout(15000)]
+        [TestMethod, Timeout(30000)]
         public void LoggerDeadlockTest()
         {
             var logTup = CreateLogger();

@@ -52,6 +52,7 @@
     <Compile Include="SQLDataService.cs" />
     <Compile Include="HostManagerService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SystemConfigurationService.cs" />
     <Compile Include="XMLDataService.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -46,6 +46,7 @@
     <Compile Include="ComplexTypes\TimeSpanBool.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Persistent\JobConfiguration.cs" />
+    <Compile Include="Persistent\SystemConfiguration.cs" />
     <Compile Include="Persistent\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

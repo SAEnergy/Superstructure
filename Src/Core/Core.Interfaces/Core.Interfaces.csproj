@@ -62,6 +62,7 @@
     <Compile Include="Services\IHostManagerService.cs" />
     <Compile Include="Services\INotificationService.cs" />
     <Compile Include="Scheduler\ISchedulerService.cs" />
+    <Compile Include="Services\ISystemConfigurationService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core.Models\Core.Models.csproj">

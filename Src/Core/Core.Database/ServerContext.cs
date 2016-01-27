@@ -14,6 +14,10 @@ namespace Core.Database
 
         public DbSet<User> Users { get; set; }
 
+        public DbSet<JobConfiguration> JobConfigurations { get; set; }
+
+        public DbSet<SystemConfiguration> SystemConfigurations { get; set; }
+
         #endregion
 
         #region Constructors
