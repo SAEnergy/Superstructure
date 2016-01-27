@@ -9,16 +9,20 @@ namespace Core.Models.Persistent
         [Key]
         public int JobConfigurationId { get; set; }
 
+        [StringLength(255)]
         public string Name { get; set; }
 
         public DateTime Created { get; set; }
 
         public JobActionType ActionType { get; set; }
 
+        [StringLength(255)]
         public string FileName { get; set; }
 
+        [StringLength(255)]
         public string Arguments { get; set; }
 
+        [StringLength(255)]
         public string WorkingDirectory { get; set; }
 
         public bool CaptureOutput { get; set; }

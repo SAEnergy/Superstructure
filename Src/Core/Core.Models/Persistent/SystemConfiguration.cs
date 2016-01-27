@@ -8,8 +8,10 @@ namespace Core.Models.Persistent
         [Key]
         public int SystemConfigurationId { get; set; }
 
+        [StringLength(255)]
         public string Key { get; set; }
 
+        [StringLength(255)]
         public string Value { get; set; }
 
         public AuditInfo AuditInfo { get; set; }

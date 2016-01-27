@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.Settings
 {
@@ -117,7 +115,7 @@ namespace Core.Settings
                 {
                     _logger.Log(string.Format("Argument \"{0}\" requires a delimiter of \"{1}\" with a value of type \"{2}\".", arg, setting.Item2.Delimiter, setting.Item1.PropertyType.Name), LogMessageSeverity.Error);
 
-                    Environment.Exit(-1);
+                    Environment.Exit(-1); //do not allow execution to continue, logging system will automatically clean up
                 }
             }
 

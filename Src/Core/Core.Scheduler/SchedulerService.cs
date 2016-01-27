@@ -145,9 +145,18 @@ namespace Core.Scheduler
 
             _logger.Log("Scheduler loading all jobs from storage.");
 
-            foreach(var jobConfig in GetJobs())
+            var query = GetJobs();
+
+            if (query != null)
             {
-                jobs.Add(JobFactory.Create(jobConfig));
+                foreach (var jobConfig in query)
+                {
+                    jobs.Add(JobFactory.Create(jobConfig));
+                }
+            }
+            else
+            {
+                _logger.Log("Storage returned null as result!", LogMessageSeverity.Warning);
             }
 
             return jobs;
