@@ -219,11 +219,8 @@ namespace Core.Logging
                     if (_messageQueue.Count == 0) { break; }
                 }
             }
-            List<ILogDestination> dests = new List<ILogDestination>();
-            lock (_destinations)
-            {
-                dests.AddRange(_destinations);
-            }
+            var dests = LogDestinations;
+
             foreach (ILogDestination dest in dests)
             {
                 dest.Flush();

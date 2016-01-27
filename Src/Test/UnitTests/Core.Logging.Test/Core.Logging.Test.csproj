@@ -63,6 +63,10 @@
       <Project>{27a1df0a-7fd7-4306-9054-60fa4652780e}</Project>
       <Name>Core.Logging</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Test.Helpers\Test.Helpers.csproj">
+      <Project>{f97158e5-4996-4972-8b6d-46cd0e3c93cf}</Project>
+      <Name>Test.Helpers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Test.Mocks\Test.Mocks.csproj">
       <Project>{1b7c43fb-f2bc-4c38-9d06-35c716666aff}</Project>
       <Name>Test.Mocks</Name>
