@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Core.Scheduler.Jobs
 {
-    public abstract class BaseJob : IJob
+    public abstract class JobBase : IJob
     {
         #region Fields
 
@@ -54,7 +54,7 @@ namespace Core.Scheduler.Jobs
 
         #region Constructor
 
-        protected BaseJob(ILogger logger, JobConfiguration config)
+        protected JobBase(ILogger logger, JobConfiguration config)
         {
             Status = JobStatus.Unknown;
             _logger = logger;

@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace Core.Scheduler.Jobs
 {
-    public sealed class RunProgramJob : BaseJob
+    public sealed class RunProgramJob : JobBase
     {
         #region Fields
 
