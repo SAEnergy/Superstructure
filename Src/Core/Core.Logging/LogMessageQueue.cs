@@ -140,20 +140,6 @@ namespace Core.Logging
             }
         }
 
-        private LogMessage CreateLogMessage(LogMessageSeverity severity, string message, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFilePath = "",
-            [CallerLineNumber] int callerLineNumber = -1)
-        {
-            var logMessage = new LogMessage();
-
-            logMessage.CallerName = callerName;
-            logMessage.FilePath = callerFilePath;
-            logMessage.Message = message;
-            logMessage.Severity = severity;
-            logMessage.LineNumber = callerLineNumber;
-
-            return logMessage;
-        }
-
         #endregion
     }
 }

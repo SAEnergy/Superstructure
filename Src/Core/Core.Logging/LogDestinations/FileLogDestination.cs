@@ -147,9 +147,9 @@ namespace Core.Logging.LogDestinations
 
                 retVal = parsedNumber < _config.MaxLogFileCount ? parsedNumber : 0; //reset if the older filenumber is greater than logfilecount
             }
-            catch
+            catch(Exception ex)
             {
-                //will need to log this to other destinations
+                _logger.HandleLoggingException(string.Format("Error in FileLogDestination \"{0}\"", ex.Message));
             }
 
             return retVal;

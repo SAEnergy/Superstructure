@@ -245,16 +245,31 @@ namespace Core.Logging
                 _messagesReady.WaitOne(_queueTimeOut);
                 _messagesReady.Reset();
 
-                int beforeQueue = 0;
-                int messageSize = 0;
-
                 List<LogMessage> messages = null;
 
                 lock (_messageQueue)
                 {
-                    beforeQueue = _messageQueue.Count;
-                    messages = _messageQueue.ToArray().Take(_blockSize).ToList();
-                    messageSize = messages.Count;
+                    messages = new List<LogMessage>();
+
+                    if (_messageQueue.Count > 0)
+                    {
+                        for (int i = 0; i < _blockSize; i++)
+                        {
+                            if (_messageQueue.Count > 0)
+                            {
+                                messages.Add(_messageQueue.Dequeue());
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                    }
+
+                    if(_messageQueue.Count == 0)
+                    {
+                        _queueEmpty.Set();
+                    }
                 }
 
                 if (messages.Count > 0)
@@ -264,19 +279,6 @@ namespace Core.Logging
                     foreach (var destination in dests)
                     {
                         destination.ProcessMessages(messages);
-                    }
-                }
-
-                lock (_messageQueue)
-                {
-                    for (int x = 0; x < messageSize; x++)
-                    {
-                        _messageQueue.Dequeue();
-                    }
-
-                    if (_messageQueue.Count == 0)
-                    {
-                        _queueEmpty.Set();
                     }
                 }
             }
