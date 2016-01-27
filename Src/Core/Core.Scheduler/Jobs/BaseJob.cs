@@ -61,9 +61,10 @@ namespace Core.Scheduler.Jobs
             Configuration = config;
             _taskList = new List<Task>();
             cancelSource = new CancellationTokenSource();
-            NextRunTime = DateTime.UtcNow.Add(CalculateNextRunWaitTime());
 
             _logger.Log(string.Format("Job name \"{0}\" created of type \"{1}\".", config.Name, GetType()));
+
+            NextRunTime = DateTime.UtcNow.Add(CalculateNextRunWaitTime());
         }
 
         #endregion
@@ -213,7 +214,7 @@ namespace Core.Scheduler.Jobs
                     break;
             }
 
-            _logger.Log(string.Format("Job by the name of \"{0}\" scheduled to run in {1} day(s), {2} hours {3} minutes and {4} seconds.", Configuration.Name, result.Days, result.Hours, result.Minutes, result.Seconds));
+            _logger.Log(string.Format("Job by the name of \"{0}\" scheduled to run in {1} day(s), {2} hour(s) {3} minute(s) and {4} second(s).", Configuration.Name, result.Days, result.Hours, result.Minutes, result.Seconds));
 
             return result;
         }

@@ -77,12 +77,12 @@ namespace Core.Logging
 
         public void AddLogDestination(ILogDestination logDestination)
         {
-            if(IsRunning)
+            if (IsRunning)
             {
                 logDestination.Start();
             }
 
-            lock(_destinations)
+            lock (_destinations)
             {
                 Log(string.Format("LogDestination of type \"{0}\" added.", logDestination.GetType().Name));
 
@@ -134,7 +134,7 @@ namespace Core.Logging
         public void Log(string message, LogMessageCategory category, LogMessageSeverity severity, [CallerMemberName] string callerName = "",
             [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1)
         {
-           Log(CreateMessage(message, category, severity, callerName, callerFilePath, callerLineNumber));
+            Log(CreateMessage(message, category, severity, callerName, callerFilePath, callerLineNumber));
         }
 
         private LogMessage CreateMessage(string message, LogMessageCategory category, LogMessageSeverity severity, [CallerMemberName] string callerName = "",
@@ -185,7 +185,7 @@ namespace Core.Logging
 
         public void Stop()
         {
-            lock(_syncObject)
+            lock (_syncObject)
             {
                 if (IsRunning)
                 {
@@ -211,7 +211,7 @@ namespace Core.Logging
         {
             Pause();
 
-            while(true)
+            while (true)
             {
                 _queueEmpty.WaitOne(_queueTimeOut);
                 lock (_messageQueue)
@@ -248,7 +248,6 @@ namespace Core.Logging
                 int beforeQueue = 0;
                 int messageSize = 0;
 
-
                 List<LogMessage> messages = null;
 
                 lock (_messageQueue)
@@ -260,24 +259,25 @@ namespace Core.Logging
 
                 if (messages.Count > 0)
                 {
-                    IEnumerable<ILogDestination> dests = null;
-                    lock (_destinations)
-                    {
-                        dests = LogDestinations;
-                    }
+                    IEnumerable<ILogDestination> dests = LogDestinations;
+
                     foreach (var destination in dests)
                     {
                         destination.ProcessMessages(messages);
                     }
                 }
+
                 lock (_messageQueue)
                 {
-                    if (messageSize > _messageQueue.Count) { System.Diagnostics.Debug.Assert(false); }
-                    for (int x=0;x<messages.Count;x++)
+                    for (int x = 0; x < messageSize; x++)
                     {
                         _messageQueue.Dequeue();
                     }
-                    if (_messageQueue.Count == 0) { _queueEmpty.Set(); }
+
+                    if (_messageQueue.Count == 0)
+                    {
+                        _queueEmpty.Set();
+                    }
                 }
             }
         }
@@ -313,7 +313,7 @@ namespace Core.Logging
         public void Resume()
         {
             IsPaused = false;
-            lock(_messageQueue)
+            lock (_messageQueue)
             {
                 foreach (LogMessage message in _tempQueue)
                 {
