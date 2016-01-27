@@ -277,7 +277,6 @@ namespace Core.Logging
                     {
                         _messageQueue.Dequeue();
                     }
-                    Console.WriteLine("" + beforeQueue + messageSize);
                     if (_messageQueue.Count == 0) { _queueEmpty.Set(); }
                 }
             }
