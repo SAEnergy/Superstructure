@@ -70,6 +70,7 @@ namespace Core.Logging.Test
             int messageCount = 100;
             int sleepTime = 100;
 
+            _dest.GenerateErrrorsWhileProcessing = false;
             _dest.SleepTime = sleepTime;
             _dest.MaxQueueSize = 1;
             _dest.BatchSize = 1;
@@ -89,6 +90,10 @@ namespace Core.Logging.Test
         [TestMethod]
         public void LoggerOrderingTest()
         {
+            _dest.BatchSize = 150;
+            _dest.MaxQueueSize = 5000;
+            _dest.GenerateErrrorsWhileProcessing = false;
+
             int messageCount = 10000;
             List<string> messages = new List<string>();
 
