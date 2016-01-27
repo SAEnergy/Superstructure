@@ -106,7 +106,9 @@ namespace Core.Logging.Test
 
             _log.Flush();
 
-            for(int x=0;x<messageCount;x++)
+            Assert.AreEqual(messages.Count, _dest.Messages.Count);
+
+            for(int x=0; x < messageCount; x++)
             {
                 Assert.AreEqual(messages[x], _dest.Messages[x].Message);
             }
