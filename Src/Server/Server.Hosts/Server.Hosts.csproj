@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DuplexTestHost.cs" />
+    <Compile Include="ServiceHostBase.cs" />
     <Compile Include="TestService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

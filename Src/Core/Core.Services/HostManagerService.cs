@@ -128,7 +128,7 @@ namespace Core.Services
             {
                 var assm = Assembly.LoadFile(file);
 
-                var types = assm.GetTypes().Where(t => typeof(IHost).IsAssignableFrom(t));
+                var types = assm.GetTypes().Where(t => typeof(IHost).IsAssignableFrom(t) && t.ContainsGenericParameters == false);
 
                 foreach (Type type in types)
                 {
