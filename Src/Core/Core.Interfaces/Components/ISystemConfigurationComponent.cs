@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Interfaces.Services
+namespace Core.Interfaces.Components
 {
-    public interface ISystemConfigurationService
+    public interface ISystemConfigurationComponent
     {
     }
 }

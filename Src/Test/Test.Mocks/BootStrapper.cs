@@ -1,6 +1,6 @@
 ﻿using Core.Interfaces.IoC;
 using Core.Interfaces.Logging;
-using Core.Interfaces.Services;
+using Core.Interfaces.Components;
 
 namespace Test.Mocks
 {
@@ -11,7 +11,7 @@ namespace Test.Mocks
             #region Singletons
 
             container.Register<ILogger, LoggerMock>();
-            container.Register<IDataService, DataServiceMock>();
+            container.Register<IDataComponent, DataComponentMock>();
 
             #endregion
         }

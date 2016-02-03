@@ -1,6 +1,6 @@
-﻿namespace Core.Interfaces.Services
+﻿namespace Core.Interfaces.Components
 {
-    public interface IHostManagerService
+    public interface IHostManagerComponent
     {
         void StartAll();
 

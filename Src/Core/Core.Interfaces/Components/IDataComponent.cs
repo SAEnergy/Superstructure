@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Core.Interfaces.Services
+namespace Core.Interfaces.Components
 {
-    public interface IDataService
+    public interface IDataComponent
     {
         bool Delete<T>(int key) where T : class;
 

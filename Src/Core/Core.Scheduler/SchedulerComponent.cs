@@ -1,7 +1,7 @@
 ﻿using Core.Interfaces.Base;
 using Core.Interfaces.Logging;
-using Core.Interfaces.Scheduler;
-using Core.Interfaces.Services;
+using Core.Interfaces.Components.Scheduler;
+using Core.Interfaces.Components;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,14 +13,14 @@ using Core.Models;
 
 namespace Core.Scheduler
 {
-    public sealed class SchedulerService : Singleton<ISchedulerService>, ISchedulerService
+    public sealed class SchedulerComponent : Singleton<ISchedulerComponent>, ISchedulerComponent
     {
         #region Fields
 
         private TimeSpan _schedulerCheckSpeed = TimeSpan.FromSeconds(1);
 
         private readonly ILogger _logger;
-        private readonly IDataService _dataService;
+        private readonly IDataComponent _dataComponent;
 
         private Thread _schedulerWorker;
         private List<IJob> _jobs;
@@ -37,20 +37,20 @@ namespace Core.Scheduler
 
         #region Constructor
 
-        private SchedulerService(ILogger logger, IDataService dataService)
+        private SchedulerComponent(ILogger logger, IDataComponent dataComponent)
         {
             _logger = logger;
             JobFactory.Logger = logger;
-            _dataService = dataService;
+            _dataComponent = dataComponent;
         }
 
         #endregion
 
         #region Public Methods
 
-        public static ISchedulerService CreateInstance(ILogger logger, IDataService dataService)
+        public static ISchedulerComponent CreateInstance(ILogger logger, IDataComponent dataComponent)
         {
-            return Instance = new SchedulerService(logger, dataService);
+            return Instance = new SchedulerComponent(logger, dataComponent);
         }
 
         public void Start()
@@ -59,7 +59,7 @@ namespace Core.Scheduler
             {
                 if (!IsRunning)
                 {
-                    _logger.Log("Scheduler starting...");
+                    _logger.Log("Scheduler component starting...");
 
                     _schedulerWorker = new Thread(new ThreadStart(SchedulerWorker));
 
@@ -74,7 +74,7 @@ namespace Core.Scheduler
             {
                 if (IsRunning)
                 {
-                    _logger.Log("Scheduler stopping.");
+                    _logger.Log("Scheduler component stopping.");
 
                     IsRunning = false;
 
@@ -85,7 +85,7 @@ namespace Core.Scheduler
 
         public List<JobConfiguration> GetJobs()
         {
-            return _dataService.Find<JobConfiguration>(j => !j.AuditInfo.IsArchived);
+            return _dataComponent.Find<JobConfiguration>(j => !j.AuditInfo.IsArchived);
         }
 
         public bool AddJob(JobConfiguration job)
@@ -111,7 +111,7 @@ namespace Core.Scheduler
         {
             IsRunning = true;
 
-            _logger.Log("Scheduler running.");
+            _logger.Log("Scheduler component running.");
 
             _jobs = LoadAllJobs();
 
@@ -136,7 +136,7 @@ namespace Core.Scheduler
                 }
             }
 
-            _logger.Log("Scheduler stopped.");
+            _logger.Log("Scheduler component stopped.");
         }
 
         private List<IJob> LoadAllJobs()

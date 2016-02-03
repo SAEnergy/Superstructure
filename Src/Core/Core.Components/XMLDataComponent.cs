@@ -1,6 +1,5 @@
-﻿using Core.Interfaces.Base;
-using Core.Interfaces.Logging;
-using Core.Interfaces.Services;
+﻿using Core.Interfaces.Logging;
+using Core.Interfaces.Components;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,9 +11,9 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
-namespace Core.Services
+namespace Core.Components
 {
-    public sealed class XMLDataService : IDataService
+    public sealed class XMLDataComponent : IDataComponent
     {
         #region Fields
 
@@ -41,7 +40,7 @@ namespace Core.Services
 
         #region Constructor
 
-        public XMLDataService(ILogger logger)
+        public XMLDataComponent(ILogger logger)
         {
             Folder = string.IsNullOrEmpty(Folder) ? defaultFolder : Folder;
             FileName = string.IsNullOrEmpty(FileName) ? defaultFileName : FileName;
@@ -174,7 +173,7 @@ namespace Core.Services
 
                         CreateNewFileIfNeeded(fullFileName);
 
-                        _logger.Log(string.Format("XMLDataService loading xml data from \"{0}\".", fullFileName));
+                        _logger.Log(string.Format("XMLDataComponent loading xml data from \"{0}\".", fullFileName));
 
                         _document = XDocument.Load(fullFileName);
 
@@ -205,7 +204,7 @@ namespace Core.Services
                     }
                     catch(Exception ex)
                     {
-                        _logger.Log(string.Format("XMLDataService cannot save xml data to \"{0}\" - Error {1}.", fullFileName, ex.Message), LogMessageSeverity.Error);
+                        _logger.Log(string.Format("XMLDataComponent cannot save xml data to \"{0}\" - Error {1}.", fullFileName, ex.Message), LogMessageSeverity.Error);
                     }
                 }
             }
@@ -304,7 +303,7 @@ namespace Core.Services
 
             if(!Directory.Exists(fullPath))
             {
-                _logger.Log(string.Format("Creating directory \"{0}\" for XMLDataService", fullPath));
+                _logger.Log(string.Format("Creating directory \"{0}\" for XMLDataComponent", fullPath));
 
                 Directory.CreateDirectory(Folder);
             }

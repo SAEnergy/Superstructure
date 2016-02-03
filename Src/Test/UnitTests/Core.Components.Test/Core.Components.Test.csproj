@@ -6,8 +6,8 @@
     <ProjectGuid>{7A4DB1DE-80C5-4D1A-9851-0A9B5AB05999}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Core.Services.Test</RootNamespace>
-    <AssemblyName>Core.Services.Test</AssemblyName>
+    <RootNamespace>Core.Components.Test</RootNamespace>
+    <AssemblyName>Core.Components.Test</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -63,12 +63,16 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="DataServiceMockTest.cs" />
-    <Compile Include="SQLDataServiceTest.cs" />
+    <Compile Include="DataComponentMockTest.cs" />
+    <Compile Include="SQLDataComponentTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="XMLDataServiceTest.cs" />
+    <Compile Include="XMLDataComponentTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Core\Core.Components\Core.Components.csproj">
+      <Project>{e6322468-7278-4940-9d5c-826e30477a19}</Project>
+      <Name>Core.Components</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Core\Core.Database\Core.Database.csproj">
       <Project>{b21c9416-91fc-462c-9676-a429d4b4d132}</Project>
       <Name>Core.Database</Name>
@@ -81,10 +85,6 @@
       <Project>{803e539b-3687-4465-b272-e50816df453f}</Project>
       <Name>Core.Models</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Core\Core.Services\Core.Services.csproj">
-      <Project>{e6322468-7278-4940-9d5c-826e30477a19}</Project>
-      <Name>Core.Services</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Test.Mocks\Test.Mocks.csproj">
       <Project>{1b7c43fb-f2bc-4c38-9d06-35c716666aff}</Project>
       <Name>Test.Mocks</Name>
@@ -95,7 +95,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="XMLTestData\DataService.xml">
+    <Content Include="XMLTestData\DataComponent.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

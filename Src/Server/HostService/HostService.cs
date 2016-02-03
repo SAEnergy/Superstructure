@@ -1,13 +1,10 @@
 ﻿using Core.Interfaces.Base;
+using Core.Interfaces.Components;
 using Core.Interfaces.Logging;
-using Core.Interfaces.Services;
 using Core.IoC.Container;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace HostService
 {
@@ -49,7 +46,7 @@ namespace HostService
 
                 StartAllRunnableTypes();
 
-                IoCContainer.Instance.Resolve<IHostManagerService>().StartAll();
+                IoCContainer.Instance.Resolve<IHostManagerComponent>().StartAll();
             }
         }
 
@@ -62,7 +59,7 @@ namespace HostService
 
                 StopAllRunnableTypes();
 
-                IoCContainer.Instance.Resolve<IHostManagerService>().StopAll();
+                IoCContainer.Instance.Resolve<IHostManagerComponent>().StopAll();
             }
         }
 
@@ -72,11 +69,11 @@ namespace HostService
 
         private void StartAllRunnableTypes()
         {
-            _logger.Log("Starting all runnable services");
+            _logger.Log("Starting all runnable components");
 
             foreach (var type in GetRunnableRegisteredTypes())
             {
-                _logger.Log(string.Format("Starting service of type {0}", type.Name));
+                _logger.Log(string.Format("Starting component of type {0}", type.Name));
 
                 var runnable = IoCContainer.Instance.Resolve(type) as IRunnable;
 
@@ -93,11 +90,11 @@ namespace HostService
 
         private void StopAllRunnableTypes()
         {
-            _logger.Log("Stopping all runnable services");
+            _logger.Log("Stopping all runnable components");
 
             foreach (var type in GetRunnableRegisteredTypes())
             {
-                _logger.Log(string.Format("Stopping service of type {0}", type.Name));
+                _logger.Log(string.Format("Stopping component of type {0}", type.Name));
 
                 var runnable = IoCContainer.Instance.Resolve(type) as IRunnable;
 

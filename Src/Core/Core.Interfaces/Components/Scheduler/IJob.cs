@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Interfaces.Scheduler
+namespace Core.Interfaces.Components.Scheduler
 {
     public interface IJob
     {

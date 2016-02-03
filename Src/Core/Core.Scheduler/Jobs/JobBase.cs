@@ -1,5 +1,5 @@
 ﻿using Core.Interfaces.Logging;
-using Core.Interfaces.Scheduler;
+using Core.Interfaces.Components.Scheduler;
 using Core.Models.Persistent;
 using System;
 using System.Collections.Generic;

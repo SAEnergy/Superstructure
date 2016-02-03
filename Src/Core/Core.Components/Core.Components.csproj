@@ -7,8 +7,8 @@
     <ProjectGuid>{E6322468-7278-4940-9D5C-826E30477A19}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Core.Services</RootNamespace>
-    <AssemblyName>Core.Services</AssemblyName>
+    <RootNamespace>Core.Components</RootNamespace>
+    <AssemblyName>Core.Components</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -50,11 +50,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SQLDataService.cs" />
-    <Compile Include="HostManagerService.cs" />
+    <Compile Include="SQLDataComponent.cs" />
+    <Compile Include="HostManagerComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SystemConfigurationService.cs" />
-    <Compile Include="XMLDataService.cs" />
+    <Compile Include="SystemConfigurationComponent.cs" />
+    <Compile Include="XMLDataComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core.Comm\Core.Comm.csproj">

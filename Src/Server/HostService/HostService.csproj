@@ -79,6 +79,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Core\Core.Components\Core.Components.csproj">
+      <Project>{e6322468-7278-4940-9d5c-826e30477a19}</Project>
+      <Name>Core.Components</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Core\Core.Database\Core.Database.csproj">
       <Project>{b21c9416-91fc-462c-9676-a429d4b4d132}</Project>
       <Name>Core.Database</Name>
@@ -98,10 +102,6 @@
     <ProjectReference Include="..\..\Core\Core.Scheduler\Core.Scheduler.csproj">
       <Project>{93f677ee-2190-4f16-bf5a-2bd44437327d}</Project>
       <Name>Core.Scheduler</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Core\Core.Services\Core.Services.csproj">
-      <Project>{e6322468-7278-4940-9d5c-826e30477a19}</Project>
-      <Name>Core.Services</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Core\Core.Settings\Core.Settings.csproj">
       <Project>{990d2026-6a74-4a32-8510-6b28142ba3f2}</Project>

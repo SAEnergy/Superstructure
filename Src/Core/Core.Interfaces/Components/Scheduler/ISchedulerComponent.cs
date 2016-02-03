@@ -2,9 +2,9 @@
 using Core.Models.Persistent;
 using System.Collections.Generic;
 
-namespace Core.Interfaces.Scheduler
+namespace Core.Interfaces.Components.Scheduler
 {
-    public interface ISchedulerService : IRunnable
+    public interface ISchedulerComponent : IRunnable
     {
         List<JobConfiguration> GetJobs();
 

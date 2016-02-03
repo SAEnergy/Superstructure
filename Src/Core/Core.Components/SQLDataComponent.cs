@@ -1,15 +1,14 @@
 ﻿using Core.Database;
-using Core.Interfaces.Base;
 using Core.Interfaces.Logging;
-using Core.Interfaces.Services;
+using Core.Interfaces.Components;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 
-namespace Core.Services
+namespace Core.Components
 {
-    public sealed class SQLDataService : IDataService
+    public sealed class SQLDataComponent : IDataComponent
     {
         #region Fields
 
@@ -19,7 +18,7 @@ namespace Core.Services
 
         #region Constructor
 
-        public SQLDataService(ILogger logger)
+        public SQLDataComponent(ILogger logger)
         {
             _logger = logger;
         }
@@ -165,7 +164,7 @@ namespace Core.Services
             if (obj == null)
             {
                 retVal = false;
-                _logger.Log("Null value detected sent to DataService...", LogMessageSeverity.Error);
+                _logger.Log("Null value detected sent to DataComponent...", LogMessageSeverity.Error);
             }
 
             return retVal;

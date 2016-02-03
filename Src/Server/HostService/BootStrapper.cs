@@ -1,10 +1,10 @@
 ﻿using Core.Interfaces.IoC;
 using Core.Interfaces.Logging;
-using Core.Interfaces.Scheduler;
-using Core.Interfaces.Services;
+using Core.Interfaces.Components.Scheduler;
+using Core.Interfaces.Components;
 using Core.Logging;
 using Core.Scheduler;
-using Core.Services;
+using Core.Components;
 
 namespace HostService
 {
@@ -15,10 +15,10 @@ namespace HostService
             #region Singletons
 
             container.Register<ILogger, Logger>();
-            container.Register<IDataService, XMLDataService>(LifeCycle.Transient);
-            //container.Register<IDataService, SQLDataService>(LifeCycle.Transient);
-            container.Register<IHostManagerService, HostManagerService>();
-            container.Register<ISchedulerService, SchedulerService>();
+            container.Register<IDataComponent, XMLDataComponent>(LifeCycle.Transient);
+            //container.Register<IDataComponent, SQLDataComponent>(LifeCycle.Transient);
+            container.Register<IHostManagerComponent, HostManagerComponent>();
+            container.Register<ISchedulerComponent, SchedulerComponent>();
 
             #endregion
         }

@@ -1,4 +1,4 @@
-﻿using Core.Interfaces.Services;
+﻿using Core.Interfaces.Components;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using System.Text;
 
 namespace Test.Mocks
 {
-    public class DataServiceMock : IDataService
+    public class DataComponentMock : IDataComponent
     {
         #region Fields
 
@@ -30,18 +30,18 @@ namespace Test.Mocks
         /// <summary>
         /// Creates an empty data source
         /// </summary>
-        public DataServiceMock()
+        public DataComponentMock()
         {
             _dataSource = new Dictionary<Type, List<object>>();
             _dataSourceOriginal = new Dictionary<Type, List<object>>();
         }
 
         /// <summary>
-        /// Prime DataServiceMock datasource with a folder of xml files, named after each table (e.g. Users.xml for Users)
+        /// Prime DataComponentMock datasource with a folder of xml files, named after each table (e.g. Users.xml for Users)
         /// Not required to
         /// </summary>
         /// <param name="inputFolderPath"></param>
-        public DataServiceMock(string inputFolderPath)
+        public DataComponentMock(string inputFolderPath)
         {
             _dataSource = new Dictionary<Type, List<object>>();
             _dataSourceOriginal = new Dictionary<Type, List<object>>();
@@ -164,7 +164,7 @@ namespace Test.Mocks
         }
 
         /// <summary>
-        /// Resets datasource back to what it was after the DataServiceMock was constructed, this includes primed data
+        /// Resets datasource back to what it was after the DataComponentMock was constructed, this includes primed data
         /// </summary>
         public void ResetDataSource()
         {

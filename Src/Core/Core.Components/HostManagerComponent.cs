@@ -1,7 +1,7 @@
 ﻿using Core.Comm;
 using Core.Interfaces.Base;
 using Core.Interfaces.Logging;
-using Core.Interfaces.Services;
+using Core.Interfaces.Components;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,9 +11,9 @@ using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 
-namespace Core.Services
+namespace Core.Components
 {
-    public sealed class HostManagerService : Singleton<IHostManagerService>, IHostManagerService
+    public sealed class HostManagerComponent : Singleton<IHostManagerComponent>, IHostManagerComponent
     {
         #region Fields
 
@@ -26,7 +26,7 @@ namespace Core.Services
 
         #region Constructor
 
-        private HostManagerService(ILogger logger)
+        private HostManagerComponent(ILogger logger)
         {
             _logger = logger;
         }
@@ -35,9 +35,9 @@ namespace Core.Services
 
         #region Public Methods
 
-        public static IHostManagerService CreateInstance(ILogger logger)
+        public static IHostManagerComponent CreateInstance(ILogger logger)
         {
-            return Instance = new HostManagerService(logger);
+            return Instance = new HostManagerComponent(logger);
         }
 
         public void RestartAll()
