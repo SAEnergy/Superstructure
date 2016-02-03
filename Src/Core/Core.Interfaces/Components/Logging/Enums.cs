@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 
-namespace Core.Interfaces.Logging
+namespace Core.Interfaces.Components.Logging
 {
     public class UserExtensibleEnum
     {

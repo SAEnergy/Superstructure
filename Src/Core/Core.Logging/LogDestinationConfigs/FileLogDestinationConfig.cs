@@ -1,4 +1,4 @@
-﻿using Core.Interfaces.Logging;
+﻿using Core.Interfaces.Components.Logging;
 
 namespace Core.Logging.LogDestinationConfigs
 {

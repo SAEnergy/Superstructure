@@ -1,5 +1,5 @@
 ﻿using Core.Interfaces.Base;
-using Core.Interfaces.Logging;
+using Core.Interfaces.Components.Logging;
 using Core.Interfaces.Components;
 
 namespace Core.Components

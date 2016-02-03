@@ -1,6 +1,6 @@
 ﻿using Core.Interfaces.Base;
 using Core.Interfaces.Components;
-using Core.Interfaces.Logging;
+using Core.Interfaces.Components.Logging;
 using Core.IoC.Container;
 using System;
 using System.Collections.Generic;

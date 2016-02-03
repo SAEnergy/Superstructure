@@ -1,5 +1,5 @@
-﻿using Core.Interfaces.IoC;
-using Core.Interfaces.Logging;
+﻿using Core.Interfaces.Components.IoC;
+using Core.Interfaces.Components.Logging;
 using Core.Interfaces.Components;
 
 namespace Test.Mocks

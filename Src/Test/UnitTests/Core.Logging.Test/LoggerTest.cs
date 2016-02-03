@@ -1,4 +1,4 @@
-﻿using Core.Interfaces.Logging;
+﻿using Core.Interfaces.Components.Logging;
 using Core.Logging.LogDestinations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;

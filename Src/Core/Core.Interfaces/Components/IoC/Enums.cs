@@ -1,4 +1,4 @@
-﻿namespace Core.Interfaces.IoC
+﻿namespace Core.Interfaces.Components.IoC
 {
     public enum LifeCycle
     {

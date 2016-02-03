@@ -1,4 +1,4 @@
-﻿using Core.Interfaces.Logging;
+﻿using Core.Interfaces.Components.Logging;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using System;

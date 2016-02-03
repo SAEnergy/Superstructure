@@ -1,5 +1,5 @@
 ﻿using Core.Comm.BaseClasses;
-using Core.Interfaces.Logging;
+using Core.Interfaces.Components.Logging;
 using Core.Interfaces.ServiceContracts;
 using System;
 using System.Collections.Generic;

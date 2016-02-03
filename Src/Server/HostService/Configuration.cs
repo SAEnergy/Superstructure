@@ -1,5 +1,5 @@
 ﻿using Core.Database;
-using Core.Interfaces.Logging;
+using Core.Interfaces.Components.Logging;
 using Core.IoC.Container;
 using Core.Settings;
 using Core.Settings.BaseClasses;

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Core.Interfaces.IoC
+namespace Core.Interfaces.Components.IoC
 {
     public interface IIoCContainer
     {

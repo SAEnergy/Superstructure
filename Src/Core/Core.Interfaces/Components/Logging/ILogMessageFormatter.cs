@@ -1,4 +1,4 @@
-﻿namespace Core.Interfaces.Logging
+﻿namespace Core.Interfaces.Components.Logging
 {
     public interface ILogMessageFormatter
     {

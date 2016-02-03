@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Core.Logging;
-using Core.Interfaces.Logging;
+using Core.Interfaces.Components.Logging;
 using System.Runtime.CompilerServices;
 
 namespace Core.Logging.Test

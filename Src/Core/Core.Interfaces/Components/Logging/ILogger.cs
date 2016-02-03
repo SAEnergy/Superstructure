@@ -2,7 +2,7 @@
 using System;
 using System.Runtime.CompilerServices;
 
-namespace Core.Interfaces.Logging
+namespace Core.Interfaces.Components.Logging
 {
     public interface ILogger : IRunnable
     {

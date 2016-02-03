@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Core.Database;
 using Test.Mocks;
-using Core.Interfaces.Logging;
+using Core.Interfaces.Components.Logging;
 using Core.Models.Persistent;
 using Core.Interfaces.Components;
 using System.Linq;

@@ -1,5 +1,5 @@
 ﻿using Core.Interfaces.Base;
-using Core.Interfaces.IoC;
+using Core.Interfaces.Components.IoC;
 using System;
 using System.Collections.Generic;
 using System.Linq;

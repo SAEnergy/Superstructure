@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Core.Interfaces.Logging
+namespace Core.Interfaces.Components.Logging
 {
     public class LogMessage
     {

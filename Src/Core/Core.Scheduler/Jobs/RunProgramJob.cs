@@ -1,4 +1,4 @@
-﻿using Core.Interfaces.Logging;
+﻿using Core.Interfaces.Components.Logging;
 using Core.Models.Persistent;
 using System;
 using System.Diagnostics;

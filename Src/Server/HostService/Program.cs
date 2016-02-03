@@ -1,4 +1,4 @@
-﻿using Core.Interfaces.Logging;
+﻿using Core.Interfaces.Components.Logging;
 using Core.IoC.Container;
 using Core.Logging.LogDestinationConfigs;
 using Core.Logging.LogDestinations;

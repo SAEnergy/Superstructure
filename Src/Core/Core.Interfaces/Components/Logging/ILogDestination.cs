@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace Core.Interfaces.Logging
+namespace Core.Interfaces.Components.Logging
 {
     public interface ILogDestination : IRunnable
     {
