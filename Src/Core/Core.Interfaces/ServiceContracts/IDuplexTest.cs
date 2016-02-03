@@ -11,7 +11,7 @@ namespace Core.Interfaces.ServiceContracts
     public interface IDuplexTestCallback
     { 
         [OperationContract(IsOneWay = true)]
-        void MooBack();
+        void MooBack(string moo);
     }
 
     [ServiceContract(CallbackContract=typeof(IDuplexTestCallback))]

@@ -1,4 +1,5 @@
-﻿using Core.Interfaces.Base;
+﻿using Core.Comm;
+using Core.Interfaces.Base;
 using Core.Interfaces.Logging;
 using Core.Interfaces.Services;
 using System;
@@ -6,6 +7,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.ServiceModel;
+using System.ServiceModel.Channels;
+using System.ServiceModel.Description;
 
 namespace Core.Services
 {
@@ -16,7 +20,7 @@ namespace Core.Services
         private const string _dllSearchPattern = "*.Hosts.dll";
         private readonly ILogger _logger;
 
-        private Dictionary<Type, IHost> _hosts;
+        private Dictionary<Type, ServiceHost> _hosts;
 
         #endregion
 
@@ -50,11 +54,11 @@ namespace Core.Services
 
             _hosts = FindAllHosts();
 
-            foreach(var host in _hosts.Values)
+            foreach (var host in _hosts.Values)
             {
                 _logger.Log(string.Format("HostManager starting host of type \"{0}\".", host.GetType().Name));
 
-                host.Start();
+                host.Open();
             }
         }
 
@@ -66,7 +70,7 @@ namespace Core.Services
             {
                 _logger.Log(string.Format("HostManager stopping host of type \"{0}\".", host.GetType().Name));
 
-                host.Stop();
+                host.Close();
             }
         }
 
@@ -78,7 +82,7 @@ namespace Core.Services
 
         public void Start<T>()
         {
-            IHost host;
+            ServiceHost host;
 
             if (!_hosts.TryGetValue(typeof(T), out host))
             {
@@ -90,14 +94,14 @@ namespace Core.Services
                 {
                     _logger.Log(string.Format("HostManager starting host with interface type of \"{0}\".", typeof(T).Name), LogMessageSeverity.Error);
 
-                    host.Start();
+                    host.Open();
                 }
             }
         }
 
         public void Stop<T>()
         {
-            IHost host;
+            ServiceHost host;
 
             if (!_hosts.TryGetValue(typeof(T), out host))
             {
@@ -109,7 +113,7 @@ namespace Core.Services
                 {
                     _logger.Log(string.Format("HostManager stopping host with interface type of \"{0}\".", typeof(T).Name), LogMessageSeverity.Error);
 
-                    host.Stop();
+                    host.Close();
                 }
             }
         }
@@ -118,9 +122,9 @@ namespace Core.Services
 
         #region Private Methods
 
-        private Dictionary<Type, IHost> FindAllHosts()
+        private Dictionary<Type, ServiceHost> FindAllHosts()
         {
-            var hosts = new Dictionary<Type, IHost>();
+            var hosts = new Dictionary<Type, ServiceHost>();
 
             var files = Directory.GetFiles(Environment.CurrentDirectory, _dllSearchPattern, SearchOption.TopDirectoryOnly);
 
@@ -128,15 +132,25 @@ namespace Core.Services
             {
                 var assm = Assembly.LoadFile(file);
 
-                var types = assm.GetTypes().Where(t => typeof(IHost).IsAssignableFrom(t) && t.ContainsGenericParameters == false);
+                var types = assm.GetTypes().Where(t => typeof(IServiceHost).IsAssignableFrom(t) && t.ContainsGenericParameters == false);
 
                 foreach (Type type in types)
                 {
                     _logger.Log(string.Format("HostManager creating host of type \"{0}\".", type));
 
-                    IHost host = Activator.CreateInstance(type) as IHost;
+                    Type interfaceType = (Type)type.GetMethod("GetInterfaceType", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Invoke(null, null);
 
-                    hosts.Add(host.InterfaceType, host);
+                    ServiceHost host = new ServiceHost(type);
+
+                    EndpointAddress endpoint = new EndpointAddress("net.tcp://localhost:9595/tcp/" + interfaceType.Name + "/");
+
+                    Binding binding = new NetTcpBinding(SecurityMode.None, false);
+
+                    ServiceEndpoint service = new ServiceEndpoint(ContractDescription.GetContract(interfaceType), binding, endpoint);
+
+                    host.AddServiceEndpoint(service);
+
+                    hosts.Add(interfaceType, host);
                 }
             }
 

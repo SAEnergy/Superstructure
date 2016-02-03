@@ -41,6 +41,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -56,6 +57,10 @@
     <Compile Include="XMLDataService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Core.Comm\Core.Comm.csproj">
+      <Project>{ade057b4-c64f-4142-a4df-0b733fe31926}</Project>
+      <Name>Core.Comm</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Core.Database\Core.Database.csproj">
       <Project>{b21c9416-91fc-462c-9676-a429d4b4d132}</Project>
       <Name>Core.Database</Name>

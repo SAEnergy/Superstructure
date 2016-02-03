@@ -1,6 +1,9 @@
 ﻿using Client.Base;
+using Core.Comm;
+using Core.Interfaces.ServiceContracts;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -19,14 +22,40 @@ namespace Client.Main
     /// <summary>
     /// Interaction logic for TestDialog.xaml
     /// </summary>
-    public partial class TestDialog : DialogBase
+    public partial class TestDialog : DialogBase, IDuplexTestCallback
     {
         private WaitDialog _dialog;
         private CancellationTokenSource _cancel;
+        private Subscription<IDuplexTest> _conn;
+        public ObservableCollection<string> Messages { get; private set; }
 
         public TestDialog(Window owner) : base(owner)
         {
+            Messages = new ObservableCollection<string>();
+            this.DataContext = this;
             InitializeComponent();
+            _conn = new Subscription<IDuplexTest>(this);
+            _conn.Connected += _conn_Connected;
+            _conn.Disconnected += _conn_Disconnected;
+            _conn.Start();
+        }
+
+        private void _conn_Disconnected(ISubscription source, Exception ex)
+        {
+            this.BeginInvokeIfRequired(() => Messages.Add("Disconnected. " + ex.Message));
+        }
+
+        private void _conn_Connected(object sender, EventArgs e)
+        {
+            this.BeginInvokeIfRequired(() => Messages.Add("Opening Connection."));
+            try
+            {
+                _conn.Channel.Moo();
+            }
+            catch (Exception ex)
+            {
+                this.BeginInvokeIfRequired(() => Messages.Add("Error: " + ex.Message));
+            }
         }
 
         private async Task Worker(CancellationToken tok)
@@ -34,7 +63,7 @@ namespace Client.Main
             await Task.Run(() =>
             {
                 int x;
-                int count = 100; 
+                int count = 100;
 
                 this.BeginInvokeIfRequired(() => { if (_dialog != null) { _dialog.MaxValue = count; } });
 
@@ -70,6 +99,16 @@ namespace Client.Main
         private void _dialog_Closed(object sender, EventArgs e)
         {
             _cancel.Cancel();
+        }
+
+        public void MooBack(string moo)
+        {
+            this.BeginInvokeIfRequired(() => Messages.Add("Received pong from server: " + moo));
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            _conn.Stop();
         }
     }
 }

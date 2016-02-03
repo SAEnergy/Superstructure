@@ -13,6 +13,7 @@
     >
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
@@ -24,6 +25,10 @@
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1">
+            <Border BorderThickness="1" Background="White" Opacity="1" Margin="0"/>
+            <ListBox ItemsSource="{Binding Path=Messages}" Margin="0"/>
+        </Grid>
+        <Grid Grid.Row="2">
             <Border BorderThickness="1" Background="White" Opacity="1" Margin="0"/>
             <Button IsCancel="True" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="5" Margin="10">Close</Button>
         </Grid>
