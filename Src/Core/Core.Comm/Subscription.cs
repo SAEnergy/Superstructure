@@ -6,10 +6,14 @@ using System.Threading.Tasks;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.Threading;
+using Core.Interfaces.ServiceContracts;
 
 namespace Core.Comm
 {
-    public class Subscription<T> : ISubscription<T>
+
+    public enum SubscriptionState { Disconnected, Connecting, Connected, };
+
+    public class Subscription<T> : ISubscription<T> where T : IUserAuthentication
     {
         public event EventHandler Connected;
         public event SubscriptionDisconnectedEvent Disconnected;
@@ -17,6 +21,9 @@ namespace Core.Comm
         protected object _callback;
         protected Exception _lastException;
         private Thread _worker;
+        public SubscriptionState State { get; private set; }
+
+        private object _stateLock = new object();
 
         public Subscription(object callback)
         {
@@ -26,60 +33,115 @@ namespace Core.Comm
 
         public void Start()
         {
-            EndpointAddress endpoint = new EndpointAddress("net.tcp://localhost:9595/tcp/" + typeof(T).Name + "/");
-            Binding binding = new NetTcpBinding(SecurityMode.None, false);
-
-            _factory = new DuplexChannelFactory<T>(_callback, binding, endpoint);
-            _factory.Opened += _factory_Opened;
-            _factory.Faulted += _factory_Faulted;
+            lock (_stateLock)
+            {
+                State = SubscriptionState.Connecting;
+            }
             _worker = new Thread(new ThreadStart(WorkerThread));
             _worker.Start();
         }
 
         private void WorkerThread()
         {
-            while (true)
+            try
             {
-                if (_factory.State != CommunicationState.Opened) { }
-                try
+                while (true)
                 {
-                    _factory.Open();
-                }
-                catch (ThreadAbortException)
-                {
-                    try
+                    if (_factory == null)
                     {
-                        if (_factory != null) { _factory.Abort(); }
+                        EndpointAddress endpoint = new EndpointAddress("net.tcp://localhost:9595/tcp/" + typeof(T).Name + "/");
+                        Binding binding = new NetTcpBinding(SecurityMode.None, false);
+                        _factory = new DuplexChannelFactory<T>(_callback, binding, endpoint);
                     }
-                    catch
+
+                    if (_factory.State != CommunicationState.Opened)
                     {
-                        /* nom */
+
+                        try
+                        {
+                            _factory.Open();
+                            Channel = _factory.CreateChannel();
+                            ((ICommunicationObject)Channel).Closed += Channel_Closed;
+                            ((ICommunicationObject)Channel).Faulted += Channel_Faulted;
+                            Channel.Ping();
+                            lock (_stateLock)
+                            {
+                                State = SubscriptionState.Connected;
+                            }
+                            if (Connected != null) { Connected(this, null); }
+                        }
+                        catch (ThreadAbortException)
+                        {
+
+                        }
+                        catch (Exception ex)
+                        {
+                            _lastException = ex;
+                            OnDisconnect(ex);
+                        }
                     }
+
+                    Thread.Sleep(15000);
                 }
-                catch (Exception ex)
-                {
-                    _lastException = ex;
-                }
+            }
+            finally
+            {
+                Cleanup();
             }
         }
 
-        private void _factory_Opened(object sender, EventArgs e)
+        private void Cleanup()
         {
-            Channel = _factory.CreateChannel();
-            if (Connected != null) { Connected(this, null); }
+
+            Channel = default(T);
+
+            try
+            {
+                if (_factory != null) { _factory.Close(); }
+            }
+            catch
+            {
+                /* nom */
+            }
+
+            try
+            {
+                if (_factory != null) { _factory.Abort(); }
+            }
+            catch
+            {
+                /* nom */
+            }
+
+            _factory = null;
         }
 
-        private void _factory_Faulted(object sender, EventArgs e)
+        private void Channel_Closed(object sender, EventArgs e)
         {
-            if (Disconnected != null) { Disconnected(this, _lastException); }
+            OnDisconnect(new Exception("Channel Closed."));
         }
 
-        protected void OnConnect()
+        private void Channel_Faulted(object sender, EventArgs e)
         {
+            OnDisconnect(new Exception("Channel Closed."));
         }
 
         protected void OnDisconnect(Exception ex)
         {
+            try
+            {
+                lock (_stateLock)
+                {
+                    if (State == SubscriptionState.Disconnected) { return; }
+                    State = SubscriptionState.Disconnected;
+                }
+
+                if (Disconnected != null) { Disconnected(this, ((ex != null) ? ex : new Exception("Unknown error."))); }
+            }
+            finally
+            {
+                Cleanup();
+            }
         }
 
         public void Stop()

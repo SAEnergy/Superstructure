@@ -20,8 +20,9 @@
         <Grid Grid.Row="0">
             <Border BorderThickness="1" Background="White" Opacity="1" Margin="0"/>
             <StackPanel>
-                <Button HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5" Margin="10" Click="ModalBackgroundTask">Modal Background Task</Button>
-                <Button HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5" Margin="10" Click="CancellableBackgroundTask">Cancellable Background Task</Button>
+                <Button HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5" Margin="10" Click="ClickModalBackgroundTask">Modal Background Task</Button>
+                <Button HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5" Margin="10" Click="ClickCancellableBackgroundTask">Cancellable Background Task</Button>
+                <Button HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5" Margin="10" Click="ClickTriggerException">Trigger Exception</Button>
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1">

@@ -15,9 +15,12 @@ namespace Core.Interfaces.ServiceContracts
     }
 
     [ServiceContract(CallbackContract=typeof(IDuplexTestCallback))]
-    public interface IDuplexTest
+    public interface IDuplexTest : IUserAuthentication
     {
         [OperationContract]
         bool Moo();
+
+        [OperationContract]
+        void ThrowException();
     }
 }

@@ -64,6 +64,7 @@
     <Compile Include="Components\INotificationComponent.cs" />
     <Compile Include="Components\Scheduler\ISchedulerComponent.cs" />
     <Compile Include="Components\ISystemConfigurationComponent.cs" />
+    <Compile Include="ServiceContracts\IUserAuthentication.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core.Models\Core.Models.csproj">

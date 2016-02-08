@@ -47,7 +47,7 @@ namespace Client.Main
 
         private void _conn_Connected(object sender, EventArgs e)
         {
-            this.BeginInvokeIfRequired(() => Messages.Add("Opening Connection."));
+            this.BeginInvokeIfRequired(() => Messages.Add("Connected to Server."));
             try
             {
                 _conn.Channel.Moo();
@@ -77,7 +77,7 @@ namespace Client.Main
             });
         }
 
-        private void ModalBackgroundTask(object sender, RoutedEventArgs e)
+        private void ClickModalBackgroundTask(object sender, RoutedEventArgs e)
         {
             _dialog = new WaitDialog(this);
             _dialog.IsCancellable = false;
@@ -86,7 +86,7 @@ namespace Client.Main
             _dialog = null;
         }
 
-        private void CancellableBackgroundTask(object sender, RoutedEventArgs e)
+        private void ClickCancellableBackgroundTask(object sender, RoutedEventArgs e)
         {
             _dialog = new WaitDialog(this);
             _cancel = new CancellationTokenSource();
@@ -109,6 +109,19 @@ namespace Client.Main
         protected override void OnClosed(EventArgs e)
         {
             _conn.Stop();
+        }
+
+        private async void ClickTriggerException(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                await Task.Run(() => _conn.Channel.ThrowException());
+            }
+            catch (Exception ex)
+            {
+                this.BeginInvokeIfRequired(() => Messages.Add("Error: " + ex.Message));
+            }
+
         }
     }
 }

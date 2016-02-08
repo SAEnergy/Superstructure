@@ -12,7 +12,7 @@ using System.Threading;
 namespace Server.Hosts
 {
     [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, InstanceContextMode = InstanceContextMode.PerSession)]
-    public class DuplexTestHost : ServiceHostBase<IDuplexTest>, IDuplexTest, IDisposable
+    public class DuplexTestHost : ServiceHostBase<IDuplexTest>, IDuplexTest
     {
         private IDuplexTestCallback _callback;
         private Thread _worker;
@@ -39,14 +39,20 @@ namespace Server.Hosts
             }
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             _worker.Abort();
+            base.Dispose();
         }
 
         public bool Moo()
         {
             return true;
+        }
+
+        public void ThrowException()
+        {
+            throw new NotImplementedException();
         }
     }
 }
