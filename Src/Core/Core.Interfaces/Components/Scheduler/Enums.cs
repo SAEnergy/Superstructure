@@ -9,6 +9,7 @@ namespace Core.Interfaces.Components.Scheduler
     public enum JobStatus
     {
         Unknown,
+        Misconfigured,
         Paused,
         Running,
         Success,

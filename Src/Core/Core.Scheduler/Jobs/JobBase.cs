@@ -158,138 +158,215 @@ namespace Core.Scheduler.Jobs
 
         private TimeSpan CalculateNextRunWaitTime()
         {
-            var secondsInDay = (int)Math.Floor(TimeSpan.FromDays(1).TotalSeconds);
+            TimeSpan result = TimeSpan.MaxValue;
 
-            int seconds = Configuration.StartTimeInSeconds;
-
-            if(Configuration.StartTimeInSeconds > secondsInDay)
+            if (Configuration.TriggerType != JobTriggerType.NotConfigured)
             {
-                _logger.Log(string.Format("Job by the name of \"{0}\" start time set to more that one days worth of seconds, defaulting to start running at midnight.", Configuration.Name), LogMessageSeverity.Warning);
-                seconds = 0;
-            }
+                var secondsInDay = (int)Math.Floor(TimeSpan.FromDays(1).TotalSeconds);
 
-            DateTime startTime = DateTime.Today.Add(TimeSpan.FromSeconds(seconds));
+                int seconds = Configuration.StartTimeInSeconds;
 
-            TimeSpan offset = startTime.Subtract(DateTime.UtcNow.ToLocalTime());
+                if (Configuration.StartTimeInSeconds > secondsInDay)
+                {
+                    _logger.Log(string.Format("Job by the name of \"{0}\" start time set to more that one days worth of seconds, defaulting to start running at midnight.", Configuration.Name), LogMessageSeverity.Warning);
+                    seconds = 0;
+                }
 
-            if(offset.TotalSeconds < 0)
-            {
-                offset = offset.Add(TimeSpan.FromDays(1));
-            }
+                DateTime startTime = DateTime.Today.Add(TimeSpan.FromSeconds(seconds));
 
-            TimeSpan result = offset;
+                TimeSpan offset = startTime.Subtract(DateTime.UtcNow.ToLocalTime());
 
-            switch (Configuration.TriggerType)
-            {
-                case JobTriggerType.Continuously:
+                switch (Configuration.TriggerType)
+                {
+                    case JobTriggerType.Continuously:
 
-                    if (Configuration.RepeatEvery.Enabled)
-                    {
-                        var repeatSeconds = Configuration.RepeatEvery.TimeInSeconds;
-
-                        if(Configuration.RepeatEvery.TimeInSeconds < 1)
+                        if (offset.TotalSeconds < 0)
                         {
-                            _logger.Log(string.Format("Job by the name of \"{0}\" start time set to repeat faster than every 1 second, defaulting to run every 1 second.", Configuration.Name), LogMessageSeverity.Warning);
-                            repeatSeconds = 1;
+                            offset = offset.Add(TimeSpan.FromDays(1));
                         }
 
-                        result = TimeSpan.FromSeconds(offset.TotalSeconds % repeatSeconds); //this is the wait time till the next repeat
-                    }
-                    break;
+                        result = offset;
 
-                case JobTriggerType.Daily:
+                        if (Configuration.RepeatEvery.Enabled)
+                        {
+                            var repeatSeconds = Configuration.RepeatEvery.TimeInSeconds;
 
-                    break;
+                            if (Configuration.RepeatEvery.TimeInSeconds < 1)
+                            {
+                                _logger.Log(string.Format("Job by the name of \"{0}\" start time set to repeat faster than every 1 second, defaulting to run every 1 second.", Configuration.Name), LogMessageSeverity.Warning);
+                                repeatSeconds = 1;
+                            }
 
-                case JobTriggerType.Weekly:
+                            result = TimeSpan.FromSeconds(offset.TotalSeconds % repeatSeconds); //this is the wait time till the next repeat
+                        }
+                        break;
 
-                    break;
+                    case JobTriggerType.Daily:
+                        if (Configuration.TriggerDays != JobTriggerDays.NotConfigured)
+                        {
+                            result = FindNextTriggerTimeSpanDays(offset);
+                        }
+                        else
+                        {
+                            Status = JobStatus.Misconfigured;
+                            _logger.Log(string.Format("Job by the name of \"{0}\" has a trigger type of \"{1}\" that is misconfigured.  This job will not run!", Configuration.Name, Configuration.TriggerType), LogMessageSeverity.Critical);
+                        }
 
-                case JobTriggerType.Monthly:
+                        break;
 
-                    break;
+                    case JobTriggerType.Weekly:
 
-                default:
-                    _logger.Log(string.Format("Job by the name of \"{0}\" has a trigger type of \"{1}\" that is not supported.", Configuration.Name, Configuration.TriggerType), LogMessageSeverity.Warning);
-                    break;
+                        break;
+
+                    case JobTriggerType.Monthly:
+
+                        break;
+
+                    default:
+                        _logger.Log(string.Format("Job by the name of \"{0}\" has a trigger type of \"{1}\" that is not supported.", Configuration.Name, Configuration.TriggerType), LogMessageSeverity.Warning);
+                        break;
+                }
+                if(result != TimeSpan.MaxValue)
+                {
+                    _logger.Log(string.Format("Job by the name of \"{0}\" scheduled to run in {1} day(s), {2} hour(s) {3} minute(s) and {4} second(s).", Configuration.Name, result.Days, result.Hours, result.Minutes, result.Seconds));
+                }
             }
-
-            _logger.Log(string.Format("Job by the name of \"{0}\" scheduled to run in {1} day(s), {2} hour(s) {3} minute(s) and {4} second(s).", Configuration.Name, result.Days, result.Hours, result.Minutes, result.Seconds));
+            else
+            {
+                Status = JobStatus.Misconfigured;
+                _logger.Log(string.Format("Job by the name of \"{0}\" has a trigger type of \"{1}\" that is misconfigured.  This job will not run!", Configuration.Name, Configuration.TriggerType), LogMessageSeverity.Critical);
+            }
 
             return result;
         }
 
-        private async void TryExecute(CancellationToken ct)
+        private TimeSpan FindNextTriggerTimeSpanDays(TimeSpan startTimeOffset)
         {
-            if (!IsExecuting || Configuration.SimultaneousExecutions)
+            var result = startTimeOffset;
+
+            if (Configuration.TriggerDays != JobTriggerDays.NotConfigured)
             {
-                if(MissedLastRunTime)
+                var dayStart = (int)DateTime.UtcNow.ToLocalTime().DayOfWeek;
+
+                //if the offset is negative, we missed todays start time.
+                if(result.TotalSeconds < 0)
                 {
-                    _logger.Log(string.Format("Job \"{0}\" missed last run time, executing late...", Configuration.Name), LogMessageSeverity.Warning);
-                    MissedLastRunTime = false;
+                    result = result.Add(TimeSpan.FromDays(1));
+                    dayStart++;
                 }
 
-                var task = new Task<bool>(() => Execute(ct), ct);
+                var dayToCheck = GetJobTriggerDays(dayStart);
 
-                _logger.Log(string.Format("Starting job \"{0}\".", Configuration.Name));
+                var day = dayStart;
 
-                lock (_taskList)
+                while (!Configuration.TriggerDays.HasFlag(dayToCheck))
                 {
-                    _taskList.Add(task);
+                   result = result.Add(TimeSpan.FromDays(1));
 
-                    if (_taskList.Count > 1)
+                    day = day >= 6 ? 0 : day + 1;
+                    dayToCheck = GetJobTriggerDays(day);
+
+                    //safety
+                    if(day == dayStart)
                     {
-                        _logger.Log(string.Format("Running {0} jobs simultaneously by the name of \"{1}\"", _taskList.Count, Configuration.Name), LogMessageSeverity.Warning);
+                        break;
                     }
                 }
+            }
 
-                var watch = new Stopwatch();
+            return result;
+        }
 
-                watch.Start();
+        private JobTriggerDays GetJobTriggerDays(int day)
+        {
+            JobTriggerDays jobDay = JobTriggerDays.NotConfigured;
 
-                bool rc = false;
+            if(day < 7)
+            {
+                jobDay = (JobTriggerDays)Math.Pow(2, day);
+            }
 
-                try
+            return jobDay;
+        }
+
+        private async void TryExecute(CancellationToken ct)
+        {
+            if (Status != JobStatus.Misconfigured)
+            {
+                if (!IsExecuting || Configuration.SimultaneousExecutions)
                 {
-                    LastStartTime = DateTime.UtcNow.ToLocalTime();
+                    if (MissedLastRunTime)
+                    {
+                        _logger.Log(string.Format("Job \"{0}\" missed last run time, executing late...", Configuration.Name), LogMessageSeverity.Warning);
+                        MissedLastRunTime = false;
+                    }
 
-                    task.Start();
-                    Status = JobStatus.Running;
+                    var task = new Task<bool>(() => Execute(ct), ct);
 
-                    rc = await task;
+                    _logger.Log(string.Format("Starting job \"{0}\".", Configuration.Name));
+
+                    lock (_taskList)
+                    {
+                        _taskList.Add(task);
+
+                        if (_taskList.Count > 1)
+                        {
+                            _logger.Log(string.Format("Running {0} jobs simultaneously by the name of \"{1}\"", _taskList.Count, Configuration.Name), LogMessageSeverity.Warning);
+                        }
+                    }
+
+                    var watch = new Stopwatch();
+
+                    watch.Start();
+
+                    bool rc = false;
+
+                    try
+                    {
+                        LastStartTime = DateTime.UtcNow.ToLocalTime();
+
+                        task.Start();
+                        Status = JobStatus.Running;
+
+                        rc = await task;
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        _logger.Log(string.Format("Job \"{0}\" canceled.", Configuration.Name), LogMessageSeverity.Warning);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Log(string.Format("Job \"{0}\" failed! Error - {1}.", Configuration.Name, ex.Message), LogMessageSeverity.Error);
+                    }
+
+                    watch.Stop();
+
+                    LastRunDuration = watch.Elapsed;
+
+                    lock (_taskList)
+                    {
+                        _taskList.Remove(task);
+                    }
+
+                    Status = rc ? JobStatus.Success : JobStatus.Error;
+
+                    string message = rc ? "completed successfully" : "failed to complete successfully";
+
+                    _logger.Log(string.Format("Job \"{0}\" {1}, run time = {2:hh\\:mm\\:ss}", Configuration.Name, message, watch.Elapsed), rc ? LogMessageSeverity.Information : LogMessageSeverity.Error);
                 }
-                catch(OperationCanceledException)
+                else
                 {
-                    _logger.Log(string.Format("Job \"{0}\" canceled.", Configuration.Name), LogMessageSeverity.Warning);
+                    //only message about it once
+                    if (!MissedLastRunTime)
+                    {
+                        _logger.Log(string.Format("Job \"{0}\" attempting to execute, but is already running.", Configuration.Name), LogMessageSeverity.Warning);
+                    }
+                    MissedLastRunTime = true;
                 }
-                catch(Exception ex)
-                {
-                    _logger.Log(string.Format("Job \"{0}\" failed! Error - {1}.", Configuration.Name, ex.Message),LogMessageSeverity.Error);
-                }
-
-                watch.Stop();
-
-                LastRunDuration = watch.Elapsed;
-
-                lock (_taskList)
-                {
-                    _taskList.Remove(task);
-                }
-
-                Status = rc ? JobStatus.Success : JobStatus.Error;
-
-                string message = rc ? "completed successfully" : "failed to complete successfully";
-
-                _logger.Log(string.Format("Job \"{0}\" {1}, run time = {2:hh\\:mm\\:ss}", Configuration.Name, message, watch.Elapsed), rc ? LogMessageSeverity.Information : LogMessageSeverity.Error);
             }
             else
             {
-                //only message about it once
-                if(!MissedLastRunTime)
-                {
-                    _logger.Log(string.Format("Job \"{0}\" attempting to execute, but is already running.", Configuration.Name), LogMessageSeverity.Warning);
-                }
-                MissedLastRunTime = true;
+                _logger.Log(string.Format("Job \"{0}\" attempting to execute, but is misconfigured.", Configuration.Name), LogMessageSeverity.Error);
             }
         }
 
