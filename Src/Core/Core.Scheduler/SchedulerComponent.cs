@@ -96,9 +96,14 @@ namespace Core.Scheduler
                 lock(_jobs)
                 {
                     var newJob = JobFactory.Create(job);
-                    _jobs.Add(newJob);
 
-                    newJob.Start();
+                    if (newJob != null)
+                    {
+                        _logger.Log(string.Format("Scheduler component adding new job named \"{0}\".", job.Name));
+                        _jobs.Add(newJob);
+
+                        newJob.Start();
+                    }
                 }
             }
         }
@@ -113,9 +118,11 @@ namespace Core.Scheduler
             throw new NotImplementedException();
         }
 
-        public bool RegisterCustomJobActionType(JobActionType actionType, Type implementationType)
+        public bool RegisterCustomJobActionType(string actionType, Type implementationType)
         {
-            throw new NotImplementedException();
+            _logger.Log(string.Format("Scheduler component registering custom job action type named \"{0}\".", actionType));
+
+            return JobFactory.RegisterType(actionType, implementationType); //expose this as part of the scheduler interface
         }
 
         #endregion

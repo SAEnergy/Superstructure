@@ -14,7 +14,7 @@ namespace Core.Models.Persistent
 
         public DateTime Created { get; set; }
 
-        public JobActionType ActionType { get; set; }
+        public string ActionType { get; set; }
 
         [StringLength(255)]
         public string FileName { get; set; }

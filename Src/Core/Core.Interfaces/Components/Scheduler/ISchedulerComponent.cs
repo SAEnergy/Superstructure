@@ -15,6 +15,6 @@ namespace Core.Interfaces.Components.Scheduler
 
         bool UpdateJob(JobConfiguration job);
 
-        bool RegisterCustomJobActionType(JobActionType actionType, Type implementationType);
+        bool RegisterCustomJobActionType(string actionType, Type implementationType);
     }
 }
