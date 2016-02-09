@@ -47,6 +47,13 @@ namespace LoggerTest.App
 
             //_logger.AddLogDestination(new TCPLogDestination(tcp_config));
 
+            Core.Logging.Log4Net.LogDestinationConfigs.XMLDestinationConfig xml_config = new Core.Logging.Log4Net.LogDestinationConfigs.XMLDestinationConfig();
+            xml_config.LogDirectory = ".\\xml_logs";
+            xml_config.LogFilePrefix = "XmlTestLog";
+
+            _logger.AddLogDestination(new Core.Logging.Log4Net.XMLDestination(xml_config));
+            
+
             _logger.Start();
 
             Console.CancelKeyPress += Console_CancelKeyPress;
