@@ -13,14 +13,12 @@ namespace Core.Interfaces.Components.Scheduler
 
         JobConfiguration Configuration { get; }
 
-        bool TryRun();
+        void ForceRun();
 
-        bool ForceRun();
+        void TryCancel();
 
-        bool TryCancel();
+        //void TryPause();
 
-        bool TryPause();
-
-        void UpdateConfiguration(JobConfiguration newConfig);
+        //void UpdateConfiguration(JobConfiguration newConfig);
     }
 }

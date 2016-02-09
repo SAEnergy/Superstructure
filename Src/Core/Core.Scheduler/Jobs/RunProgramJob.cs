@@ -44,7 +44,7 @@ namespace Core.Scheduler.Jobs
                         //if we are not going to kill the proc, then leave it to do it's thing
                         if (Configuration.KillProcOnCancel)
                         {
-                            _logger.Log(string.Format("Job \"{0}\" is configured to kill process on cancel.  Killing proces...", Configuration.Name), LogMessageSeverity.Error);
+                            _logger.Log(string.Format("Job \"{0}\" is configured to kill process on cancel.  Killing process...", Configuration.Name), LogMessageSeverity.Error);
 
                             proc.Kill();
                         }

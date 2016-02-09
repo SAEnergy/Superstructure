@@ -17,12 +17,11 @@ namespace Core.Scheduler
     {
         #region Fields
 
-        private TimeSpan _schedulerCheckSpeed = TimeSpan.FromSeconds(1);
+        private TimeSpan _schedulerShutDownTimeOut = TimeSpan.FromMinutes(5);
 
         private readonly ILogger _logger;
         private readonly IDataComponent _dataComponent;
 
-        private Thread _schedulerWorker;
         private List<IJob> _jobs;
 
         private static object _syncObject = new object();
@@ -61,9 +60,7 @@ namespace Core.Scheduler
                 {
                     _logger.Log("Scheduler component starting...");
 
-                    _schedulerWorker = new Thread(new ThreadStart(SchedulerWorker));
-
-                    _schedulerWorker.Start();
+                    Task.Factory.StartNew(() => LoadAllJobs()); //does not block here on purpose
                 }
             }
         }
@@ -76,9 +73,13 @@ namespace Core.Scheduler
                 {
                     _logger.Log("Scheduler component stopping.");
 
+                    var task = Task.Factory.StartNew(() => CancelAllJobs());
+
+                    task.Wait(_schedulerShutDownTimeOut); //wait for a while, and give up if it doesn't complete
+
                     IsRunning = false;
 
-                    _schedulerWorker.Join();
+                    _logger.Log("Scheduler component stopped.");
                 }
             }
         }
@@ -107,41 +108,30 @@ namespace Core.Scheduler
 
         #region Private Methods
 
-        private void SchedulerWorker()
+        private void CancelAllJobs()
         {
-            IsRunning = true;
-
-            _logger.Log("Scheduler component running.");
-
-            _jobs = LoadAllJobs();
-
-            while (IsRunning)
+            if(_jobs != null)
             {
                 lock(_jobs)
                 {
-                    foreach(var job in _jobs)
+                    if (_jobs.Count > 0)
                     {
-                        job.TryRun();
+                        _logger.Log("Scheduler component attempting to cancel jobs.");
+
+                        foreach (var job in _jobs)
+                        {
+                            job.TryCancel();
+                        }
+
+                        _logger.Log("Scheduler component has canceled all jobs.");
                     }
                 }
-
-                Thread.Sleep(_schedulerCheckSpeed);
             }
-
-            lock (_jobs)
-            {
-                foreach (var job in _jobs)
-                {
-                    job.TryCancel();
-                }
-            }
-
-            _logger.Log("Scheduler component stopped.");
         }
 
-        private List<IJob> LoadAllJobs()
+        private void LoadAllJobs()
         {
-            var jobs = new List<IJob>();
+            _jobs = new List<IJob>();
 
             _logger.Log("Scheduler loading all jobs from storage.");
 
@@ -149,17 +139,20 @@ namespace Core.Scheduler
 
             if (query != null)
             {
-                foreach (var jobConfig in query)
+                IsRunning = true;
+
+                lock(_jobs)
                 {
-                    jobs.Add(JobFactory.Create(jobConfig));
+                    foreach (var jobConfig in query)
+                    {
+                        _jobs.Add(JobFactory.Create(jobConfig));
+                    }
                 }
             }
             else
             {
                 _logger.Log("Storage returned null as result!", LogMessageSeverity.Warning);
             }
-
-            return jobs;
         }
 
         #endregion

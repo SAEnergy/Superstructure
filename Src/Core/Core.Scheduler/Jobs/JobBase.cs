@@ -1,16 +1,34 @@
-﻿using Core.Interfaces.Components.Logging;
-using Core.Interfaces.Components.Scheduler;
-using Core.Models.Persistent;
+﻿using Core.Interfaces.Components.Scheduler;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
+using Core.Models.Persistent;
+using System.Threading;
+using Core.Interfaces.Components.Logging;
+using System.Diagnostics;
 
 namespace Core.Scheduler.Jobs
 {
+    public class JobRunInfo
+    {
+        public Task<bool> Task { get; private set; }
+
+        public bool IsRunning { get; set; }
+
+        public DateTime StartTime { get; set; }
+
+        public TimeSpan RunDurration { get; set; }
+
+        public bool CompletedSuccessfully { get; set; }
+
+        public JobRunInfo(Task<bool> task)
+        {
+            Task = task;
+        }
+    }
+
     public abstract class JobBase : IJob
     {
         #region Fields
@@ -19,9 +37,9 @@ namespace Core.Scheduler.Jobs
 
         protected readonly ILogger _logger;
 
-        private List<Task> _taskList;
-
         private CancellationTokenSource cancelSource;
+
+        private List<JobRunInfo> _infos;
 
         #endregion
 
@@ -30,25 +48,6 @@ namespace Core.Scheduler.Jobs
         public JobConfiguration Configuration { get; private set; }
 
         public JobStatus Status { get; private set; }
-
-        public DateTime LastStartTime { get; private set; }
-
-        public TimeSpan LastRunDuration { get; private set; }
-
-        public DateTime NextRunTime { get; private set; }
-
-        public bool MissedLastRunTime { get; private set; }
-
-        public bool IsExecuting
-        {
-            get
-            {
-                lock(_taskList)
-                {
-                    return _taskList.Count > 0;
-                }
-            }
-        }
 
         #endregion
 
@@ -59,33 +58,43 @@ namespace Core.Scheduler.Jobs
             Status = JobStatus.Unknown;
             _logger = logger;
             Configuration = config;
-            _taskList = new List<Task>();
             cancelSource = new CancellationTokenSource();
+            _infos = new List<JobRunInfo>();
 
             _logger.Log(string.Format("Job name \"{0}\" created of type \"{1}\".", config.Name, GetType()));
 
-            NextRunTime = DateTime.UtcNow.Add(CalculateNextRunWaitTime());
+            LaunchNextJob(cancelSource.Token, false);
         }
 
         #endregion
 
         #region Public Methods
 
-        public bool TryCancel()
+        public void ForceRun()
         {
-            bool rc = false;
-
-            if(cancelSource != null)
+            if (Configuration.RunState != JobRunState.Disabled)
             {
-                if (IsExecuting)
+                LaunchNextJob(cancelSource.Token, true);
+            }
+            else
+            {
+                _logger.Log(string.Format("Cannot force run disabled job by the name of \"{0}\".", Configuration.Name), LogMessageSeverity.Warning);
+            }
+        }
+
+        public void TryCancel()
+        {
+            if (cancelSource != null)
+            {
+                if (InfosCount() > 0)
                 {
                     Status = JobStatus.Cancelling;
 
-                    _logger.Log(string.Format("Job name \"{0}\" canceling all executing tasks.  ", Configuration.Name), LogMessageSeverity.Warning);
+                    _logger.Log(string.Format("Job name \"{0}\" canceling all scheduled and currently executing tasks.  ", Configuration.Name), LogMessageSeverity.Warning);
 
                     cancelSource.Cancel();
 
-                    while(IsExecuting)
+                    while (InfosCount() > 0)
                     {
                         _logger.Log(string.Format("Job name \"{0}\" waiting on tasks to cancel...", Configuration.Name), LogMessageSeverity.Warning);
                         Thread.Sleep(_cancelWaitCycle);
@@ -95,65 +104,228 @@ namespace Core.Scheduler.Jobs
                     _logger.Log(string.Format("Job name \"{0}\" all tasks have been canceled.", Configuration.Name));
                 }
             }
-
-            return rc;
         }
 
-        public bool TryPause()
-        {
-            throw new NotImplementedException();
-        }
+        //public void TryPause()
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public bool TryRun()
-        {
-            bool retVal = false;
+        //public void UpdateConfiguration(JobConfiguration newConfig)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-            if(Configuration.RunState == JobRunState.Automatic)
+        public bool HasRunningTask()
+        {
+            bool rc = false;
+
+            if (_infos != null)
             {
-                if(NextRunTime < DateTime.UtcNow || Configuration.RunImmediatelyIfRunTimeMissed && MissedLastRunTime)
+                if (InfosCount() > 0)
                 {
-                    TryExecute(cancelSource.Token);
-
-                    if (!MissedLastRunTime || !Configuration.RunImmediatelyIfRunTimeMissed)
+                    lock (_infos)
                     {
-                        NextRunTime = DateTime.UtcNow.Add(CalculateNextRunWaitTime());
+                        rc = _infos.Any(j => j.IsRunning);
                     }
                 }
             }
 
-            return retVal;
+            return rc;
         }
 
-        public bool ForceRun()
+        public int NumberOfRunningTasks()
         {
-            bool retVal = false;
+            int rc = 0;
 
-            if (Configuration.RunState != JobRunState.Disabled)
+            if (_infos != null)
             {
-                TryExecute(cancelSource.Token);
-            }
-            else
-            {
-                _logger.Log(string.Format("Cannot force run disabled job by the name of \"{0}\".", Configuration.Name), LogMessageSeverity.Warning);
+                if (InfosCount() > 0)
+                {
+                    lock (_infos)
+                    {
+                        rc = _infos.Where(j => j.IsRunning).Count();
+                    }
+                }
             }
 
-            return retVal;
-        }
-
-        public void UpdateConfiguration(JobConfiguration newConfig)
-        {
-            throw new NotImplementedException();
+            return rc;
         }
 
         public abstract bool Execute(CancellationToken ct);
 
         #endregion
 
-        #region
+        #region Private Methods
 
-        private bool CheckSchedule()
+        private void LaunchNextJob(CancellationToken ct, bool runNow)
         {
-            return NextRunTime < DateTime.UtcNow;
+            if (Configuration.RunState == JobRunState.Automatic || runNow)
+            {
+                var info = new JobRunInfo(new Task<bool>(() => Execute(ct), ct));
+
+                info.StartTime = runNow ? DateTime.UtcNow : CalculateNextStartTime();
+
+                if (_infos != null)
+                {
+                    lock (_infos)
+                    {
+                        _infos.Add(info);
+                    }
+                }
+
+                Task.Factory.StartNew(() => Run(ct, info)); //does not block here on purpose
+                _logger.Log(string.Format("Job \"{0}\" has been setup to run.", Configuration.Name));
+            }
+        }
+
+        //a self relaunching scheduler
+        private async Task Run(CancellationToken ct, JobRunInfo info)
+        {
+            if (info != null)
+            {
+                if (Status != JobStatus.Misconfigured)
+                {
+                    try
+                    {
+                        _logger.Log(string.Format(string.Format("Job \"{0}\" scheduled to start \"{1}\"", Configuration.Name, info.StartTime.ToLocalTime())));
+                        WaitTillDoneOrThrow(ct, info.StartTime); //wait till it's time, while checking for cancel token
+
+                        _logger.Log(string.Format(string.Format("Job \"{0}\" starting at \"{1}\"", Configuration.Name, DateTime.UtcNow.ToLocalTime())));
+
+                        bool willRun = !HasRunningTask() || Configuration.SimultaneousExecutions;
+
+                        if (!willRun && Configuration.RunImmediatelyIfRunTimeMissed)
+                        {
+                            _logger.Log(string.Format("Job \"{0}\" missed scheduled execution window, will run immediately after currently executing job.", Configuration.Name), LogMessageSeverity.Warning);
+                            var tasks = _infos.Where(j => j.IsRunning).Select(j => j.Task).ToArray();
+
+                            if (tasks.Count() > 0)
+                            {
+                                Task.WaitAll(tasks); //blocks till all the tasks are done
+                            }
+
+                            willRun = true;
+                        }
+
+                        LaunchNextJob(ct, false); //launch the next job no matter what
+
+                        if (willRun)
+                        {
+                            await RunTask(info);
+                        }
+                        else
+                        {
+                            _logger.Log(string.Format("Job \"{0}\" missed scheduled execution window.", Configuration.Name), LogMessageSeverity.Warning);
+                        }
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        _logger.Log(string.Format("The scheduled job, \"{0}\", has been canceled prior to execution.", Configuration.Name), LogMessageSeverity.Warning);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Log(string.Format("The scheduled job, \"{0}\", has encountered an error prior to execution - {1}.", Configuration.Name, ex.Message), LogMessageSeverity.Error);
+                    }
+                }
+                else
+                {
+                    _logger.Log(string.Format("Job \"{0}\" cannot run because it is misconfigured...", Configuration.Name), LogMessageSeverity.Error);
+                }
+
+                RemoveFromInfos(info); //need to remove here no matter what, success, failure, cancel, exception, etc
+            }
+        }
+
+        private void WaitTillDoneOrThrow(CancellationToken ct, DateTime startTime)
+        {
+            var doneYet = new ManualResetEvent(false);
+
+            //must wait in a cycle so we can check to make sure we are not being canceled
+            while (!doneYet.WaitOne(_cancelWaitCycle))
+            {
+                ct.ThrowIfCancellationRequested();
+
+                if (DateTime.UtcNow.ToLocalTime() >= startTime.ToLocalTime())
+                {
+                    doneYet.Set();
+                }
+            }
+        }
+
+        private void RemoveFromInfos(JobRunInfo info)
+        {
+            if(info != null && _infos != null)
+            {
+                lock (_infos)
+                {
+                    if (_infos.Contains(info))
+                    {
+                        _infos.Remove(info);
+                    }
+                }
+            }
+        }
+
+        private int InfosCount()
+        {
+            int rc = 0;
+
+            if(_infos != null)
+            {
+                lock(_infos)
+                {
+                    rc = _infos.Count;
+                }
+            }
+
+            return rc;
+        }
+
+        private async Task RunTask(JobRunInfo info)
+        {
+            if (info != null && info.Task != null)
+            {
+                var watch = new Stopwatch();
+
+                watch.Start();
+
+                bool rc = false;
+
+                try
+                {
+                    info.Task.Start();
+                    Status = JobStatus.Running;
+                    info.IsRunning = true;
+
+                    rc = await info.Task;
+                }
+                catch (OperationCanceledException)
+                {
+                    _logger.Log(string.Format("Job \"{0}\" canceled.", Configuration.Name), LogMessageSeverity.Warning);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Log(string.Format("Job \"{0}\" failed! Error - {1}.", Configuration.Name, ex.Message), LogMessageSeverity.Error);
+                }
+
+                watch.Stop();
+
+                info.CompletedSuccessfully = rc;
+                info.RunDurration = watch.Elapsed;
+                info.IsRunning = false;
+
+                Status = rc ? JobStatus.Success : JobStatus.Error;
+
+                string message = rc ? "completed successfully" : "failed to complete successfully";
+
+                _logger.Log(string.Format("Job \"{0}\" {1}, run time = {2:hh\\:mm\\:ss}", Configuration.Name, message, watch.Elapsed), rc ? LogMessageSeverity.Information : LogMessageSeverity.Error);
+            }
+        }
+
+        private DateTime CalculateNextStartTime()
+        {
+            return DateTime.UtcNow.Add(CalculateNextRunWaitTime());
         }
 
         private TimeSpan CalculateNextRunWaitTime()
@@ -226,7 +398,7 @@ namespace Core.Scheduler.Jobs
                         _logger.Log(string.Format("Job by the name of \"{0}\" has a trigger type of \"{1}\" that is not supported.", Configuration.Name, Configuration.TriggerType), LogMessageSeverity.Warning);
                         break;
                 }
-                if(result != TimeSpan.MaxValue)
+                if (result != TimeSpan.MaxValue)
                 {
                     _logger.Log(string.Format("Job by the name of \"{0}\" scheduled to run in {1} day(s), {2} hour(s) {3} minute(s) and {4} second(s).", Configuration.Name, result.Days, result.Hours, result.Minutes, result.Seconds));
                 }
@@ -249,7 +421,7 @@ namespace Core.Scheduler.Jobs
                 var dayStart = (int)DateTime.UtcNow.ToLocalTime().DayOfWeek;
 
                 //if the offset is negative, we missed todays start time.
-                if(result.TotalSeconds < 0)
+                if (result.TotalSeconds < 0)
                 {
                     result = result.Add(TimeSpan.FromDays(1));
                     dayStart++;
@@ -261,13 +433,13 @@ namespace Core.Scheduler.Jobs
 
                 while (!Configuration.TriggerDays.HasFlag(dayToCheck))
                 {
-                   result = result.Add(TimeSpan.FromDays(1));
+                    result = result.Add(TimeSpan.FromDays(1));
 
                     day = day >= 6 ? 0 : day + 1;
                     dayToCheck = GetJobTriggerDays(day);
 
                     //safety
-                    if(day == dayStart)
+                    if (day == dayStart)
                     {
                         break;
                     }
@@ -281,93 +453,12 @@ namespace Core.Scheduler.Jobs
         {
             JobTriggerDays jobDay = JobTriggerDays.NotConfigured;
 
-            if(day < 7)
+            if (day < 7)
             {
                 jobDay = (JobTriggerDays)Math.Pow(2, day);
             }
 
             return jobDay;
-        }
-
-        private async void TryExecute(CancellationToken ct)
-        {
-            if (Status != JobStatus.Misconfigured)
-            {
-                if (!IsExecuting || Configuration.SimultaneousExecutions)
-                {
-                    if (MissedLastRunTime)
-                    {
-                        _logger.Log(string.Format("Job \"{0}\" missed last run time, executing late...", Configuration.Name), LogMessageSeverity.Warning);
-                        MissedLastRunTime = false;
-                    }
-
-                    var task = new Task<bool>(() => Execute(ct), ct);
-
-                    _logger.Log(string.Format("Starting job \"{0}\".", Configuration.Name));
-
-                    lock (_taskList)
-                    {
-                        _taskList.Add(task);
-
-                        if (_taskList.Count > 1)
-                        {
-                            _logger.Log(string.Format("Running {0} jobs simultaneously by the name of \"{1}\"", _taskList.Count, Configuration.Name), LogMessageSeverity.Warning);
-                        }
-                    }
-
-                    var watch = new Stopwatch();
-
-                    watch.Start();
-
-                    bool rc = false;
-
-                    try
-                    {
-                        LastStartTime = DateTime.UtcNow.ToLocalTime();
-
-                        task.Start();
-                        Status = JobStatus.Running;
-
-                        rc = await task;
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        _logger.Log(string.Format("Job \"{0}\" canceled.", Configuration.Name), LogMessageSeverity.Warning);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Log(string.Format("Job \"{0}\" failed! Error - {1}.", Configuration.Name, ex.Message), LogMessageSeverity.Error);
-                    }
-
-                    watch.Stop();
-
-                    LastRunDuration = watch.Elapsed;
-
-                    lock (_taskList)
-                    {
-                        _taskList.Remove(task);
-                    }
-
-                    Status = rc ? JobStatus.Success : JobStatus.Error;
-
-                    string message = rc ? "completed successfully" : "failed to complete successfully";
-
-                    _logger.Log(string.Format("Job \"{0}\" {1}, run time = {2:hh\\:mm\\:ss}", Configuration.Name, message, watch.Elapsed), rc ? LogMessageSeverity.Information : LogMessageSeverity.Error);
-                }
-                else
-                {
-                    //only message about it once
-                    if (!MissedLastRunTime)
-                    {
-                        _logger.Log(string.Format("Job \"{0}\" attempting to execute, but is already running.", Configuration.Name), LogMessageSeverity.Warning);
-                    }
-                    MissedLastRunTime = true;
-                }
-            }
-            else
-            {
-                _logger.Log(string.Format("Job \"{0}\" attempting to execute, but is misconfigured.", Configuration.Name), LogMessageSeverity.Error);
-            }
         }
 
         #endregion
