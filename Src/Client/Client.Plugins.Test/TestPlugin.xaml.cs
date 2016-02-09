@@ -15,21 +15,22 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Client.Main
+namespace Client.Plugins.Test
 {
     /// <summary>
-    /// Interaction logic for TestDialog.xaml
+    /// Interaction logic for UserControl1.xaml
     /// </summary>
-    public partial class TestDialog : DialogBase, IDuplexTestCallback
+    public partial class TestPlugin : PanelBase, IDuplexTestCallback
     {
         private WaitDialog _dialog;
         private CancellationTokenSource _cancel;
         private Subscription<IDuplexTest> _conn;
         public ObservableCollection<string> Messages { get; private set; }
 
-        public TestDialog(Window owner) : base(owner)
+        public TestPlugin()
         {
             Messages = new ObservableCollection<string>();
             this.DataContext = this;
@@ -79,7 +80,7 @@ namespace Client.Main
 
         private void ClickModalBackgroundTask(object sender, RoutedEventArgs e)
         {
-            _dialog = new WaitDialog(this);
+            _dialog = new WaitDialog(Window.GetWindow(this));
             _dialog.IsCancellable = false;
             var task = Worker(new CancellationToken());
             _dialog.ShowDialog();
@@ -88,7 +89,7 @@ namespace Client.Main
 
         private void ClickCancellableBackgroundTask(object sender, RoutedEventArgs e)
         {
-            _dialog = new WaitDialog(this);
+            _dialog = new WaitDialog(Window.GetWindow(this));
             _cancel = new CancellationTokenSource();
             _dialog.Closed += _dialog_Closed;
             var task = Worker(_cancel.Token);
@@ -106,9 +107,10 @@ namespace Client.Main
             this.BeginInvokeIfRequired(() => Messages.Add("Received pong from server: " + moo));
         }
 
-        protected override void OnClosed(EventArgs e)
+        public override void Dispose()
         {
             _conn.Stop();
+            base.Dispose();
         }
 
         private async void ClickTriggerException(object sender, RoutedEventArgs e)

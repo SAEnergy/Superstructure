@@ -14,14 +14,31 @@
     Height="480"
     Icon="leaf.ico"
     >
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="auto"/>
-        </Grid.RowDefinitions>
-        <Border BorderThickness="1" Background="White" Opacity="1" Margin="0"/>
-        <Border BorderThickness="1" Background="White" Opacity="0.75" Margin="0" Grid.Row="1"/>
-        <Button Click="OpenTestDialog" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5" Margin="10">Test Dialog</Button>
-        <Label Margin="20" Grid.Row="1">I am translucent and show the users' accent color!</Label>
+    <Grid Margin="2">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="2"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Border BorderThickness="0" Background="White" Opacity="1" Margin="0"/>
+        <Border BorderThickness="0" Background="White" Opacity="1" Margin="0" Grid.Column="2"/>
+        <ListBox 
+            x:Name="PluginList"
+            ItemsSource="{Binding Path=Plugins}"
+            Margin="0"
+            SelectionChanged="Plugin_SelectionChanged"
+            >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Path=Name}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <ContentPresenter 
+            Grid.Column="2"
+            Content="{Binding Path=Panel}"
+            ScrollViewer.HorizontalScrollBarVisibility="Auto"
+            ScrollViewer.VerticalScrollBarVisibility="Auto"
+            />
     </Grid>
 </base:DialogBase>

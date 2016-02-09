@@ -11,6 +11,7 @@ using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using System.ServiceModel.Dispatcher;
+using Core.Util;
 
 namespace Core.Components
 {
@@ -135,39 +136,30 @@ namespace Core.Components
         {
             var hosts = new Dictionary<Type, ServiceHostInfo>();
 
-            var files = Directory.GetFiles(Environment.CurrentDirectory, _dllSearchPattern, SearchOption.TopDirectoryOnly);
-
-            foreach (string file in files)
+            foreach (Type type in TypeLocator.FindTypes(_dllSearchPattern,typeof(IServiceHost)))
             {
-                var assm = Assembly.LoadFile(file);
+                ServiceHostInfo info = new ServiceHostInfo();
 
-                var types = assm.GetTypes().Where(t => typeof(IServiceHost).IsAssignableFrom(t) && t.ContainsGenericParameters == false);
+                info.Logger = _logger;
 
-                foreach (Type type in types)
-                {
-                    ServiceHostInfo info = new ServiceHostInfo();
+                _logger.Log(string.Format("HostManager creating host of type \"{0}\".", type));
 
-                    info.Logger = _logger;
+                Type interfaceType = (Type)type.GetMethod("GetInterfaceType", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Invoke(null, null);
+                info.InterfaceType = interfaceType;
 
-                    _logger.Log(string.Format("HostManager creating host of type \"{0}\".", type));
+                info.Host = new ServiceHost(type);
 
-                    Type interfaceType = (Type)type.GetMethod("GetInterfaceType", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Invoke(null, null);
-                    info.InterfaceType = interfaceType;
+                EndpointAddress endpoint = new EndpointAddress("net.tcp://localhost:9595/tcp/" + interfaceType.Name + "/");
 
-                    info.Host = new ServiceHost(type);
+                Binding binding = new NetTcpBinding(SecurityMode.None, false);
 
-                    EndpointAddress endpoint = new EndpointAddress("net.tcp://localhost:9595/tcp/" + interfaceType.Name + "/");
+                ServiceEndpoint service = new ServiceEndpoint(ContractDescription.GetContract(interfaceType), binding, endpoint);
 
-                    Binding binding = new NetTcpBinding(SecurityMode.None, false);
+                info.Host.Description.Behaviors.Add(new HostErrorHandlerBehavior(info));
 
-                    ServiceEndpoint service = new ServiceEndpoint(ContractDescription.GetContract(interfaceType), binding, endpoint);
+                info.Host.AddServiceEndpoint(service);
 
-                    info.Host.Description.Behaviors.Add(new HostErrorHandlerBehavior(info));
-
-                    info.Host.AddServiceEndpoint(service);
-
-                    hosts.Add(interfaceType, info);
-                }
+                hosts.Add(interfaceType, info);
             }
 
             return hosts;

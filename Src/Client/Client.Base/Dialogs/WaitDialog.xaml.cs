@@ -49,7 +49,8 @@ namespace Client.Base
         }
 
         public bool IsCancellable { get; set; }
-        public WaitDialog(DialogBase owner) : base(owner)
+
+        public WaitDialog(Window owner) : base(owner)
         {
             this.DataContext = this;
 
