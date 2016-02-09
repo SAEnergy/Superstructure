@@ -1,42 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Diagnostics;
+﻿using System.Runtime.CompilerServices;
+using Core.Interfaces.Base;
 
 namespace Core.Interfaces.Components.Logging
 {
-    public class UserExtensibleEnum
-    {
-        public int Code { get; private set; }
-        public string Name { get; private set; }
-
-        protected UserExtensibleEnum(int code, string name)
-        {
-            Code = code;
-            Name = name;
-        }
-
-        public override string ToString()
-        {
-            return Name;
-        }
-
-        public static bool operator >(UserExtensibleEnum e1, UserExtensibleEnum e2)
-        {
-            return e1.Code > e2.Code;
-        }
-        public static bool operator <(UserExtensibleEnum e1, UserExtensibleEnum e2)
-        {
-            return e1.Code < e2.Code;
-        }
-
-
-    }
-
     public class LogMessageSeverity : UserExtensibleEnum
     {
         public static LogMessageSeverity Information = new LogMessageSeverity(10000);

@@ -1,5 +1,6 @@
 ﻿using Core.Interfaces.Base;
 using Core.Models.Persistent;
+using System;
 using System.Collections.Generic;
 
 namespace Core.Interfaces.Components.Scheduler
@@ -8,10 +9,12 @@ namespace Core.Interfaces.Components.Scheduler
     {
         List<JobConfiguration> GetJobs();
 
-        bool AddJob(JobConfiguration job);
+        void AddJob(JobConfiguration job);
 
         bool DeleteJob(JobConfiguration job);
 
         bool UpdateJob(JobConfiguration job);
+
+        bool RegisterCustomJobActionType(JobActionType actionType, Type implementationType);
     }
 }

@@ -17,6 +17,8 @@ namespace Core.Interfaces.Components.Scheduler
 
         void TryCancel();
 
+        void Start();
+
         //void TryPause();
 
         //void UpdateConfiguration(JobConfiguration newConfig);

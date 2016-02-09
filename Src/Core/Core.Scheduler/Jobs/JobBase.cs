@@ -38,8 +38,8 @@ namespace Core.Scheduler.Jobs
         protected readonly ILogger _logger;
 
         private CancellationTokenSource cancelSource;
-
         private List<JobRunInfo> _infos;
+        private bool _isRunning;
 
         #endregion
 
@@ -62,13 +62,22 @@ namespace Core.Scheduler.Jobs
             _infos = new List<JobRunInfo>();
 
             _logger.Log(string.Format("Job name \"{0}\" created of type \"{1}\".", config.Name, GetType()));
-
-            LaunchNextJob(cancelSource.Token, false);
         }
 
         #endregion
 
         #region Public Methods
+
+        public void Start()
+        {
+            if (!_isRunning)
+            {
+                _logger.Log(string.Format("Job name \"{0}\" starting.", Configuration.Name));
+                _isRunning = true;
+
+                LaunchNextJob(cancelSource.Token, false);
+            }
+        }
 
         public void ForceRun()
         {

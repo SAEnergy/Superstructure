@@ -89,9 +89,18 @@ namespace Core.Scheduler
             return _dataComponent.Find<JobConfiguration>(j => !j.AuditInfo.IsArchived);
         }
 
-        public bool AddJob(JobConfiguration job)
+        public void AddJob(JobConfiguration job)
         {
-            throw new NotImplementedException();
+            if(_jobs != null)
+            {
+                lock(_jobs)
+                {
+                    var newJob = JobFactory.Create(job);
+                    _jobs.Add(newJob);
+
+                    newJob.Start();
+                }
+            }
         }
 
         public bool DeleteJob(JobConfiguration job)
@@ -100,6 +109,11 @@ namespace Core.Scheduler
         }
 
         public bool UpdateJob(JobConfiguration job)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool RegisterCustomJobActionType(JobActionType actionType, Type implementationType)
         {
             throw new NotImplementedException();
         }
@@ -141,12 +155,9 @@ namespace Core.Scheduler
             {
                 IsRunning = true;
 
-                lock(_jobs)
+                foreach (var jobConfig in query)
                 {
-                    foreach (var jobConfig in query)
-                    {
-                        _jobs.Add(JobFactory.Create(jobConfig));
-                    }
+                    AddJob(jobConfig);
                 }
             }
             else
