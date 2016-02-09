@@ -198,11 +198,23 @@ namespace Core.Scheduler.Jobs
                         if (!willRun && Configuration.RunImmediatelyIfRunTimeMissed)
                         {
                             _logger.Log(string.Format("Job \"{0}\" missed scheduled execution window, will run immediately after currently executing job.", Configuration.Name), LogMessageSeverity.Warning);
-                            var tasks = _infos.Where(j => j.IsRunning).Select(j => j.Task).ToArray();
 
-                            if (tasks.Count() > 0)
+                            Task<bool>[] tasks = null;
+
+                            if(_infos != null)
                             {
-                                Task.WaitAll(tasks); //blocks till all the tasks are done
+                                lock(_infos)
+                                {
+                                    tasks = _infos.Where(j => j.IsRunning).Select(j => j.Task).ToArray();
+                                }
+                            }
+
+                            if (tasks != null)
+                            {
+                                if (tasks.Count() > 0)
+                                {
+                                    Task.WaitAll(tasks); //blocks till all the tasks are done
+                                }
                             }
 
                             willRun = true;
@@ -212,7 +224,7 @@ namespace Core.Scheduler.Jobs
 
                         if (willRun)
                         {
-                            await RunTask(info);
+                            await RunTask(info); //actually run it!
                         }
                         else
                         {
@@ -233,7 +245,7 @@ namespace Core.Scheduler.Jobs
                     _logger.Log(string.Format("Job \"{0}\" cannot run because it is misconfigured...", Configuration.Name), LogMessageSeverity.Error);
                 }
 
-                RemoveFromInfos(info); //need to remove here no matter what, success, failure, cancel, exception, etc
+                RemoveFromInfos(info); //need to remove here no matter what, success, failure, cancel, exception, missed window, etc
             }
         }
 
@@ -351,39 +363,11 @@ namespace Core.Scheduler.Jobs
                 switch (Configuration.TriggerType)
                 {
                     case JobTriggerType.Continuously:
-
-                        if (offset.TotalSeconds < 0)
-                        {
-                            offset = offset.Add(TimeSpan.FromDays(1));
-                        }
-
-                        result = offset;
-
-                        if (Configuration.RepeatEvery.Enabled)
-                        {
-                            var repeatSeconds = Configuration.RepeatEvery.TimeInSeconds;
-
-                            if (Configuration.RepeatEvery.TimeInSeconds < 1)
-                            {
-                                _logger.Log(string.Format("Job by the name of \"{0}\" start time set to repeat faster than every 1 second, defaulting to run every 1 second.", Configuration.Name), LogMessageSeverity.Warning);
-                                repeatSeconds = 1;
-                            }
-
-                            result = TimeSpan.FromSeconds(offset.TotalSeconds % repeatSeconds); //this is the wait time till the next repeat
-                        }
+                        result = FindNextTriggerTimeSpanContinuously(offset);
                         break;
 
                     case JobTriggerType.Daily:
-                        if (Configuration.TriggerDays != JobTriggerDays.NotConfigured)
-                        {
-                            result = FindNextTriggerTimeSpanDays(offset);
-                        }
-                        else
-                        {
-                            Status = JobStatus.Misconfigured;
-                            _logger.Log(string.Format("Job by the name of \"{0}\" has a trigger type of \"{1}\" that is misconfigured.  This job will not run!", Configuration.Name, Configuration.TriggerType), LogMessageSeverity.Critical);
-                        }
-
+                        result = FindNextTriggerTimeSpanDaily(offset);
                         break;
 
                     case JobTriggerType.Weekly:
@@ -412,7 +396,32 @@ namespace Core.Scheduler.Jobs
             return result;
         }
 
-        private TimeSpan FindNextTriggerTimeSpanDays(TimeSpan startTimeOffset)
+        private TimeSpan FindNextTriggerTimeSpanContinuously(TimeSpan startTimeOffset)
+        {
+            if (startTimeOffset.TotalSeconds < 0)
+            {
+                startTimeOffset = startTimeOffset.Add(TimeSpan.FromDays(1));
+            }
+
+            var result = startTimeOffset;
+
+            if (Configuration.RepeatEvery.Enabled)
+            {
+                var repeatSeconds = Configuration.RepeatEvery.TimeInSeconds;
+
+                if (Configuration.RepeatEvery.TimeInSeconds < 1)
+                {
+                    _logger.Log(string.Format("Job by the name of \"{0}\" start time set to repeat faster than every 1 second, defaulting to run every 1 second.", Configuration.Name), LogMessageSeverity.Warning);
+                    repeatSeconds = 1;
+                }
+
+                result = TimeSpan.FromSeconds(startTimeOffset.TotalSeconds % repeatSeconds); //this is the wait time till the next repeat
+            }
+
+            return result;
+        }
+
+        private TimeSpan FindNextTriggerTimeSpanDaily(TimeSpan startTimeOffset)
         {
             var result = startTimeOffset;
 
@@ -435,7 +444,7 @@ namespace Core.Scheduler.Jobs
                 {
                     result = result.Add(TimeSpan.FromDays(1));
 
-                    day = day >= 6 ? 0 : day + 1;
+                    day = day >= 6 ? 0 : day + 1;  //the days enum goes from 0 to 6, 0 being sunday 6 being saturday
                     dayToCheck = GetJobTriggerDays(day);
 
                     //safety
@@ -445,6 +454,12 @@ namespace Core.Scheduler.Jobs
                     }
                 }
             }
+            else
+            {
+                Status = JobStatus.Misconfigured;
+                _logger.Log(string.Format("Job by the name of \"{0}\" has a trigger type of \"{1}\" that is misconfigured.  This job will not run!", Configuration.Name, Configuration.TriggerType), LogMessageSeverity.Critical);
+                result = TimeSpan.MaxValue;
+            }
 
             return result;
         }
@@ -453,9 +468,9 @@ namespace Core.Scheduler.Jobs
         {
             JobTriggerDays jobDay = JobTriggerDays.NotConfigured;
 
-            if (day < 7)
+            if (day < 7) //our flag goes from 1 to 7, 1 being sunday and 7 being saturday
             {
-                jobDay = (JobTriggerDays)Math.Pow(2, day);
+                jobDay = (JobTriggerDays)Math.Pow(2, day); //convert to a flag value (e.g. 2^x power)
             }
 
             return jobDay;
