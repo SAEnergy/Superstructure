@@ -67,6 +67,8 @@ namespace Core.Scheduler
                     if (CheckType(type))
                     {
                         _jobActionTypeMap.Add(name, type);
+
+                        rc = true;
                     }
                     else
                     {
