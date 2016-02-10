@@ -30,7 +30,7 @@ namespace Core.Components
         private const string _dllSearchPattern = "*.Hosts.dll";
         private readonly ILogger _logger;
 
-        private Dictionary<Type, ServiceHostInfo> _hosts;
+        private Dictionary<Type, ServiceHostInfo> _infos;
 
         #endregion
 
@@ -62,11 +62,11 @@ namespace Core.Components
         {
             _logger.Log("HostManager starting all hosts...");
 
-            _hosts = FindAllHosts();
+            _infos = FindAllHosts();
 
-            foreach (var host in _hosts.Values)
+            foreach (var host in _infos.Values)
             {
-                _logger.Log(string.Format("HostManager starting host of type \"{0}\".", host.GetType().Name));
+                _logger.Log(string.Format("HostManager starting host for interface \"{0}\".", host.InterfaceType.Name));
 
                 host.Host.Open();
             }
@@ -76,9 +76,9 @@ namespace Core.Components
         {
             _logger.Log("HostManager stopping all hosts...");
 
-            foreach (var host in _hosts.Values)
+            foreach (var host in _infos.Values)
             {
-                _logger.Log(string.Format("HostManager stopping host of type \"{0}\".", host.GetType().Name));
+                _logger.Log(string.Format("HostManager stopping host for interface \"{0}\".", host.InterfaceType.Name));
 
                 host.Host.Abort();
             }
@@ -94,7 +94,7 @@ namespace Core.Components
         {
             ServiceHostInfo host;
 
-            if (!_hosts.TryGetValue(typeof(T), out host))
+            if (!_infos.TryGetValue(typeof(T), out host))
             {
                 _logger.Log(string.Format("HostManager cannot find host with interface type of \"{0}\".", typeof(T).Name), LogMessageSeverity.Error);
             }
@@ -113,7 +113,7 @@ namespace Core.Components
         {
             ServiceHostInfo host;
 
-            if (!_hosts.TryGetValue(typeof(T), out host))
+            if (!_infos.TryGetValue(typeof(T), out host))
             {
                 _logger.Log(string.Format("HostManager cannot find host with interface type of \"{0}\".", typeof(T).Name), LogMessageSeverity.Error);
             }
@@ -140,12 +140,12 @@ namespace Core.Components
             {
                 ServiceHostInfo info = new ServiceHostInfo();
 
-                _logger.Log(string.Format("HostManager creating host of type \"{0}\".", type));
-
                 Type interfaceType = (Type)type.GetMethod("GetInterfaceType", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Invoke(null, null);
+
+                _logger.Log(string.Format("HostManager creating host for interface \"{0}\".", interfaceType.Name));
+
                 info.InterfaceType = interfaceType;
                 info.Logger = _logger;
-
                 info.Host = new ServiceHost(type);
 
                 info.Host.Description.Behaviors.Add(new HostErrorHandlerBehavior(info));
