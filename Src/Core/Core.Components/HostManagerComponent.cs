@@ -1,17 +1,17 @@
 ﻿using Core.Comm;
 using Core.Interfaces.Base;
-using Core.Interfaces.Components.Logging;
 using Core.Interfaces.Components;
+using Core.Interfaces.Components.Logging;
+using Core.Util;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using System.ServiceModel.Dispatcher;
-using Core.Util;
 
 namespace Core.Components
 {
@@ -136,29 +136,63 @@ namespace Core.Components
         {
             var hosts = new Dictionary<Type, ServiceHostInfo>();
 
-            foreach (Type type in TypeLocator.FindTypes(_dllSearchPattern,typeof(IServiceHost)))
+            foreach (Type type in TypeLocator.FindTypes(_dllSearchPattern, typeof(IServiceHost)))
             {
                 ServiceHostInfo info = new ServiceHostInfo();
-
-                info.Logger = _logger;
 
                 _logger.Log(string.Format("HostManager creating host of type \"{0}\".", type));
 
                 Type interfaceType = (Type)type.GetMethod("GetInterfaceType", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Invoke(null, null);
                 info.InterfaceType = interfaceType;
+                info.Logger = _logger;
 
                 info.Host = new ServiceHost(type);
 
-                EndpointAddress endpoint = new EndpointAddress("net.tcp://localhost:9595/tcp/" + interfaceType.Name + "/");
-
-                Binding binding = new NetTcpBinding(SecurityMode.None, false);
-
-                ServiceEndpoint service = new ServiceEndpoint(ContractDescription.GetContract(interfaceType), binding, endpoint);
-
                 info.Host.Description.Behaviors.Add(new HostErrorHandlerBehavior(info));
+                ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
+                //smb.HttpsGetEnabled = true;
+                //smb.HttpsGetUrl = new Uri("https://localhost:9596/mex/");
+                smb.HttpGetEnabled = true;
+                smb.HttpGetUrl = new Uri("http://localhost:9596/mex/");
+                info.Host.Description.Behaviors.Add(smb);
 
-                info.Host.AddServiceEndpoint(service);
+                ContractDescription contract = ContractDescription.GetContract(interfaceType);
 
+                {
+                    EndpointAddress endpoint = new EndpointAddress("net.tcp://localhost:9595/" + interfaceType.Name + "/");
+                    Binding binding = new NetTcpBinding(SecurityMode.None, false);
+                    ServiceEndpoint service = new ServiceEndpoint(contract, binding, endpoint);
+                    info.Host.AddServiceEndpoint(service);
+                }
+
+                {
+                    //var store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
+                    //store.Open(OpenFlags.ReadOnly);
+                    //var cert = store.Certificates.Find(X509FindType.FindBySubjectName, "localhost", false)[0];
+                    //store.Close();
+                    //var endpointIdentity = EndpointIdentity.CreateX509CertificateIdentity(cert);
+                    //EndpointAddress endpoint = new EndpointAddress(new Uri("https://localhost:9596/" + interfaceType.Name + "/"), endpointIdentity);
+                    //Binding binding = new NetHttpsBinding(BasicHttpsSecurityMode.Transport, false);
+                    EndpointAddress endpoint = new EndpointAddress("http://localhost:9596/" + interfaceType.Name + "/");
+                    Binding binding = new NetHttpBinding(BasicHttpSecurityMode.None, false);
+                    ServiceEndpoint service = new ServiceEndpoint(contract, binding, endpoint);
+                    info.Host.AddServiceEndpoint(service);
+                }
+
+                {
+                    ContractDescription mexContract = ContractDescription.GetContract(typeof(IMetadataExchange));
+                    //var store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
+                    //store.Open(OpenFlags.ReadOnly);
+                    //var cert = store.Certificates.Find(X509FindType.FindBySubjectName, "localhost", false)[0];
+                    //store.Close();
+                    //var endpointIdentity = EndpointIdentity.CreateX509CertificateIdentity(cert);
+                    //EndpointAddress endpoint = new EndpointAddress(new Uri("https://localhost:9596/mex/"), endpointIdentity);
+                    //Binding binding = new NetHttpsBinding(BasicHttpsSecurityMode.Transport, false);
+                    EndpointAddress endpoint = new EndpointAddress("http://localhost:9596/mex/");
+                    Binding binding = new NetHttpBinding(BasicHttpSecurityMode.None, false);
+                    ServiceEndpoint service = new ServiceEndpoint(mexContract, binding, endpoint);
+                    info.Host.AddServiceEndpoint(service);
+                }
                 hosts.Add(interfaceType, info);
             }
 
