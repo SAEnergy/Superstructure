@@ -71,6 +71,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Logging.Log4Net", "Src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Util.Tests", "Src\Test\UnitTests\Core.Util.Tests\Core.Util.Tests.csproj", "{7ED8049D-5946-4FBE-8C86-4624771F1D42}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client.Resources", "Src\Client\Client.Resources\Client.Resources.csproj", "{D40C4661-6B70-437E-9B0C-632AAAAB7F9A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -177,6 +179,10 @@ Global
 		{7ED8049D-5946-4FBE-8C86-4624771F1D42}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7ED8049D-5946-4FBE-8C86-4624771F1D42}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7ED8049D-5946-4FBE-8C86-4624771F1D42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D40C4661-6B70-437E-9B0C-632AAAAB7F9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D40C4661-6B70-437E-9B0C-632AAAAB7F9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D40C4661-6B70-437E-9B0C-632AAAAB7F9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D40C4661-6B70-437E-9B0C-632AAAAB7F9A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -211,5 +217,6 @@ Global
 		{12FBBE80-B573-411A-9226-CAD37408715B} = {8E18CE31-B102-47C1-B06A-319FE55B9043}
 		{81607B00-77B0-4987-A1B4-3DFF9DFFEADD} = {FA0A3D8E-6753-49DB-AF8F-E5938FF494D8}
 		{7ED8049D-5946-4FBE-8C86-4624771F1D42} = {8E18CE31-B102-47C1-B06A-319FE55B9043}
+		{D40C4661-6B70-437E-9B0C-632AAAAB7F9A} = {4A268B4F-6F2F-4225-ABCD-CDED70CF33D0}
 	EndGlobalSection
 EndGlobal

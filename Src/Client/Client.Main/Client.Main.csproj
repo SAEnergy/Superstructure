@@ -37,7 +37,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>..\Resources\leaf.ico</ApplicationIcon>
+    <ApplicationIcon>..\Client.Resources\Icons\leaf.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -108,11 +108,10 @@
       <Project>{98c98907-35d1-40b3-970b-53b38dd3cb4a}</Project>
       <Name>Client.Base</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="..\Resources\leaf.ico">
-      <Link>leaf.ico</Link>
-    </Resource>
+    <ProjectReference Include="..\Client.Resources\Client.Resources.csproj">
+      <Project>{d40c4661-6b70-437e-9b0c-632aaaab7f9a}</Project>
+      <Name>Client.Resources</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

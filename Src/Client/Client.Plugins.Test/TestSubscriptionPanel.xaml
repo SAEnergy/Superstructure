@@ -1,5 +1,5 @@
 ﻿<mybase:PanelBase 
-    x:Class="Client.Plugins.Test.TestPlugin"
+    x:Class="Client.Plugins.Test.TestSubscriptionPanel"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -16,8 +16,6 @@
         <Grid Grid.Row="0">
             <Border BorderThickness="1" Background="White" Opacity="1" Margin="0"/>
             <StackPanel>
-                <Button HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5" Margin="5" Click="ClickModalBackgroundTask">Modal Background Task</Button>
-                <Button HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5" Margin="5" Click="ClickCancellableBackgroundTask">Cancellable Background Task</Button>
                 <Button HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5" Margin="5" Click="ClickTriggerException">Trigger Exception</Button>
             </StackPanel>
         </Grid>

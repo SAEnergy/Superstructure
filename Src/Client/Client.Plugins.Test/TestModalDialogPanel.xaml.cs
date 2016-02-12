@@ -23,40 +23,15 @@ namespace Client.Plugins.Test
     /// <summary>
     /// Interaction logic for UserControl1.xaml
     /// </summary>
-    public partial class TestPlugin : PanelBase, IDuplexTestCallback
+    public partial class TestModalDialogs : PanelBase
     {
         private WaitDialog _dialog;
         private CancellationTokenSource _cancel;
-        private Subscription<IDuplexTest> _conn;
-        public ObservableCollection<string> Messages { get; private set; }
 
-        public TestPlugin()
+        public TestModalDialogs()
         {
-            Messages = new ObservableCollection<string>();
             this.DataContext = this;
             InitializeComponent();
-            _conn = new Subscription<IDuplexTest>(this);
-            _conn.Connected += _conn_Connected;
-            _conn.Disconnected += _conn_Disconnected;
-            _conn.Start();
-        }
-
-        private void _conn_Disconnected(ISubscription source, Exception ex)
-        {
-            this.BeginInvokeIfRequired(() => Messages.Add("Disconnected. " + ex.Message));
-        }
-
-        private void _conn_Connected(object sender, EventArgs e)
-        {
-            this.BeginInvokeIfRequired(() => Messages.Add("Connected to Server."));
-            try
-            {
-                _conn.Channel.Moo();
-            }
-            catch (Exception ex)
-            {
-                this.BeginInvokeIfRequired(() => Messages.Add("Error: " + ex.Message));
-            }
         }
 
         private async Task Worker(CancellationToken tok)
@@ -100,30 +75,6 @@ namespace Client.Plugins.Test
         private void _dialog_Closed(object sender, EventArgs e)
         {
             _cancel.Cancel();
-        }
-
-        public void MooBack(string moo)
-        {
-            this.BeginInvokeIfRequired(() => Messages.Add("Received pong from server: " + moo));
-        }
-
-        public override void Dispose()
-        {
-            _conn.Stop();
-            base.Dispose();
-        }
-
-        private async void ClickTriggerException(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                await Task.Run(() => _conn.Channel.ThrowException());
-            }
-            catch (Exception ex)
-            {
-                this.BeginInvokeIfRequired(() => Messages.Add("Error: " + ex.Message));
-            }
-
         }
     }
 }

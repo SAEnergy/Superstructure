@@ -48,12 +48,19 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="TestPlugin.xaml">
+    <Page Include="TestModalDialogPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TestSubscriptionPanel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="TestPlugin.xaml.cs">
-      <DependentUpon>TestPlugin.xaml</DependentUpon>
+    <Compile Include="TestModalDialogPanel.xaml.cs">
+      <DependentUpon>TestModalDialogPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TestSubscriptionPanel.xaml.cs">
+      <DependentUpon>TestSubscriptionPanel.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

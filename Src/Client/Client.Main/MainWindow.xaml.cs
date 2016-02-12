@@ -1,10 +1,12 @@
 ﻿using Client.Base;
+using Client.Resources;
 using Core.Util;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace Client.Main
 {
@@ -12,6 +14,7 @@ namespace Client.Main
     {
         public Type PluginType { get; set; }
         public string Name { get; set; }
+        public ImageSource Icon { get; set; }
     }
 
     public partial class MainWindow : DialogBase
@@ -39,8 +42,24 @@ namespace Client.Main
             foreach (Type type in types)
             {
                 PluginInfo info = new PluginInfo();
+                PanelMetadataAttribute atty = type.GetAttribute<PanelMetadataAttribute>();
                 info.PluginType = type;
-                info.Name = type.Name;
+                if (atty != null && !string.IsNullOrWhiteSpace(atty.DisplayName))
+                {
+                    info.Name = atty.DisplayName;
+                }
+                else
+                {
+                    info.Name = PascalCaseSplitter.Split(type.Name);
+                }
+                if (atty != null && !string.IsNullOrWhiteSpace(atty.IconPath))
+                {
+                    info.Icon = WPFHelpers.GetImage(atty.IconPath);
+                }
+                if (info.Icon == null)
+                {
+                    info.Icon = WPFHelpers.GetImage("images/puzzle-piece.png");
+                }
                 this.InvokeIfRequired(() => Plugins.Add(info));
             }
             this.BeginInvokeIfRequired(() => { if (PluginList.SelectedItem == null) { PluginList.SelectedItem = Plugins[0]; } });
@@ -55,6 +74,12 @@ namespace Client.Main
             if (info == null) { return; }
 
             Panel = Activator.CreateInstance(info.PluginType) as PanelBase;
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            if (Panel != null) { Panel.Dispose(); }
+            base.OnClosed(e);
         }
     }
 }

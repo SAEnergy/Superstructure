@@ -49,7 +49,7 @@ namespace Core.Comm
                 {
                     if (_factory == null)
                     {
-                        EndpointAddress endpoint = new EndpointAddress("net.tcp://localhost:9595/tcp/" + typeof(T).Name + "/");
+                        EndpointAddress endpoint = new EndpointAddress("net.tcp://localhost:9595/" + typeof(T).Name + "/");
                         Binding binding = new NetTcpBinding(SecurityMode.None, false);
                         _factory = new DuplexChannelFactory<T>(_callback, binding, endpoint);
                     }

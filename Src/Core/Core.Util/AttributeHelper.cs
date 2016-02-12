@@ -10,7 +10,7 @@ namespace Core.Util
     {
         public static T GetAttribute<T>(this Type type)
         {
-            return (T) type.GetCustomAttributes(type, true).FirstOrDefault();
+            return (T) type.GetCustomAttributes(typeof(T), true).FirstOrDefault();
         }
     }
 }
