@@ -69,7 +69,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Scheduler.Test", "Src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Logging.Log4Net", "Src\Core\Core.Logging.Log4Net\Core.Logging.Log4Net.csproj", "{81607B00-77B0-4987-A1B4-3DFF9DFFEADD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Util.Tests", "Src\Test\UnitTests\Core.Util.Tests\Core.Util.Tests.csproj", "{7ED8049D-5946-4FBE-8C86-4624771F1D42}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Util.Test", "Src\Test\UnitTests\Core.Util.Tests\Core.Util.Test.csproj", "{7ED8049D-5946-4FBE-8C86-4624771F1D42}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client.Resources", "Src\Client\Client.Resources\Client.Resources.csproj", "{D40C4661-6B70-437E-9B0C-632AAAAB7F9A}"
 EndProject

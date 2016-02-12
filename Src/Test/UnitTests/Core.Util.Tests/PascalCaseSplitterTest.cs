@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Core.Util.Tests
+namespace Core.Util.Test
 {
     [TestClass]
     public class PascalCaseSplitterTest
