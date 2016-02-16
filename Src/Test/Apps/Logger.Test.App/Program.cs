@@ -3,6 +3,7 @@ using Core.Logging;
 using Core.Logging.LogDestinationConfigs;
 using Core.Logging.LogDestinations;
 using Core.Logging.LogMessageFormats;
+using Core.Logging.Remote;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,7 +53,10 @@ namespace LoggerTest.App
             xml_config.LogFilePrefix = "XmlTestLog";
 
             _logger.AddLogDestination(new Core.Logging.Log4Net.XMLDestination(xml_config));
-            
+
+            RemoteLogDestination remote = new RemoteLogDestination();
+
+            _logger.AddLogDestination(remote);
 
             _logger.Start();
 

@@ -73,6 +73,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Util.Test", "Src\Test\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client.Resources", "Src\Client\Client.Resources\Client.Resources.csproj", "{D40C4661-6B70-437E-9B0C-632AAAAB7F9A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Logging.Remote", "src\core\Core.Logging.Remote\Core.Logging.Remote.csproj", "{43DFA6B7-0D66-4DBA-B9B2-E0D4B8BDE643}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -183,6 +185,10 @@ Global
 		{D40C4661-6B70-437E-9B0C-632AAAAB7F9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D40C4661-6B70-437E-9B0C-632AAAAB7F9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D40C4661-6B70-437E-9B0C-632AAAAB7F9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43DFA6B7-0D66-4DBA-B9B2-E0D4B8BDE643}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43DFA6B7-0D66-4DBA-B9B2-E0D4B8BDE643}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43DFA6B7-0D66-4DBA-B9B2-E0D4B8BDE643}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43DFA6B7-0D66-4DBA-B9B2-E0D4B8BDE643}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -218,5 +224,6 @@ Global
 		{81607B00-77B0-4987-A1B4-3DFF9DFFEADD} = {FA0A3D8E-6753-49DB-AF8F-E5938FF494D8}
 		{7ED8049D-5946-4FBE-8C86-4624771F1D42} = {8E18CE31-B102-47C1-B06A-319FE55B9043}
 		{D40C4661-6B70-437E-9B0C-632AAAAB7F9A} = {4A268B4F-6F2F-4225-ABCD-CDED70CF33D0}
+		{43DFA6B7-0D66-4DBA-B9B2-E0D4B8BDE643} = {FA0A3D8E-6753-49DB-AF8F-E5938FF494D8}
 	EndGlobalSection
 EndGlobal

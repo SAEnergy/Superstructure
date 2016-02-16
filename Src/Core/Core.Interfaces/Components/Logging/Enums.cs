@@ -1,8 +1,10 @@
 ﻿using System.Runtime.CompilerServices;
 using Core.Interfaces.Base;
+using System.Runtime.Serialization;
 
 namespace Core.Interfaces.Components.Logging
 {
+    [DataContract]
     public class LogMessageSeverity : UserExtensibleEnum
     {
         public static LogMessageSeverity Information = new LogMessageSeverity(10000);
@@ -13,6 +15,7 @@ namespace Core.Interfaces.Components.Logging
         public LogMessageSeverity(int code, [CallerMemberName] string name = "") : base(code,name) { }
     }
 
+    [DataContract]
     public class LogMessageCategory : UserExtensibleEnum
     {
         public static LogMessageCategory Debug = new LogMessageCategory(10000);

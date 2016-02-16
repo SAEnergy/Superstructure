@@ -58,6 +58,8 @@
     <Compile Include="Components\Scheduler\Enums.cs" />
     <Compile Include="Components\Scheduler\IJob.cs" />
     <Compile Include="ServiceContracts\IDuplexTest.cs" />
+    <Compile Include="ServiceContracts\ILogSubscription.cs" />
+    <Compile Include="ServiceContracts\IRemoteLogging.cs" />
     <Compile Include="ServiceContracts\ITestService.cs" />
     <Compile Include="Components\IAlarmComponent.cs" />
     <Compile Include="Components\IDataComponent.cs" />

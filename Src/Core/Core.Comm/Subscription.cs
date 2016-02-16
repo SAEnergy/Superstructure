@@ -17,7 +17,7 @@ namespace Core.Comm
     {
         public event EventHandler Connected;
         public event SubscriptionDisconnectedEvent Disconnected;
-        protected DuplexChannelFactory<T> _factory;
+        protected ChannelFactory<T> _factory;
         protected object _callback;
         protected Exception _lastException;
         private Thread _worker;
@@ -51,7 +51,14 @@ namespace Core.Comm
                     {
                         EndpointAddress endpoint = new EndpointAddress("net.tcp://localhost:9595/" + typeof(T).Name + "/");
                         Binding binding = new NetTcpBinding(SecurityMode.None, false);
-                        _factory = new DuplexChannelFactory<T>(_callback, binding, endpoint);
+                        if (_callback != null)
+                        {
+                            _factory = new DuplexChannelFactory<T>(_callback, binding, endpoint);
+                        }
+                        else
+                        {
+                            _factory = new ChannelFactory<T>(binding, endpoint);
+                        }
                     }
 
                     if (_factory.State != CommunicationState.Opened)
