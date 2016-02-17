@@ -24,6 +24,7 @@ namespace Core.Comm
         public SubscriptionState State { get; private set; }
 
         private object _stateLock = new object();
+        private ManualResetEvent _resetEvent = new ManualResetEvent(false);
 
         public Subscription(object callback)
         {
@@ -47,6 +48,8 @@ namespace Core.Comm
             {
                 while (true)
                 {
+                    _resetEvent.Reset();
+
                     if (_factory == null)
                     {
                         EndpointAddress endpoint = new EndpointAddress("net.tcp://localhost:9595/" + typeof(T).Name + "/");
@@ -68,9 +71,9 @@ namespace Core.Comm
                         {
                             _factory.Open();
                             Channel = _factory.CreateChannel();
-                            ((ICommunicationObject)Channel).Closed += Channel_Closed;
-                            ((ICommunicationObject)Channel).Faulted += Channel_Faulted;
                             Channel.Ping();
+                            ((ICommunicationObject)Channel).Closed += Channel_Closed;
+                            ((ICommunicationObject)Channel).Faulted += Channel_Closed;
                             lock (_stateLock)
                             {
                                 State = SubscriptionState.Connected;
@@ -88,7 +91,7 @@ namespace Core.Comm
                         }
                     }
 
-                    Thread.Sleep(15000);
+                    _resetEvent.WaitOne(15000);
                 }
             }
             finally
@@ -125,12 +128,8 @@ namespace Core.Comm
 
         private void Channel_Closed(object sender, EventArgs e)
         {
-            OnDisconnect(new Exception("Channel Closed."));
-        }
-
-        private void Channel_Faulted(object sender, EventArgs e)
-        {
-            OnDisconnect(new Exception("Channel Closed."));
+            OnDisconnect(new CommunicationException("Channel Closed."));
+            _resetEvent.Set();
         }
 
         protected void OnDisconnect(Exception ex)
