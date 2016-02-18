@@ -170,6 +170,11 @@ namespace Core.Settings
 
             try
             {
+                if(value == null && info.PropertyType == typeof(bool))
+                {
+                    value = false;
+                }
+
                 var obj = Convert.ChangeType(value, info.PropertyType);
 
                 info.SetValue(this, obj);
