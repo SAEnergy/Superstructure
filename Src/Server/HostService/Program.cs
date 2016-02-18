@@ -126,7 +126,7 @@ namespace HostService
 
             _logger.Log("Server shut down.");
 
-            //last this to do is shut down logging system
+            //last thing to do is shut down logging system
             _logger.Stop();
 
             //last thing that happens ever
