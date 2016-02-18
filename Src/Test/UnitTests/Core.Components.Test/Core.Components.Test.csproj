@@ -63,6 +63,9 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="..\..\..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="DataComponentMockTest.cs" />
     <Compile Include="SQLDataComponentTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

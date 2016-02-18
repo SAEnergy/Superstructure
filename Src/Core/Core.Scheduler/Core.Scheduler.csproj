@@ -40,6 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="JobFactory.cs" />
     <Compile Include="Jobs\JobBase.cs" />
     <Compile Include="Jobs\RunProgramJob.cs" />

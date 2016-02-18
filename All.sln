@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HostService", "Src\Server\HostService\HostService.csproj", "{392799A9-DA4A-4552-8F44-FAD887BA9D34}"
 EndProject
@@ -74,6 +74,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client.Resources", "Src\Client\Client.Resources\Client.Resources.csproj", "{D40C4661-6B70-437E-9B0C-632AAAAB7F9A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Logging.Remote", "src\core\Core.Logging.Remote\Core.Logging.Remote.csproj", "{43DFA6B7-0D66-4DBA-B9B2-E0D4B8BDE643}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectUpdater", "Src\Utilities\Internal\ProjectUpdater\ProjectUpdater.csproj", "{3825FC2C-5737-4922-98A5-31DB8B8D32AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -189,6 +191,10 @@ Global
 		{43DFA6B7-0D66-4DBA-B9B2-E0D4B8BDE643}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43DFA6B7-0D66-4DBA-B9B2-E0D4B8BDE643}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43DFA6B7-0D66-4DBA-B9B2-E0D4B8BDE643}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3825FC2C-5737-4922-98A5-31DB8B8D32AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3825FC2C-5737-4922-98A5-31DB8B8D32AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3825FC2C-5737-4922-98A5-31DB8B8D32AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3825FC2C-5737-4922-98A5-31DB8B8D32AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -225,5 +231,6 @@ Global
 		{7ED8049D-5946-4FBE-8C86-4624771F1D42} = {8E18CE31-B102-47C1-B06A-319FE55B9043}
 		{D40C4661-6B70-437E-9B0C-632AAAAB7F9A} = {4A268B4F-6F2F-4225-ABCD-CDED70CF33D0}
 		{43DFA6B7-0D66-4DBA-B9B2-E0D4B8BDE643} = {FA0A3D8E-6753-49DB-AF8F-E5938FF494D8}
+		{3825FC2C-5737-4922-98A5-31DB8B8D32AA} = {D908E740-31A3-482A-B0EB-AC4FD165B97B}
 	EndGlobalSection
 EndGlobal

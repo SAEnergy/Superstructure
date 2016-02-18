@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Core.Comm")]
+[assembly: AssemblyTitle("ProjectUpdater")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 
@@ -14,4 +14,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("ade057b4-c64f-4142-a4df-0b733fe31926")]
+[assembly: Guid("3825fc2c-5737-4922-98a5-31db8b8d32aa")]
