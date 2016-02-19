@@ -1,15 +1,12 @@
 ﻿using Core.Interfaces.Components.Logging;
 using Core.Logging;
 using Core.Logging.LogDestinations;
-using Microsoft.Build;
 using Microsoft.Build.Construction;
 using Microsoft.Build.Evaluation;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProjectUpdater
 {
@@ -47,8 +44,6 @@ namespace ProjectUpdater
                 {
                     if (File.Exists(projectFile))
                     {
-                        _logger.Log(string.Format("Working on \"{0}\"", projectFile));
-
                         var project = new Project(projectFile);
 
                         GlobalAssemblyUpdater(project);
@@ -89,10 +84,6 @@ namespace ProjectUpdater
                         _logger.Log(string.Format("Project \"{0}\" did not include link to \"{1}\"", project.FullPath, _globalAssemblyInfo));
                         _verifyResult--;
                     }
-                }
-                else
-                {
-                    _logger.Log(string.Format("Project \"{0}\" already has a link to \"{1}\"", project.FullPath, _globalAssemblyInfo));
                 }
             }
         }
