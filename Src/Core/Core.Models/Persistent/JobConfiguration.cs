@@ -97,6 +97,7 @@ namespace Core.Models.Persistent
         All = 127
     }
 
+    [Flags]
     public enum JobTriggerWeeks
     {
         NotConfigured = 0,
