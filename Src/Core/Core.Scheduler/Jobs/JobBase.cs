@@ -381,11 +381,11 @@ namespace Core.Scheduler.Jobs
                         break;
 
                     case JobTriggerType.Weekly:
-                        result = FindNextTriggerTimeSpanWeekly(offset);
+                        result = FindNextTriggerTimeSpanWeekly(offset, DateTime.UtcNow.ToLocalTime());
                         break;
 
                     case JobTriggerType.Monthly:
-
+                        result = FindNextTriggerTimeSpanMonthly(offset);
                         break;
 
                     default:
@@ -474,13 +474,13 @@ namespace Core.Scheduler.Jobs
             return result;
         }
 
-        private TimeSpan FindNextTriggerTimeSpanWeekly(TimeSpan startTimeOffset)
+        private TimeSpan FindNextTriggerTimeSpanWeekly(TimeSpan startTimeOffset, DateTime startDate)
         {
             var result = startTimeOffset;
 
             if (Configuration.TriggerWeeks != JobTriggerWeeks.NotConfigured && Configuration.TriggerDays != JobTriggerDays.NotConfigured)
             {
-                var now = DateTime.UtcNow.ToLocalTime();
+                var now = startDate;
                 var triggerWeek = GetJobTriggerWeeks(now);
 
                 while (!TriggerWeeksCheck(now))
@@ -489,6 +489,36 @@ namespace Core.Scheduler.Jobs
                     now = now.AddDays(1);
                     triggerWeek = GetJobTriggerWeeks(now);
                 }
+            }
+            else
+            {
+                Status = JobStatus.Misconfigured;
+                _logger.Log(string.Format("Job by the name of \"{0}\" has a trigger type of \"{1}\" that is misconfigured.  This job will not run!", Configuration.Name, Configuration.TriggerType), LogMessageSeverity.Critical);
+                result = TimeSpan.MaxValue;
+            }
+
+            return result;
+        }
+
+        private TimeSpan FindNextTriggerTimeSpanMonthly(TimeSpan startTimeOffset)
+        {
+            var result = startTimeOffset;
+
+            if (Configuration.TriggerMonths != JobTriggerMonths.NotConfigured)
+            {
+                var now = DateTime.UtcNow.ToLocalTime();
+                var triggerMonth = GetJobTriggerMonths(now);
+                int numberOfDays = DateTime.DaysInMonth(now.Year, now.Month) - now.Day + 1;
+
+                while (!Configuration.TriggerMonths.HasFlag(triggerMonth))
+                {
+                    result = result.Add(TimeSpan.FromDays(numberOfDays));
+                    now = now.AddDays(numberOfDays);
+                    numberOfDays = DateTime.DaysInMonth(now.Year, now.Month);
+                    triggerMonth = GetJobTriggerMonths(now);
+                }
+
+                result = FindNextTriggerTimeSpanWeekly(result, now);
             }
             else
             {
@@ -541,6 +571,11 @@ namespace Core.Scheduler.Jobs
             }
 
             return counter == 1;
+        }
+
+        private JobTriggerMonths GetJobTriggerMonths(DateTime toConvert)
+        {
+            return (JobTriggerMonths)Math.Pow(2, toConvert.Month - 1);
         }
 
         private JobTriggerWeeks GetJobTriggerWeeks(DateTime toConvert)
