@@ -16,7 +16,7 @@ namespace Core.Util
 
             List<Type> found = new List<Type>();
 
-            AppDomain tempDomain = AppDomain.CreateDomain("bob");
+            AppDomain tempDomain = AppDomain.CreateDomain("bob", null, baseDir, null, false);
 
             TypeLocatorWorker bob = (TypeLocatorWorker)tempDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().ToString(), typeof(TypeLocatorWorker).FullName);
 

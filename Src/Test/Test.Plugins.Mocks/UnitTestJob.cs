@@ -3,7 +3,7 @@ using System.Threading;
 using Core.Models.Persistent;
 using Core.Interfaces.Components.Logging;
 
-namespace Core.Scheduler.Test
+namespace Test.Plugins.Mocks
 {
     public class UnitTestJob : JobBase
     {
