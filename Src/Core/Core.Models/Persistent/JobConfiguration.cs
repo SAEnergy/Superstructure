@@ -38,6 +38,8 @@ namespace Core.Models.Persistent
 
         public JobTriggerDays TriggerDays { get; set; }
 
+        public JobTriggerWeeks TriggerWeeks { get; set; }
+
         public JobTriggerMonths TriggerMonths { get; set; }
 
         public TimeSpanBool RepeatEvery { get; set; }
@@ -93,6 +95,17 @@ namespace Core.Models.Persistent
         Friday = 32,
         Saturday = 64,
         All = 127
+    }
+
+    public enum JobTriggerWeeks
+    {
+        NotConfigured = 0,
+        First = 1,
+        Second = 2,
+        Third = 4,
+        Fourth = 8,
+        Last = 16,
+        All = 31
     }
 
     [Flags]

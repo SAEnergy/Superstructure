@@ -8,6 +8,7 @@ using Core.Models.Persistent;
 using System.Threading;
 using Core.Interfaces.Components.Logging;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace Core.Scheduler.Jobs
 {
@@ -210,9 +211,9 @@ namespace Core.Scheduler.Jobs
 
                             Task<bool>[] tasks = null;
 
-                            if(_infos != null)
+                            if (_infos != null)
                             {
-                                lock(_infos)
+                                lock (_infos)
                                 {
                                     tasks = _infos.Where(j => j.IsRunning).Select(j => j.Task).ToArray();
                                 }
@@ -276,7 +277,7 @@ namespace Core.Scheduler.Jobs
 
         private void RemoveFromInfos(JobRunInfo info)
         {
-            if(info != null && _infos != null)
+            if (info != null && _infos != null)
             {
                 lock (_infos)
                 {
@@ -292,9 +293,9 @@ namespace Core.Scheduler.Jobs
         {
             int rc = 0;
 
-            if(_infos != null)
+            if (_infos != null)
             {
-                lock(_infos)
+                lock (_infos)
                 {
                     rc = _infos.Count;
                 }
@@ -380,7 +381,7 @@ namespace Core.Scheduler.Jobs
                         break;
 
                     case JobTriggerType.Weekly:
-
+                        result = FindNextTriggerTimeSpanWeekly(offset);
                         break;
 
                     case JobTriggerType.Monthly:
@@ -471,6 +472,100 @@ namespace Core.Scheduler.Jobs
             }
 
             return result;
+        }
+
+        private TimeSpan FindNextTriggerTimeSpanWeekly(TimeSpan startTimeOffset)
+        {
+            var result = startTimeOffset;
+
+            if (Configuration.TriggerWeeks != JobTriggerWeeks.NotConfigured && Configuration.TriggerDays != JobTriggerDays.NotConfigured)
+            {
+                var now = DateTime.UtcNow.ToLocalTime();
+                var triggerWeek = GetJobTriggerWeeks(now);
+
+                while (!TriggerWeeksCheck(now))
+                {
+                    result = result.Add(TimeSpan.FromDays(1));
+                    now = now.AddDays(1);
+                    triggerWeek = GetJobTriggerWeeks(now);
+                }
+            }
+            else
+            {
+                Status = JobStatus.Misconfigured;
+                _logger.Log(string.Format("Job by the name of \"{0}\" has a trigger type of \"{1}\" that is misconfigured.  This job will not run!", Configuration.Name, Configuration.TriggerType), LogMessageSeverity.Critical);
+                result = TimeSpan.MaxValue;
+            }
+
+            return result;
+        }
+
+        private bool TriggerWeeksCheck(DateTime timeToCheck)
+        {
+            var result = Configuration.TriggerWeeks.HasFlag(GetJobTriggerWeeks(timeToCheck));
+
+            if (Configuration.TriggerWeeks.HasFlag(JobTriggerWeeks.Last) && !result) //only check if we do not already have a hit
+            {
+                result = IsLastWeekOfMonth(timeToCheck);
+
+                if(!result) //check is this week has the last configured trigger day of the month
+                {
+                    result = HasLastTriggerDayOfMonth(timeToCheck);
+                }
+            }
+
+            if (result) //only check if we have a hit
+            {
+                result = Configuration.TriggerDays.HasFlag(GetJobTriggerDays((int)timeToCheck.DayOfWeek));
+            }
+
+            return result;
+        }
+
+        private bool HasLastTriggerDayOfMonth(DateTime timeToCheck)
+        {
+            int counter = 0;
+
+            var timeToReallyCheck = timeToCheck;
+
+            while (timeToReallyCheck.Month == timeToCheck.Month)
+            {
+                var triggerDay = GetJobTriggerDays((int)timeToReallyCheck.DayOfWeek);
+
+                if (Configuration.TriggerDays.HasFlag(triggerDay))
+                {
+                    counter++;
+                }
+
+                timeToReallyCheck= timeToReallyCheck.AddDays(1);
+            }
+
+            return counter == 1;
+        }
+
+        private JobTriggerWeeks GetJobTriggerWeeks(DateTime toConvert)
+        {
+            return (JobTriggerWeeks)Math.Pow(2, GetWeekOfMonth(toConvert, 1) - 1);
+        }
+
+        private bool IsLastWeekOfMonth(DateTime time)
+        {
+            int lastDayOfMonth = DateTime.DaysInMonth(time.Year, time.Month);
+            return GetWeekOfYear(time) == GetWeekOfYear(new DateTime(time.Year, time.Month, lastDayOfMonth));
+        }
+
+        private int GetWeekOfMonth(DateTime time, int dayNumber)
+        {
+            var dayToCheck = new DateTime(time.Year, time.Month, dayNumber);
+
+            return GetWeekOfYear(time) - GetWeekOfYear(dayToCheck) + 1;
+        }
+
+        private int GetWeekOfYear(DateTime time)
+        {
+            var culture = CultureInfo.CurrentCulture;
+
+            return culture.Calendar.GetWeekOfYear(time, culture.DateTimeFormat.CalendarWeekRule, culture.DateTimeFormat.FirstDayOfWeek);
         }
 
         private JobTriggerDays GetJobTriggerDays(int day)
