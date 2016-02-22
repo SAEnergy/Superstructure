@@ -2,8 +2,11 @@
 using Core.Interfaces.Components.Scheduler;
 using Core.Models.Persistent;
 using Core.Scheduler.Jobs;
+using Core.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace Core.Scheduler
 {
@@ -11,16 +14,22 @@ namespace Core.Scheduler
     {
         #region Fields
 
-        private static Dictionary<string, Type> _jobActionTypeMap = new Dictionary<string, Type>()
-        {
-            { "RunProgram" , typeof(RunProgramJob) }
-        };
+        private static Dictionary<string, Type> _jobActionTypeMap;
 
         #endregion
 
         #region Properties
 
         public static ILogger Logger { get; set; }
+
+        #endregion
+
+        #region Constructor
+
+        static JobFactory()
+        {
+            BuildJobActionTypeMap();
+        }
 
         #endregion
 
@@ -56,41 +65,25 @@ namespace Core.Scheduler
             return retVal;
         }
 
-        public static bool RegisterType(string name, Type type)
-        {
-            bool rc = false;
-
-            if (!string.IsNullOrEmpty(name) && type != null)
-            {
-                if(!_jobActionTypeMap.ContainsKey(name))
-                {
-                    if (CheckType(type))
-                    {
-                        _jobActionTypeMap.Add(name, type);
-
-                        rc = true;
-                    }
-                    else
-                    {
-                        Logger.Log(string.Format("Job action type \"{0}\" cannot be registered, the provided type does not implement the \"JobBase\" abstract class.", name), LogMessageSeverity.Error);
-                    }
-                }
-                else
-                {
-                    Logger.Log(string.Format("Job action type \"{0}\" cannot be registered, this action type name already exists.", name), LogMessageSeverity.Error);
-                }
-            }
-            else
-            {
-                Logger.Log("RegisterType provided Null arguments.", LogMessageSeverity.Error);
-            }
-
-            return rc;
-        }
-
         #endregion
 
         #region Private Methods
+
+        private static void BuildJobActionTypeMap()
+        {
+            _jobActionTypeMap = new Dictionary<string, Type>();
+
+            var type = typeof(JobBase);
+
+            var types = TypeLocator.FindTypes("*plugin*.dll", typeof(JobBase)).ToList();
+
+            types.AddRange(Assembly.GetExecutingAssembly().GetTypes().Where(t => t != type && type.IsAssignableFrom(t)));
+
+            foreach (var realtype in types)
+            {
+                _jobActionTypeMap.Add(realtype.Name, realtype);
+            }
+        }
 
         private static bool CheckType(Type type)
         {

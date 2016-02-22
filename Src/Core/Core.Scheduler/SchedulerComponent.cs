@@ -118,13 +118,6 @@ namespace Core.Scheduler
             throw new NotImplementedException();
         }
 
-        public bool RegisterCustomJobActionType(string actionType, Type implementationType)
-        {
-            _logger.Log(string.Format("Scheduler component registering custom job action type named \"{0}\".", actionType));
-
-            return JobFactory.RegisterType(actionType, implementationType); //expose this as part of the scheduler interface
-        }
-
         #endregion
 
         #region Private Methods

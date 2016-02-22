@@ -55,7 +55,6 @@
     </Compile>
     <Compile Include="SchedulerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UnitTestJob.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Core\Core.Interfaces\Core.Interfaces.csproj">
@@ -70,6 +69,10 @@
       <Project>{93f677ee-2190-4f16-bf5a-2bd44437327d}</Project>
       <Name>Core.Scheduler</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Core\Core.Util\Core.Util.csproj">
+      <Project>{74311b36-42b8-45d6-b0b7-7651db281d48}</Project>
+      <Name>Core.Util</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Test.Helpers\Test.Helpers.csproj">
       <Project>{f97158e5-4996-4972-8b6d-46cd0e3c93cf}</Project>
       <Name>Test.Helpers</Name>
@@ -77,6 +80,10 @@
     <ProjectReference Include="..\..\Test.Mocks\Test.Mocks.csproj">
       <Project>{1b7c43fb-f2bc-4c38-9d06-35c716666aff}</Project>
       <Name>Test.Mocks</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Test.Plugins.Mocks\Test.Plugins.Mocks.csproj">
+      <Project>{95f60aac-85c0-477c-93bf-28bec5ea0e78}</Project>
+      <Name>Test.Plugins.Mocks</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>
