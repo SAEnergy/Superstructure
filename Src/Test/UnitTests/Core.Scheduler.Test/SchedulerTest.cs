@@ -25,6 +25,7 @@ namespace Core.Scheduler.Test
         }
 
         [TestMethod]
+        [Ignore]
         public void SchedulerTest_AddCustomJob()
         {
             var scheduler = SchedulerComponent.CreateInstance(new LoggerMock(), new DataComponentMock());
