@@ -16,7 +16,6 @@ namespace ProjectUpdater
         private static ILogger _logger;
         private const string _searchPath = "*.csproj";
         private const string _globalAssemblyInfo = "GlobalAssemblyInfo.cs";
-        private static int _verifyResult;
         private const string _defaultFolderPath = "Run";
         private const string _folderPathFormat = "$(SolutionDir)Out\\{0}\\$(Configuration)";
 
@@ -29,35 +28,45 @@ namespace ProjectUpdater
 
         public static int Main(string[] args)
         {
+            Environment.ExitCode = 0;
+
             _logger = Logger.CreateInstance();
             _logger.AddLogDestination(new ConsoleLogDestination());
-
             _logger.Start();
 
-            _settings = new Settings(_logger);
-
-            _verifyResult = 0;
-
-            foreach (var projectFile in Directory.GetFiles(_settings.SourceFolder, _searchPath, SearchOption.AllDirectories))
+            try
             {
-                if (!string.IsNullOrEmpty(projectFile))
+                _settings = new Settings(_logger);
+                _settings.SourceFolder = Path.GetFullPath(_settings.SourceFolder);
+
+                string[] files = Directory.GetFiles(_settings.SourceFolder, _searchPath, SearchOption.AllDirectories);
+                _logger.Log("Found "+ files.Length + " projects.");
+
+                foreach (var projectFile in files)
                 {
-                    if (File.Exists(projectFile))
+                    if (!string.IsNullOrEmpty(projectFile))
                     {
-                        var project = new Project(projectFile);
+                        if (File.Exists(projectFile))
+                        {
+                            var project = new Project(projectFile);
 
-                        GlobalAssemblyUpdater(project);
+                            GlobalAssemblyUpdater(project);
 
-                        OutFolderUpdater(project);
+                            OutFolderUpdater(project);
+                        }
                     }
                 }
+
+            }
+            catch(Exception ex)
+            {
+                _logger.Log(ex.ToString(), LogMessageSeverity.Critical);
+                Environment.ExitCode--;
             }
 
-            _logger.Log("Done, bye!");
-
+            _logger.Log("Done, returning " + Environment.ExitCode + ", bye!");
             _logger.Stop();
-
-            return _verifyResult;
+            return Environment.ExitCode;
         }
 
         private static void GlobalAssemblyUpdater(Project project)
@@ -82,7 +91,7 @@ namespace ProjectUpdater
                     if (_settings.Verify)
                     {
                         _logger.Log(string.Format("Project \"{0}\" did not include link to \"{1}\"", project.FullPath, _globalAssemblyInfo));
-                        _verifyResult--;
+                        Environment.ExitCode--;
                     }
                 }
             }
@@ -115,7 +124,7 @@ namespace ProjectUpdater
                                 if(_settings.Verify)
                                 {
                                     _logger.Log(string.Format("Project \"{0}\" does not have property \"OutputPath\" set to value \"{1}\"", project.FullPath, path));
-                                    _verifyResult--;
+                                    Environment.ExitCode--;
                                 }
                             }
                         }

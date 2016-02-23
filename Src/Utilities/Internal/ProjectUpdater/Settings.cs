@@ -15,10 +15,10 @@ namespace ProjectUpdater
         [Argument]
         public string SourceFolder { get; set; }
 
-        [Argument(Optional = true)]
+        [Argument(Optional = true, DefaultValue = true)]
         public bool Verify { get; set; }
 
-        [Argument(Optional = true)]
+        [Argument(Optional = true, DefaultValue = true)]
         public bool IsReadOnly { get; set; }
 
         #endregion
