@@ -12,7 +12,7 @@ using System.ServiceModel.Description;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Server.Hosts
+namespace Core.Comm.BaseClasses
 {
     public class ServiceHostBase<T> : IServiceHost, IUserAuthentication, IDisposable  where T : IUserAuthentication
     {

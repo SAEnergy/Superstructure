@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Interfaces.Components.Logging;
+using Core.Comm.BaseClasses;
 
 namespace Server.Hosts
 {
