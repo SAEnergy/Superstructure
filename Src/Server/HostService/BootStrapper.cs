@@ -16,14 +16,14 @@ namespace HostService
             #region Singletons
 
             container.Register<ILogger, Logger>();
-            container.Register<IHostManagerComponent, MethodLoggerProxy<MethodTimerProxy<HostManagerComponent>>>();
-            container.Register<ISchedulerComponent, SchedulerComponent>();
+            container.Register<IHostManagerComponent, MethodTimerProxy<HostManagerComponent>>();
+            container.Register<ISchedulerComponent, MethodTimerProxy<SchedulerComponent>>();
 
             #endregion
 
             #region Transients
 
-            container.Register<IDataComponent, XMLDataComponent>(LifeCycle.Transient);
+            container.Register<IDataComponent, MethodTimerProxy<XMLDataComponent>>(LifeCycle.Transient);
             //container.Register<IDataComponent, SQLDataComponent>(LifeCycle.Transient);
 
             #endregion

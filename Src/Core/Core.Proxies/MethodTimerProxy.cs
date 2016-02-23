@@ -1,11 +1,7 @@
 ﻿using Core.Interfaces.Components.Logging;
 using Core.IoC.Container;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Remoting.Proxies;
-using System.Text;
-using System.Threading.Tasks;
 using System.Runtime.Remoting.Messaging;
 using System.Reflection;
 using System.Diagnostics;
@@ -33,6 +29,8 @@ namespace Core.Proxies
 
             try
             {
+                _logger.Log(string.Format("Method \"{0}\" executing...", methodCall.MethodName));
+
                 sw.Start();
                 var result = methodInfo.Invoke(_decorated, methodCall.InArgs);
 
@@ -46,7 +44,7 @@ namespace Core.Proxies
             {
                 sw.Stop();
 
-                _logger.Log(string.Format("Method {0} executed in: {1}ms", methodCall.MethodName, sw.ElapsedMilliseconds));
+                _logger.Log(string.Format("Method \"{0}\" executed in: {1}ms", methodCall.MethodName, sw.ElapsedMilliseconds));
             }
         }
     }
