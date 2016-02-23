@@ -108,7 +108,7 @@ namespace Core.Logging
                         }
                     }
                     // wait for queue to have room and keep trying
-                    Thread.Sleep(100);
+                    Thread.Sleep(_queueTimeOut);
                 }
             }
         }

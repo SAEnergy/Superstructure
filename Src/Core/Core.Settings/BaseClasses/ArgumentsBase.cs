@@ -133,7 +133,7 @@ namespace Core.Settings
 
             foreach (var info in GetFilteredProperties())
             {
-                var atty = info.GetCustomAttributes().FirstOrDefault(a => a.GetType() == typeof(ArgumentAttribute)) as ArgumentAttribute;
+                var atty = info.GetCustomAttribute<ArgumentAttribute>();
 
                 if (atty != null)
                 {

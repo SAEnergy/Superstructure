@@ -85,11 +85,6 @@ namespace Core.Scheduler
             }
         }
 
-        private static bool CheckType(Type type)
-        {
-            return typeof(JobBase).IsAssignableFrom(type);
-        }
-
         #endregion
     }
 }

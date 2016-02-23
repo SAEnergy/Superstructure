@@ -93,7 +93,7 @@ namespace Core.Settings.BaseClasses
 
             foreach(var info in GetFilteredProperties())
             {
-                var atty = info.GetCustomAttributes().FirstOrDefault(a => a.GetType() == typeof(ConfigurationAttribute)) as ConfigurationAttribute;
+                var atty = info.GetCustomAttribute<ConfigurationAttribute>();
 
                 if (atty != null)
                 {
