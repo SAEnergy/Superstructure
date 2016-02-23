@@ -22,7 +22,7 @@ namespace Core.Database
 
         #region Constructors
 
-        public ServerContext() : base(DatabaseSettings.Instance.ConnectionString) { }
+        public ServerContext() : this(DatabaseSettings.Instance.ConnectionString) { }
 
         //main constructor
         public ServerContext(string connectionString) : base(connectionString)
