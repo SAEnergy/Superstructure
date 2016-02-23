@@ -3,15 +3,15 @@
   <metadata>
     <id>SAE.Core.Logging</id>
     <version>$version$</version>
-	<title>Core Logging</title>
+    <title>Core Logging</title>
     <description>Lightweight and fast logging system with extensible destinations.</description>
     <authors>$author$</authors>
     <owners>$owner$</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <copyright>$nugetcopyright$</copyright>
-	<projectUrl>$GitHubUrl$</projectUrl>
+    <projectUrl>$GitHubUrl$</projectUrl>
     <licenseUrl>$LicenseUrl$</licenseUrl>
-	<iconUrl>$NugetIconUrl$</iconUrl>
+    <iconUrl>$NugetIconUrl$</iconUrl>
     <dependencies />
   </metadata>
   <files>
