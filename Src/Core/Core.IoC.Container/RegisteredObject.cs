@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Remoting.Proxies;
 
 namespace Core.IoC.Container
 {
@@ -23,6 +24,8 @@ namespace Core.IoC.Container
 
         public Type ConcreteType { get; private set; }
 
+        public Type RealConcreteType { get; private set; }
+
         #endregion
 
         #region Constructor
@@ -31,6 +34,7 @@ namespace Core.IoC.Container
         {
             InterfaceType = interfaceType;
             ConcreteType = concreteType;
+            RealConcreteType = GetRealConcreteType(concreteType);
             ObjectLifeCycle = lifeCycle;
 
             VerifyImplementation();
@@ -46,17 +50,17 @@ namespace Core.IoC.Container
 
             if(ObjectLifeCycle == LifeCycle.Transient)
             {
-                ConstructorInfo info = ConcreteType.GetConstructors().First();
+                ConstructorInfo info = RealConcreteType.GetConstructors().First();
                 obj = info.Invoke(BuildParameters(info));
             }
             else if(ObjectLifeCycle == LifeCycle.Singleton && obj == null)
             {
-                MethodInfo info = ConcreteType.GetMethod(SingletonBase.CREATEINSTANCEMETHODNAME, BindingFlags.Public | BindingFlags.Static);
+                MethodInfo info = RealConcreteType.GetMethod(SingletonBase.CREATEINSTANCEMETHODNAME, BindingFlags.Public | BindingFlags.Static);
                 obj = info.Invoke(null, BuildParameters(info));
 
                 if(obj == null)
                 {
-                    throw new NullReferenceException(string.Format("Singleton method \"{0}\" did not return an instance of type {1}.", SingletonBase.CREATEINSTANCEMETHODNAME, ConcreteType.FullName));
+                    throw new NullReferenceException(string.Format("Singleton method \"{0}\" did not return an instance of type {1}.", SingletonBase.CREATEINSTANCEMETHODNAME, RealConcreteType.FullName));
                 }
 
                 _singleton = obj;
@@ -64,7 +68,37 @@ namespace Core.IoC.Container
 
             if (obj == null)
             {
-                throw new NullReferenceException(string.Format("IoC container Failed to create instance of type \"{0}\".", ConcreteType.FullName));
+                throw new NullReferenceException(string.Format("IoC container failed to create instance of type \"{0}\".", RealConcreteType.FullName));
+            }
+
+            if(typeof(RealProxy).IsAssignableFrom(ConcreteType))
+            {
+                var type = ConcreteType;
+
+                while (typeof(RealProxy).IsAssignableFrom(type))
+                {
+                    var generic = type.GetGenericTypeDefinition().MakeGenericType(InterfaceType);
+
+                    if (generic != null)
+                    {
+                        var proxy = Activator.CreateInstance(generic, new object[] { obj }) as RealProxy;
+
+                        if (proxy != null)
+                        {
+                            obj = proxy.GetTransparentProxy();
+                        }
+                        else
+                        {
+                            throw new NullReferenceException(string.Format("IoC container failed to create proxy instance of type \"{0}\".", ConcreteType.FullName));
+                        }
+                    }
+                    else
+                    {
+                        throw new NullReferenceException(string.Format("IoC container failed to get proxy generic of type \"{0}\".", ConcreteType.FullName));
+                    }
+
+                    type = type.GetGenericArguments().FirstOrDefault();
+                }
             }
 
             return obj;
@@ -73,6 +107,18 @@ namespace Core.IoC.Container
         #endregion
 
         #region Private Methods
+
+        private Type GetRealConcreteType(Type concreteType)
+        {
+            var type = concreteType;
+
+            while(typeof(RealProxy).IsAssignableFrom(type))
+            {
+                type = type.GetGenericArguments().FirstOrDefault();
+            }
+
+            return type;
+        }
 
         private void VerifyImplementation()
         {
@@ -91,14 +137,14 @@ namespace Core.IoC.Container
 
         private void VerifySingleton()
         {
-            if(ConcreteType.GetConstructors().Length > 0)
+            if(RealConcreteType.GetConstructors().Length > 0)
             {
-                throw new NotSupportedException(string.Format("Singleton of type \"{0}\" cannot have a public constructor.", ConcreteType.FullName));
+                throw new NotSupportedException(string.Format("Singleton of type \"{0}\" cannot have a public constructor.", RealConcreteType.FullName));
             }
 
-            if(ConcreteType.GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance).Length != 1)
+            if(RealConcreteType.GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance).Length != 1)
             {
-                throw new NotSupportedException(string.Format("Singleton of type \"{0}\" must have one, and only one private constructor", ConcreteType.FullName));
+                throw new NotSupportedException(string.Format("Singleton of type \"{0}\" must have one, and only one private constructor", RealConcreteType.FullName));
             }
 
             if (!CheckBaseType())
@@ -109,7 +155,7 @@ namespace Core.IoC.Container
 
         private void VerifyTransient()
         {
-            if (ConcreteType.GetConstructors().Length != 1)
+            if (RealConcreteType.GetConstructors().Length != 1)
             {
                 throw new NotSupportedException("IoC concrete classes must have one, and only one public constructor.");
             }
@@ -119,7 +165,7 @@ namespace Core.IoC.Container
         {
             bool rc = false;
 
-            var baseType = ConcreteType.BaseType;
+            var baseType = RealConcreteType.BaseType;
 
             while(baseType != null)
             {

@@ -102,6 +102,10 @@
       <Project>{27a1df0a-7fd7-4306-9054-60fa4652780e}</Project>
       <Name>Core.Logging</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Core\Core.Proxies\Core.Proxies.csproj">
+      <Project>{58bdf1aa-6816-438b-920e-16b10bae3da8}</Project>
+      <Name>Core.Proxies</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Core\Core.Scheduler\Core.Scheduler.csproj">
       <Project>{93f677ee-2190-4f16-bf5a-2bd44437327d}</Project>
       <Name>Core.Scheduler</Name>
