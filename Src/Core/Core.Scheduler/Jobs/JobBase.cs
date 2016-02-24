@@ -183,7 +183,7 @@ namespace Core.Scheduler.Jobs
                     }
                 }
 
-                Task.Factory.StartNew(() => Run(ct, info)); //does not block here on purpose
+                Task.Run(() => Run(ct, info)); //does not block here on purpose
                 _logger.Log(string.Format("Job \"{0}\" has been setup to run.", Configuration.Name));
             }
         }

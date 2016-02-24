@@ -60,7 +60,7 @@ namespace Core.Scheduler
                 {
                     _logger.Log("Scheduler component starting...");
 
-                    Task.Factory.StartNew(() => LoadAllJobs()); //does not block here on purpose
+                    Task.Run(()=>LoadAllJobs()); //does not block here on purpose
                 }
             }
         }
@@ -73,7 +73,7 @@ namespace Core.Scheduler
                 {
                     _logger.Log("Scheduler component stopping.");
 
-                    var task = Task.Factory.StartNew(() => CancelAllJobs());
+                    var task = Task.Run(() => CancelAllJobs());
 
                     task.Wait(_schedulerShutDownTimeOut); //wait for a while, and give up if it doesn't complete
 
