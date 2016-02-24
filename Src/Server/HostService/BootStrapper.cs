@@ -6,6 +6,7 @@ using Core.Logging;
 using Core.Scheduler;
 using Core.Components;
 using Core.Proxies;
+using Server.WebHost;
 
 namespace HostService
 {
@@ -18,6 +19,7 @@ namespace HostService
             container.Register<ILogger, Logger>();
             container.Register<IHostManagerComponent, MethodTimerProxy<HostManagerComponent>>();
             container.Register<ISchedulerComponent, MethodTimerProxy<SchedulerComponent>>();
+            container.Register<IWebHost, MethodTimerProxy<WebHost>>();
 
             #endregion
 

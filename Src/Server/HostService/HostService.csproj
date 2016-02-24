@@ -47,6 +47,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -117,6 +118,10 @@
     <ProjectReference Include="..\Server.Hosts\Server.Hosts.csproj">
       <Project>{1ad8a980-3f70-45a8-a682-68365183b845}</Project>
       <Name>Server.Hosts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Server.WebHost\Server.WebHost.csproj">
+      <Project>{a9285281-4816-43c4-ae9a-aa0c5fe16d89}</Project>
+      <Name>Server.WebHost</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

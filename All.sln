@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HostService", "Src\Server\HostService\HostService.csproj", "{392799A9-DA4A-4552-8F44-FAD887BA9D34}"
 EndProject
@@ -80,6 +80,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Plugins.Mocks", "Src\Test\Test.Plugins.Mocks\Test.Plugins.Mocks.csproj", "{95F60AAC-85C0-477C-93BF-28BEC5EA0E78}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Proxies", "Src\Core\Core.Proxies\Core.Proxies.csproj", "{58BDF1AA-6816-438B-920E-16B10BAE3DA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.WebHost", "Src\Server\Server.WebHost\Server.WebHost.csproj", "{A9285281-4816-43C4-AE9A-AA0C5FE16D89}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -207,6 +209,10 @@ Global
 		{58BDF1AA-6816-438B-920E-16B10BAE3DA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58BDF1AA-6816-438B-920E-16B10BAE3DA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58BDF1AA-6816-438B-920E-16B10BAE3DA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9285281-4816-43C4-AE9A-AA0C5FE16D89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9285281-4816-43C4-AE9A-AA0C5FE16D89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9285281-4816-43C4-AE9A-AA0C5FE16D89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9285281-4816-43C4-AE9A-AA0C5FE16D89}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -246,5 +252,6 @@ Global
 		{3825FC2C-5737-4922-98A5-31DB8B8D32AA} = {D908E740-31A3-482A-B0EB-AC4FD165B97B}
 		{95F60AAC-85C0-477C-93BF-28BEC5EA0E78} = {859F8F13-6A13-48BE-86C6-F44027D354DC}
 		{58BDF1AA-6816-438B-920E-16B10BAE3DA8} = {FA0A3D8E-6753-49DB-AF8F-E5938FF494D8}
+		{A9285281-4816-43C4-AE9A-AA0C5FE16D89} = {AB14B98D-CD89-4139-B0D4-3D3237D1871A}
 	EndGlobalSection
 EndGlobal

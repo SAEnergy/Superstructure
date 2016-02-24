@@ -149,50 +149,14 @@ namespace Core.Components
                 info.Host = new ServiceHost(type);
 
                 info.Host.Description.Behaviors.Add(new HostErrorHandlerBehavior(info));
-                ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
-                //smb.HttpsGetEnabled = true;
-                //smb.HttpsGetUrl = new Uri("https://localhost:9596/"+ interfaceType.Name + "/mex/");
-                smb.HttpGetEnabled = true;
-                smb.HttpGetUrl = new Uri("http://localhost:9596/" + interfaceType.Name + "/mex/");
-                info.Host.Description.Behaviors.Add(smb);
 
                 ContractDescription contract = ContractDescription.GetContract(interfaceType);
 
-                {
-                    EndpointAddress endpoint = new EndpointAddress("net.tcp://localhost:9595/" + interfaceType.Name + "/");
-                    Binding binding = new NetTcpBinding(SecurityMode.None, false);
-                    ServiceEndpoint service = new ServiceEndpoint(contract, binding, endpoint);
-                    info.Host.AddServiceEndpoint(service);
-                }
+                EndpointAddress endpoint = new EndpointAddress("net.tcp://localhost:9595/" + interfaceType.Name + "/");
+                Binding binding = new NetTcpBinding(SecurityMode.None, false);
+                ServiceEndpoint service = new ServiceEndpoint(contract, binding, endpoint);
+                info.Host.AddServiceEndpoint(service);
 
-                {
-                    //var store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
-                    //store.Open(OpenFlags.ReadOnly);
-                    //var cert = store.Certificates.Find(X509FindType.FindBySubjectName, "localhost", false)[0];
-                    //store.Close();
-                    //var endpointIdentity = EndpointIdentity.CreateX509CertificateIdentity(cert);
-                    //EndpointAddress endpoint = new EndpointAddress(new Uri("https://localhost:9596/" + interfaceType.Name + "/"), endpointIdentity);
-                    //Binding binding = new NetHttpsBinding(BasicHttpsSecurityMode.Transport, false);
-                    EndpointAddress endpoint = new EndpointAddress("http://localhost:9596/" + interfaceType.Name + "/");
-                    Binding binding = new NetHttpBinding(BasicHttpSecurityMode.None, false);
-                    ServiceEndpoint service = new ServiceEndpoint(contract, binding, endpoint);
-                    info.Host.AddServiceEndpoint(service);
-                }
-
-                {
-                    ContractDescription mexContract = ContractDescription.GetContract(typeof(IMetadataExchange));
-                    //var store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
-                    //store.Open(OpenFlags.ReadOnly);
-                    //var cert = store.Certificates.Find(X509FindType.FindBySubjectName, "localhost", false)[0];
-                    //store.Close();
-                    //var endpointIdentity = EndpointIdentity.CreateX509CertificateIdentity(cert);
-                    //EndpointAddress endpoint = new EndpointAddress(new Uri("https://localhost:9596/"+ interfaceType.Name + "/mex/"), endpointIdentity);
-                    //Binding binding = new NetHttpsBinding(BasicHttpsSecurityMode.Transport, false);
-                    EndpointAddress endpoint = new EndpointAddress("http://localhost:9596/" + interfaceType.Name + "/mex/");
-                    Binding binding = new NetHttpBinding(BasicHttpSecurityMode.None, false);
-                    ServiceEndpoint service = new ServiceEndpoint(mexContract, binding, endpoint);
-                    info.Host.AddServiceEndpoint(service);
-                }
                 hosts.Add(interfaceType, info);
             }
 
