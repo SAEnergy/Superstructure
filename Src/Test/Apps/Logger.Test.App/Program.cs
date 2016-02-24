@@ -58,6 +58,14 @@ namespace LoggerTest.App
 
             _logger.AddLogDestination(remote);
 
+
+            EventViewerDestinationConfig event_viewer_config = new EventViewerDestinationConfig();
+
+            event_viewer_config.Source = "HostService";
+            event_viewer_config.LogName = "Host Service Log";
+
+            _logger.AddLogDestination(new EventViewerDestination(event_viewer_config));
+
             _logger.Start();
 
             Console.CancelKeyPress += Console_CancelKeyPress;

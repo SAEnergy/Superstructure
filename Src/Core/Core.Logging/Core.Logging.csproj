@@ -43,8 +43,10 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="LogDestinationConfigs\EventViewerDestinationConfig.cs" />
     <Compile Include="LogDestinationConfigs\FileLogDestinationConfig.cs" />
     <Compile Include="LogDestinationConfigs\TCPLogDestinationConfig.cs" />
+    <Compile Include="LogDestinations\EventViewerDestination.cs" />
     <Compile Include="LogDestinations\LogDestinationBase.cs" />
     <Compile Include="LogDestinations\ConsoleLogDestination.cs" />
     <Compile Include="LogDestinations\FileLogDestination.cs" />
