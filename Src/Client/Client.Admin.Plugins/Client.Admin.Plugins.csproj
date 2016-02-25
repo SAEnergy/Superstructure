@@ -47,13 +47,14 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="ComponentManagerPanel.xaml.cs">
+    <Compile Include="ViewModels\ComponentManagerViewModel.cs" />
+    <Compile Include="Views\ComponentManagerPanel.xaml.cs">
       <DependentUpon>ComponentManagerPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="ComponentManagerPanel.xaml">
+    <Page Include="Views\ComponentManagerPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

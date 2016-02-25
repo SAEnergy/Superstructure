@@ -40,17 +40,17 @@ namespace Client.Base
 
     public class ViewModelBase<T> : ViewModelBase where T : IUserAuthentication
     {
-        protected Subscription<T> _conn;
+        protected Subscription<T> _sub;
 
         public ViewModelBase(ViewBase parent) : base(parent)
         {
-            _conn = new Subscription<T>(this);
-            _conn.Connected += OnConnect;
-            _conn.Disconnected += OnDisconnect;
-            _conn.Start();
+            _sub = new Subscription<T>(this);
+            _sub.Connected += OnConnect;
+            _sub.Disconnected += OnDisconnect;
+            _sub.Start();
         }
 
-        protected T Channel { get; }
+        protected T Channel { get { return _sub.Channel; } }
 
         protected virtual void OnConnect(ISubscription source)
         {
@@ -64,7 +64,7 @@ namespace Client.Base
 
         public override void Dispose()
         {
-            _conn.Stop();
+            _sub.Stop();
             base.Dispose();
         }
     }
