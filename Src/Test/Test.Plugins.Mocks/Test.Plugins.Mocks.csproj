@@ -47,6 +47,10 @@
     <Compile Include="UnitTestJob.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Components\Server.Scheduler.Component\Server.Scheduler.Component.csproj">
+      <Project>{93f677ee-2190-4f16-bf5a-2bd44437327d}</Project>
+      <Name>Server.Scheduler.Component</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Core\Core.Interfaces\Core.Interfaces.csproj">
       <Project>{bdb06c43-2402-444e-a9e0-72c88174fed7}</Project>
       <Name>Core.Interfaces</Name>
@@ -54,10 +58,6 @@
     <ProjectReference Include="..\..\Core\Core.Models\Core.Models.csproj">
       <Project>{803e539b-3687-4465-b272-e50816df453f}</Project>
       <Name>Core.Models</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Core\Core.Scheduler\Core.Scheduler.csproj">
-      <Project>{93f677ee-2190-4f16-bf5a-2bd44437327d}</Project>
-      <Name>Core.Scheduler</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

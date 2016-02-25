@@ -7,8 +7,8 @@
     <ProjectGuid>{43DFA6B7-0D66-4DBA-B9B2-E0D4B8BDE643}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Core.Logging.Remote</RootNamespace>
-    <AssemblyName>Core.Logging.Remote</AssemblyName>
+    <RootNamespace>Logging.Remote</RootNamespace>
+    <AssemblyName>Logging.Remote</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -47,17 +47,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core.Comm\Core.Comm.csproj">
+    <ProjectReference Include="..\..\Core\Core.Comm\Core.Comm.csproj">
       <Project>{ade057b4-c64f-4142-a4df-0b733fe31926}</Project>
       <Name>Core.Comm</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Core.Interfaces\Core.Interfaces.csproj">
+    <ProjectReference Include="..\..\Core\Core.Interfaces\Core.Interfaces.csproj">
       <Project>{bdb06c43-2402-444e-a9e0-72c88174fed7}</Project>
       <Name>Core.Interfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Core.Logging\Core.Logging.csproj">
+    <ProjectReference Include="..\Logging.Component\Logging.Component.csproj">
       <Project>{27a1df0a-7fd7-4306-9054-60fa4652780e}</Project>
-      <Name>Core.Logging</Name>
+      <Name>Logging.Component</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -7,8 +7,8 @@
     <ProjectGuid>{E6322468-7278-4940-9D5C-826E30477A19}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Core.Components</RootNamespace>
-    <AssemblyName>Core.Components</AssemblyName>
+    <RootNamespace>Server.Components</RootNamespace>
+    <AssemblyName>Server.Components</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -61,19 +61,19 @@
     <Compile Include="XMLDataComponent.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core.Comm\Core.Comm.csproj">
+    <ProjectReference Include="..\..\Core\Core.Comm\Core.Comm.csproj">
       <Project>{ade057b4-c64f-4142-a4df-0b733fe31926}</Project>
       <Name>Core.Comm</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Core.Database\Core.Database.csproj">
+    <ProjectReference Include="..\..\Core\Core.Database\Core.Database.csproj">
       <Project>{b21c9416-91fc-462c-9676-a429d4b4d132}</Project>
       <Name>Core.Database</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Core.Interfaces\Core.Interfaces.csproj">
+    <ProjectReference Include="..\..\Core\Core.Interfaces\Core.Interfaces.csproj">
       <Project>{bdb06c43-2402-444e-a9e0-72c88174fed7}</Project>
       <Name>Core.Interfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Core.Util\Core.Util.csproj">
+    <ProjectReference Include="..\..\Core\Core.Util\Core.Util.csproj">
       <Project>{74311b36-42b8-45d6-b0b7-7651db281d48}</Project>
       <Name>Core.Util</Name>
     </ProjectReference>

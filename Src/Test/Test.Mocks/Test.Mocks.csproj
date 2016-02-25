@@ -45,7 +45,6 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="BootStrapper.cs" />
     <Compile Include="DataComponentMock.cs" />
     <Compile Include="LoggerMock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

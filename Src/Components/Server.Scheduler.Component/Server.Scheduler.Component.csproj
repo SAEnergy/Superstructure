@@ -7,8 +7,8 @@
     <ProjectGuid>{93F677EE-2190-4F16-BF5A-2BD44437327D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Core.Scheduler</RootNamespace>
-    <AssemblyName>Core.Scheduler</AssemblyName>
+    <RootNamespace>Server.Scheduler.Component</RootNamespace>
+    <AssemblyName>Server.Scheduler.Component</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -50,15 +50,15 @@
     <Compile Include="SchedulerComponent.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core.Interfaces\Core.Interfaces.csproj">
+    <ProjectReference Include="..\..\Core\Core.Interfaces\Core.Interfaces.csproj">
       <Project>{bdb06c43-2402-444e-a9e0-72c88174fed7}</Project>
       <Name>Core.Interfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Core.Models\Core.Models.csproj">
+    <ProjectReference Include="..\..\Core\Core.Models\Core.Models.csproj">
       <Project>{803e539b-3687-4465-b272-e50816df453f}</Project>
       <Name>Core.Models</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Core.Util\Core.Util.csproj">
+    <ProjectReference Include="..\..\Core\Core.Util\Core.Util.csproj">
       <Project>{74311b36-42b8-45d6-b0b7-7651db281d48}</Project>
       <Name>Core.Util</Name>
     </ProjectReference>

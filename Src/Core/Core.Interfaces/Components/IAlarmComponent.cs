@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core.Interfaces.Components
 {
-    public interface IAlarmComponent
+    public interface IAlarmComponent : IComponentBase
     {
     }
 }

@@ -10,10 +10,12 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using Core.Interfaces.Components.IoC;
 
 namespace Core.Components
 {
-    public sealed class XMLDataComponent : IDataComponent
+    [Component(ComponentType.All, typeof(IDataComponent), AllowedActions = ComponentUserActions.NoActions, Description = "XML Data System", FriendlyName = "XML Data", ComponentLifeCycle = LifeCycle.Transient)]
+    public sealed class XMLDataComponent : ComponentBase, IDataComponent
     {
         #region Fields
 

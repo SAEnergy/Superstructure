@@ -5,10 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using Core.Interfaces.Components.IoC;
 
 namespace Core.Components
 {
-    public sealed class SQLDataComponent : IDataComponent
+    [Component(ComponentType.Server, typeof(IDataComponent), AllowedActions = ComponentUserActions.NoActions, Description = "SQL Data System", FriendlyName = "SQL Data", ComponentLifeCycle = LifeCycle.Transient, DoNotRegister = true)]
+    public sealed class SQLDataComponent : ComponentBase, IDataComponent
     {
         #region Fields
 

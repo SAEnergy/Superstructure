@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Core.Interfaces.Components
 {
-    public interface IDataComponent
+    public interface IDataComponent : IComponentBase
     {
         bool Delete<T>(int key) where T : class;
 

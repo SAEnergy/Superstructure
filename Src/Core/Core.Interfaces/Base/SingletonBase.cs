@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Core.Interfaces.Components;
+using System;
 using System.Reflection;
 
 namespace Core.Interfaces.Base
 {
-    public abstract class SingletonBase
+    public abstract class SingletonBase : ComponentBase
     {
         #region Fields
 

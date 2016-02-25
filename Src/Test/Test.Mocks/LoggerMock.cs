@@ -2,12 +2,54 @@
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using System;
+using Core.Interfaces.Components.IoC;
+using System.Collections.Generic;
 
 namespace Test.Mocks
 {
     public class LoggerMock : ILogger
     {
         public bool IsRunning { get; private set; }
+
+        public string FriendName
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public string Description
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public ComponentType ComponentType
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public ComponentUserActions AllowedUserActions
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public List<Type> Proxies
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
 
         public void AddLogDestination(ILogDestination logDestination)
         {

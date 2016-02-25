@@ -66,9 +66,14 @@ namespace Core.IoC.Container
 
         public void Register<TInterfaceType, TConcreteType>(LifeCycle lifeCycle)
         {
-            RegisteredObject obj = new RegisteredObject(typeof(TInterfaceType), typeof(TConcreteType), lifeCycle);
+            Register(typeof(TInterfaceType), typeof(TConcreteType), lifeCycle);
+        }
 
-            _registeredObjects.Add(typeof(TInterfaceType), obj);
+        public void Register(Type interfaceType, Type concreteType, LifeCycle lifeCycle)
+        {
+            RegisteredObject obj = new RegisteredObject(interfaceType, concreteType, lifeCycle);
+
+            _registeredObjects.Add(interfaceType, obj);
         }
 
         public object Resolve(Type interfaceType)

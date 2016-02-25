@@ -58,7 +58,7 @@
       <Project>{bdb06c43-2402-444e-a9e0-72c88174fed7}</Project>
       <Name>Core.Interfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Core\Core.Logging\Core.Logging.csproj">
+    <ProjectReference Include="..\..\..\Components\Logging.Component\Logging.Component.csproj">
       <Project>{27a1df0a-7fd7-4306-9054-60fa4652780e}</Project>
       <Name>Core.Logging</Name>
     </ProjectReference>

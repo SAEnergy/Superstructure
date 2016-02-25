@@ -4,15 +4,13 @@ using Core.Interfaces.Components.Scheduler;
 using Core.Interfaces.Components;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Core.Models.Persistent;
-using Core.Models;
+using Core.Interfaces.Components.IoC;
 
 namespace Core.Scheduler
 {
+    [Component(ComponentType.Server, typeof(ISchedulerComponent), AllowedActions = ComponentUserActions.All, Description = "Scheduling System", FriendlyName = "Scheduler")]
     public sealed class SchedulerComponent : Singleton<ISchedulerComponent>, ISchedulerComponent
     {
         #region Fields

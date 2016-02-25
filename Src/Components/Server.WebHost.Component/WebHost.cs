@@ -1,5 +1,6 @@
 ﻿using Core.Interfaces.Base;
 using Core.Interfaces.Components;
+using Core.Interfaces.Components.IoC;
 using Core.Interfaces.Components.Logging;
 using Microsoft.Owin.Hosting;
 using Nancy;
@@ -13,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace Server.WebHost
 {
+    [Component(ComponentType.Server, typeof(IWebHost), AllowedActions = ComponentUserActions.Restart, Description = "Web Server Host", FriendlyName = "Web Server")]
     public class WebHost : Singleton<IWebHost>, IWebHost
     {
         private ILogger _logger;

@@ -87,7 +87,7 @@ namespace HostService
 
         private static void StartService(string[] args)
         {
-            BootStrapper.Configure(IoCContainer.Instance);
+            ComponentRegister.Register();
 
             _logger = IoCContainer.Instance.Resolve<ILogger>();
 

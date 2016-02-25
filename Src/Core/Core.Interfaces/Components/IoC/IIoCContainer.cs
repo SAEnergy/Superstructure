@@ -8,6 +8,8 @@ namespace Core.Interfaces.Components.IoC
 
         void Register<TInterfaceType, TConcreteType>(LifeCycle lifeCycle);
 
+        void Register(Type interfaceType, Type concreteType, LifeCycle lifeCycle);
+
         TInterfaceType Resolve<TInterfaceType>();
 
         object Resolve(Type interfaceType);

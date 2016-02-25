@@ -7,8 +7,8 @@
     <ProjectGuid>{A9285281-4816-43C4-AE9A-AA0C5FE16D89}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Server.WebHost</RootNamespace>
-    <AssemblyName>Server.WebHost</AssemblyName>
+    <RootNamespace>Server.WebHost.Component</RootNamespace>
+    <AssemblyName>Server.WebHost.Component</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

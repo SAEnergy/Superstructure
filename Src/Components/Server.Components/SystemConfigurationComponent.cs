@@ -1,9 +1,11 @@
 ﻿using Core.Interfaces.Base;
 using Core.Interfaces.Components.Logging;
 using Core.Interfaces.Components;
+using Core.Interfaces.Components.IoC;
 
 namespace Core.Components
 {
+    [Component(ComponentType.Server, typeof(ISystemConfigurationComponent), Description = "System Configuration System", FriendlyName = "System Configuration")]
     public class SystemConfigurationComponent : Singleton<ISystemConfigurationComponent>, ISystemConfigurationComponent
     {
         #region Fields

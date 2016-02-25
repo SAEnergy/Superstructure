@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace Core.Interfaces.Components.Logging
 {
-    public interface ILogger : IRunnable
+    public interface ILogger : IRunnable, IComponentBase
     {
         void Log(LogMessage logMessage);
 

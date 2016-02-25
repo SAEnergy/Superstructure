@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Linq;
+using Core.Interfaces.Components.IoC;
 
 namespace Core.Logging
 {
+    [Component(ComponentType.All, typeof(ILogger), Description = "Logging System", FriendlyName = "Logger")]
     public sealed class Logger : Singleton<ILogger>, ILogger
     {
         #region Fields

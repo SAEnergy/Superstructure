@@ -66,7 +66,6 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="BootStrapper.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="HeartBeat.cs" />
     <Compile Include="HostService.cs" />
@@ -83,9 +82,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\Core.Components\Core.Components.csproj">
-      <Project>{e6322468-7278-4940-9d5c-826e30477a19}</Project>
-      <Name>Core.Components</Name>
+    <ProjectReference Include="..\..\Components\Logging.Component\Logging.Component.csproj">
+      <Project>{27a1df0a-7fd7-4306-9054-60fa4652780e}</Project>
+      <Name>Logging.Component</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Core\Core.Database\Core.Database.csproj">
       <Project>{b21c9416-91fc-462c-9676-a429d4b4d132}</Project>
@@ -99,18 +98,6 @@
       <Project>{e4860231-c690-45df-b396-120a9e3bcdd4}</Project>
       <Name>Core.IoC.Container</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Core\Core.Logging\Core.Logging.csproj">
-      <Project>{27a1df0a-7fd7-4306-9054-60fa4652780e}</Project>
-      <Name>Core.Logging</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Core\Core.Proxies\Core.Proxies.csproj">
-      <Project>{58bdf1aa-6816-438b-920e-16b10bae3da8}</Project>
-      <Name>Core.Proxies</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Core\Core.Scheduler\Core.Scheduler.csproj">
-      <Project>{93f677ee-2190-4f16-bf5a-2bd44437327d}</Project>
-      <Name>Core.Scheduler</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Core\Core.Settings\Core.Settings.csproj">
       <Project>{990d2026-6a74-4a32-8510-6b28142ba3f2}</Project>
       <Name>Core.Settings</Name>
@@ -119,7 +106,7 @@
       <Project>{1ad8a980-3f70-45a8-a682-68365183b845}</Project>
       <Name>Server.Hosts</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Server.WebHost\Server.WebHost.csproj">
+    <ProjectReference Include="..\..\Components\Server.WebHost.Component\Server.WebHost.Component.csproj">
       <Project>{a9285281-4816-43c4-ae9a-aa0c5fe16d89}</Project>
       <Name>Server.WebHost</Name>
     </ProjectReference>

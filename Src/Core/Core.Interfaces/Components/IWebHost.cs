@@ -7,5 +7,7 @@ using System.Threading.Tasks;
 
 namespace Core.Interfaces.Components
 {
-    public interface IWebHost : IRunnable { }
+    public interface IWebHost : IRunnable, IComponentBase
+    {
+    }
 }

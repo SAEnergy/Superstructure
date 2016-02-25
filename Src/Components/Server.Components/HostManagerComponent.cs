@@ -1,6 +1,7 @@
 ﻿using Core.Comm;
 using Core.Interfaces.Base;
 using Core.Interfaces.Components;
+using Core.Interfaces.Components.IoC;
 using Core.Interfaces.Components.Logging;
 using Core.Util;
 using System;
@@ -22,7 +23,7 @@ namespace Core.Components
         public ILogger Logger { get; set; }
     }
 
-
+    [Component(ComponentType.Server, typeof(IHostManagerComponent), AllowedActions = ComponentUserActions.Restart, Description = "Host Manager System", FriendlyName = "Host Manager")]
     public sealed class HostManagerComponent : Singleton<IHostManagerComponent>, IHostManagerComponent
     {
         #region Fields

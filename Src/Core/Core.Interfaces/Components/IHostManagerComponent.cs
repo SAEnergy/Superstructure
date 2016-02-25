@@ -1,6 +1,6 @@
 ﻿namespace Core.Interfaces.Components
 {
-    public interface IHostManagerComponent
+    public interface IHostManagerComponent : IComponentBase
     {
         void StartAll();
 

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{81607B00-77B0-4987-A1B4-3DFF9DFFEADD}</ProjectGuid>
+    <ProjectGuid>{27A1DF0A-7FD7-4306-9054-60FA4652780E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Core.Logging.Log4Net</RootNamespace>
-    <AssemblyName>Core.Logging.Log4Net</AssemblyName>
+    <RootNamespace>Logging.Component</RootNamespace>
+    <AssemblyName>Logging.Component</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,10 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net">
-      <HintPath>..\..\..\Libs\NugetPackages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,22 +43,24 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="LogDestinationConfigs\XMLDestinationConfig.cs" />
-    <Compile Include="LogDestinations\XMLDestination.cs" />
+    <Compile Include="LogDestinationConfigs\EventViewerDestinationConfig.cs" />
+    <Compile Include="LogDestinationConfigs\FileLogDestinationConfig.cs" />
+    <Compile Include="LogDestinationConfigs\TCPLogDestinationConfig.cs" />
+    <Compile Include="LogDestinations\EventViewerDestination.cs" />
+    <Compile Include="LogDestinations\LogDestinationBase.cs" />
+    <Compile Include="LogDestinations\ConsoleLogDestination.cs" />
+    <Compile Include="LogDestinations\FileLogDestination.cs" />
+    <Compile Include="LogDestinations\TCPLogDestination.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="LogMessageFormatters\CSVLogMessageFormatter.cs" />
+    <Compile Include="LogMessageQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core.Interfaces\Core.Interfaces.csproj">
+    <ProjectReference Include="..\..\Core\Core.Interfaces\Core.Interfaces.csproj">
       <Project>{bdb06c43-2402-444e-a9e0-72c88174fed7}</Project>
       <Name>Core.Interfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Core.Logging\Core.Logging.csproj">
-      <Project>{27a1df0a-7fd7-4306-9054-60fa4652780e}</Project>
-      <Name>Core.Logging</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

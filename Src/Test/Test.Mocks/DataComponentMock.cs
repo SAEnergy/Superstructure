@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
+using Core.Interfaces.Components.IoC;
 
 namespace Test.Mocks
 {
@@ -22,6 +23,46 @@ namespace Test.Mocks
         private Dictionary<Type, List<object>> _dataSourceOriginal;
 
         private static int _keyCounter = 1;
+
+        public string FriendName
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public string Description
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public ComponentType ComponentType
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public ComponentUserActions AllowedUserActions
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public List<Type> Proxies
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
 
         #endregion
 
