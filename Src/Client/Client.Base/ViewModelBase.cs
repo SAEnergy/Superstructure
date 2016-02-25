@@ -7,11 +7,12 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Client.Base
 {
-    public class ViewModelBase : IDisposable
+    public class ViewModelBase : DependencyObject, IDisposable
     {
         protected SynchronizationContext _context;
         protected ViewBase _parent;
