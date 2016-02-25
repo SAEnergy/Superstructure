@@ -23,7 +23,7 @@ namespace Core.IoC.Container
 
                     if (atty != null)
                     {
-                        if (types.HasFlag(atty.Type) && !atty.DoNotRegister)
+                        if ((types & atty.Type) == types && !atty.DoNotRegister)
                         {
                             IoCContainer.Instance.Register(atty.InterfaceType, component, atty.ComponentLifeCycle);
                         }

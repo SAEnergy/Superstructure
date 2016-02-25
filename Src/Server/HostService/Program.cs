@@ -1,4 +1,5 @@
-﻿using Core.Interfaces.Components.Logging;
+﻿using Core.Interfaces.Components.IoC;
+using Core.Interfaces.Components.Logging;
 using Core.IoC.Container;
 using Core.Logging.LogDestinationConfigs;
 using Core.Logging.LogDestinations;
@@ -87,7 +88,7 @@ namespace HostService
 
         private static void StartService(string[] args)
         {
-            ComponentRegister.Register();
+            ComponentRegister.Register(ComponentType.Server);
 
             _logger = IoCContainer.Instance.Resolve<ILogger>();
 
