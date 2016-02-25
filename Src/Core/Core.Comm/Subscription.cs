@@ -15,7 +15,7 @@ namespace Core.Comm
 
     public class Subscription<T> : ISubscription<T> where T : IUserAuthentication
     {
-        public event EventHandler Connected;
+        public event SubscriptionConnectedEvent Connected;
         public event SubscriptionDisconnectedEvent Disconnected;
         protected ChannelFactory<T> _factory;
         protected object _callback;
@@ -78,7 +78,7 @@ namespace Core.Comm
                             {
                                 State = SubscriptionState.Connected;
                             }
-                            if (Connected != null) { Connected(this, null); }
+                            if (Connected != null) { Connected(this); }
                         }
                         catch (ThreadAbortException)
                         {

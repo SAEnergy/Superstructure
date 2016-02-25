@@ -1,38 +1,17 @@
 ﻿using Client.Base;
-using Core.Comm;
-using Core.Interfaces.ServiceContracts;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Client.Plugins.Test
 {
-    /// <summary>
-    /// Interaction logic for UserControl1.xaml
-    /// </summary>
-    public partial class TestModalDialogs : PanelBase
+    class TestModalDialogViewModel : ViewModelBase
     {
         private WaitDialog _dialog;
         private CancellationTokenSource _cancel;
 
-        public TestModalDialogs()
-        {
-            this.DataContext = this;
-            InitializeComponent();
-        }
+        public TestModalDialogViewModel(ViewBase parent) : base(parent) { }
 
         private async Task Worker(CancellationToken tok)
         {
@@ -53,18 +32,18 @@ namespace Client.Plugins.Test
             });
         }
 
-        private void ClickModalBackgroundTask(object sender, RoutedEventArgs e)
+        public void ClickModalBackgroundTask(object sender, RoutedEventArgs e)
         {
-            _dialog = new WaitDialog(Window.GetWindow(this));
+            _dialog = new WaitDialog(Window.GetWindow(_parent));
             _dialog.IsCancellable = false;
             var task = Worker(new CancellationToken());
             _dialog.ShowDialog();
             _dialog = null;
         }
 
-        private void ClickCancellableBackgroundTask(object sender, RoutedEventArgs e)
+        public void ClickCancellableBackgroundTask(object sender, RoutedEventArgs e)
         {
-            _dialog = new WaitDialog(Window.GetWindow(this));
+            _dialog = new WaitDialog(Window.GetWindow(_parent));
             _cancel = new CancellationTokenSource();
             _dialog.Closed += _dialog_Closed;
             var task = Worker(_cancel.Token);

@@ -51,18 +51,20 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Page Include="TestModalDialogPanel.xaml">
+    <Page Include="Views\TestModalDialogPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="TestSubscriptionPanel.xaml">
+    <Page Include="Views\TestSubscriptionPanel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="TestModalDialogPanel.xaml.cs">
+    <Compile Include="Views\TestModalDialogPanel.xaml.cs">
       <DependentUpon>TestModalDialogPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TestSubscriptionPanel.xaml.cs">
+    <Compile Include="ViewModels\TestModalDialogViewModel.cs" />
+    <Compile Include="ViewModels\TestSubscriptionViewModel.cs" />
+    <Compile Include="Views\TestSubscriptionPanel.xaml.cs">
       <DependentUpon>TestSubscriptionPanel.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>

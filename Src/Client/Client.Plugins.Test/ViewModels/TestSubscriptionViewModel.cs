@@ -2,48 +2,29 @@
 using Core.Comm;
 using Core.Interfaces.ServiceContracts;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Client.Plugins.Test
 {
-
-    [PanelMetadata(DisplayName = "Subscription Test", IconPath = "images/globe.png")]
-    public partial class TestSubscriptionPanel : PanelBase, IDuplexTestCallback
+    public class TestSubscriptionViewModel : ViewModelBase<IDuplexTest>, IDuplexTestCallback
     {
-        private Subscription<IDuplexTest> _conn;
         public ObservableCollection<string> Messages { get; private set; }
 
-        public TestSubscriptionPanel()
+        public TestSubscriptionViewModel(ViewBase parent) : base(parent)
         {
             Messages = new ObservableCollection<string>();
-            this.DataContext = this;
-            InitializeComponent();
-            _conn = new Subscription<IDuplexTest>(this);
-            _conn.Connected += _conn_Connected;
-            _conn.Disconnected += _conn_Disconnected;
-            _conn.Start();
+            Messages.Add("honk");
         }
 
-        private void _conn_Disconnected(ISubscription source, Exception ex)
+        protected override void OnDisconnect(ISubscription source, Exception error)
         {
-            this.BeginInvokeIfRequired(() => Messages.Add("Disconnected. " + ex.Message));
+            this.BeginInvokeIfRequired(() => Messages.Add("Disconnected. " + error.Message));
+            base.OnDisconnect(source, error);
         }
 
-        private void _conn_Connected(object sender, EventArgs e)
+        protected override void OnConnect(ISubscription source)
         {
             this.BeginInvokeIfRequired(() => Messages.Add("Connected to Server."));
             try
@@ -67,7 +48,7 @@ namespace Client.Plugins.Test
             base.Dispose();
         }
 
-        private async void ClickTriggerException(object sender, RoutedEventArgs e)
+        public async void ClickTriggerException(object sender, RoutedEventArgs e)
         {
             try
             {

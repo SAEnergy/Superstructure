@@ -30,7 +30,7 @@ namespace Core.Logging.Remote
             _logger.HandleLoggingException("Error while logging to remote server \"" + _servername + "\": " + ex.Message);
         }
 
-        private void _conn_Connected(object sender, EventArgs e)
+        private void _conn_Connected(ISubscription source)
         {
         }
 

@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 namespace Core.Comm
 {
     public delegate void SubscriptionDisconnectedEvent(ISubscription source, Exception ex);
+    public delegate void SubscriptionConnectedEvent(ISubscription source);
 
 
     public interface ISubscription
     {
-        event EventHandler Connected;
+        event SubscriptionConnectedEvent Connected;
         event SubscriptionDisconnectedEvent Disconnected;
 
         void Start();
