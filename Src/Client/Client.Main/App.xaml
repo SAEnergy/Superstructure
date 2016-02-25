@@ -4,6 +4,9 @@
              xmlns:local="clr-namespace:Client.Main"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <Style TargetType="DataGrid">
+            <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+            <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}"/>
+        </Style>
     </Application.Resources>
 </Application>
