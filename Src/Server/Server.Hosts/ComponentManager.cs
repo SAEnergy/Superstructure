@@ -35,15 +35,16 @@ namespace Server.Hosts
             foreach(var type in IoCContainer.Instance.GetRegisteredTypes())
             {
                 var info = new ComponentInfo();
-                info.TypeName = type.FullName;
+                info.InterfaceTypeName = type.Key.Name;
+                info.ConcreteTypeName = type.Value.Name;
 
-                //var atty = type.GetAttribute<ComponentMetadataAttribute>();
+                var atty = type.Value.GetAttribute<ComponentMetadataAttribute>();
 
-                //if(atty != null)
-                //{
-                //    info.Description = atty.Description;
-                //    info.FriendlyName = atty.FriendlyName;
-                //}
+                if(atty != null)
+                {
+                    info.Description = atty.Description;
+                    info.FriendlyName = atty.FriendlyName;
+                }
 
                 infos.Add(info);
             }

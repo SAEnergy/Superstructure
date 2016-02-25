@@ -23,13 +23,13 @@ namespace Core.Components
         public ILogger Logger { get; set; }
     }
 
-    [ComponentRegistration(ComponentType.Server, typeof(IHostManagerComponent))]
+    [ComponentRegistration(ComponentType.Server, typeof(IHostManager))]
     [ComponentMetadata(AllowedActions = ComponentUserActions.Restart, Description = "Controller for all host endpoints.", FriendlyName = "Host Manager Component")]
-    public sealed class HostManagerComponent : Singleton<IHostManagerComponent>, IHostManagerComponent
+    public sealed class HostManager : Singleton<IHostManager>, IHostManager
     {
         #region Fields
 
-        private const string _dllSearchPattern = "*.Hosts.dll";
+        private const string _dllSearchPattern = "*Hosts.dll";
         private readonly ILogger _logger;
 
         private Dictionary<Type, ServiceHostInfo> _infos;
@@ -43,7 +43,7 @@ namespace Core.Components
 
         #region Constructor
 
-        private HostManagerComponent(ILogger logger)
+        private HostManager(ILogger logger)
         {
             _logger = logger;
         }
@@ -52,9 +52,9 @@ namespace Core.Components
 
         #region Public Methods
 
-        public static IHostManagerComponent CreateInstance(ILogger logger)
+        public static IHostManager CreateInstance(ILogger logger)
         {
-            return Instance = new HostManagerComponent(logger);
+            return Instance = new HostManager(logger);
         }
 
         public void RestartAll()

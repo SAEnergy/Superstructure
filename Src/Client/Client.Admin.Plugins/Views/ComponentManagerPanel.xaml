@@ -9,6 +9,7 @@
     mc:Ignorable="d" >
     <Grid>
         <Border BorderThickness="1" Background="White" Opacity="1" Margin="0"/>
-        <ListBox ItemsSource="{Binding Path=Messages}" Margin="5"/>
+        <DataGrid ItemsSource="{Binding Path=Components}" CanUserAddRows="False">
+        </DataGrid>
     </Grid>
 </mybase:PanelBase>

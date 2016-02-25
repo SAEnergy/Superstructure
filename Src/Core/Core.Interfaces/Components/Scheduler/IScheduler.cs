@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Core.Interfaces.Components.Scheduler
 {
-    public interface ISchedulerComponent : IRunnable
+    public interface IScheduler : IRunnable
     {
         List<JobConfiguration> GetJobs();
 

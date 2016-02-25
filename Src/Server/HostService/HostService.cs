@@ -107,7 +107,7 @@ namespace HostService
 
         private List<Type> GetRunnableRegisteredTypes()
         {
-            return IoCContainer.Instance.GetRegisteredTypes().Where(i => typeof(IRunnable).IsAssignableFrom(i) && i != typeof(ILogger)).ToList();
+            return IoCContainer.Instance.GetRegisteredTypes().Select(k => k.Key).Where(i => typeof(IRunnable).IsAssignableFrom(i) && i != typeof(ILogger)).ToList();
         }
 
         #endregion

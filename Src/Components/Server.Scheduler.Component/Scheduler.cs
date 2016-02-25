@@ -10,9 +10,9 @@ using Core.Interfaces.Components.Base;
 
 namespace Core.Scheduler
 {
-    [ComponentRegistration(ComponentType.Server, typeof(ISchedulerComponent))]
+    [ComponentRegistration(ComponentType.Server, typeof(IScheduler))]
     [ComponentMetadata(AllowedActions = ComponentUserActions.All, Description = "Scheduling system.", FriendlyName = "Scheduler Component")]
-    public sealed class SchedulerComponent : Singleton<ISchedulerComponent>, ISchedulerComponent
+    public sealed class Scheduler : Singleton<IScheduler>, IScheduler
     {
         #region Fields
 
@@ -35,7 +35,7 @@ namespace Core.Scheduler
 
         #region Constructor
 
-        private SchedulerComponent(ILogger logger, IDataComponent dataComponent)
+        private Scheduler(ILogger logger, IDataComponent dataComponent)
         {
             _logger = logger;
             JobFactory.Logger = logger;
@@ -46,9 +46,9 @@ namespace Core.Scheduler
 
         #region Public Methods
 
-        public static ISchedulerComponent CreateInstance(ILogger logger, IDataComponent dataComponent)
+        public static IScheduler CreateInstance(ILogger logger, IDataComponent dataComponent)
         {
-            return Instance = new SchedulerComponent(logger, dataComponent);
+            return Instance = new Scheduler(logger, dataComponent);
         }
 
         public void Start()

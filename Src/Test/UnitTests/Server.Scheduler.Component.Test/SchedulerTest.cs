@@ -15,20 +15,20 @@ namespace Core.Scheduler.Test
         [TestInitialize]
         public void InitializeTest()
         {
-            SingletonHelper.Clean(typeof(SchedulerComponent));
+            SingletonHelper.Clean(typeof(Scheduler));
         }
 
         [TestCleanup]
         public void TestCleanup()
         {
-            SingletonHelper.Clean(typeof(SchedulerComponent));
+            SingletonHelper.Clean(typeof(Scheduler));
         }
 
         [TestMethod]
         [Ignore]
         public void SchedulerTest_AddCustomJob()
         {
-            var scheduler = SchedulerComponent.CreateInstance(new LoggerMock(), new DataComponentMock());
+            var scheduler = Scheduler.CreateInstance(new LoggerMock(), new DataComponentMock());
 
             scheduler.Start();
 

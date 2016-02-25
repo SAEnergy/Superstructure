@@ -68,12 +68,12 @@
     <Compile Include="ServiceContracts\ILogSubscription.cs" />
     <Compile Include="ServiceContracts\IRemoteLogging.cs" />
     <Compile Include="ServiceContracts\ITestService.cs" />
-    <Compile Include="Components\IAlarmComponent.cs" />
+    <Compile Include="Components\IAlarmManager.cs" />
     <Compile Include="Components\IDataComponent.cs" />
-    <Compile Include="Components\IHostManagerComponent.cs" />
-    <Compile Include="Components\INotificationComponent.cs" />
-    <Compile Include="Components\Scheduler\ISchedulerComponent.cs" />
-    <Compile Include="Components\ISystemConfigurationComponent.cs" />
+    <Compile Include="Components\IHostManager.cs" />
+    <Compile Include="Components\INotificationManager.cs" />
+    <Compile Include="Components\Scheduler\IScheduler.cs" />
+    <Compile Include="Components\ISystemConfiguration.cs" />
     <Compile Include="ServiceContracts\IUserAuthentication.cs" />
   </ItemGroup>
   <ItemGroup>

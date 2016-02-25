@@ -8,6 +8,8 @@ namespace Core.Models.DataContracts
 
         public string Description { get; set; }
 
-        public string TypeName { get; set; }
+        public string InterfaceTypeName { get; set; }
+
+        public string ConcreteTypeName { get; set; }
     }
 }

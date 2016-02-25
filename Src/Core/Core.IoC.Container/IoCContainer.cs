@@ -54,9 +54,9 @@ namespace Core.IoC.Container
 
         #region Public Methods
 
-        public List<Type> GetRegisteredTypes()
+        public List<KeyValuePair<Type, Type>> GetRegisteredTypes()
         {
-            return _registeredObjects.Keys.ToList();
+            return _registeredObjects.Select(r => new KeyValuePair<Type, Type>(r.Key, r.Value.ConcreteType)).ToList();
         }
 
         public void Register<TInterfaceType, TConcreteType>()

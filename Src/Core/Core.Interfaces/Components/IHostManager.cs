@@ -3,7 +3,7 @@ using Core.Interfaces.Components.Base;
 
 namespace Core.Interfaces.Components
 {
-    public interface IHostManagerComponent : IRunnable, IComponentBase
+    public interface IHostManager : IRunnable, IComponentBase
     {
         void RestartAll();
 

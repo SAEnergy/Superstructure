@@ -5,9 +5,9 @@ using Core.Interfaces.Components.Base;
 
 namespace Core.Components
 {
-    [ComponentRegistration(ComponentType.Server, typeof(ISystemConfigurationComponent))]
+    [ComponentRegistration(ComponentType.Server, typeof(ISystemConfiguration))]
     [ComponentMetadata(Description = "Maintains system wide configurations.", FriendlyName = "System Configuration Component")]
-    public class SystemConfigurationComponent : Singleton<ISystemConfigurationComponent>, ISystemConfigurationComponent
+    public class SystemConfiguration : Singleton<ISystemConfiguration>, ISystemConfiguration
     {
         #region Fields
 
@@ -18,7 +18,7 @@ namespace Core.Components
 
         #region Constructor
 
-        private SystemConfigurationComponent(ILogger logger, IDataComponent dataComponent)
+        private SystemConfiguration(ILogger logger, IDataComponent dataComponent)
         {
             _logger = logger;
             _dataComponent = dataComponent;
@@ -28,9 +28,9 @@ namespace Core.Components
 
         #region Public Methods
 
-        public static ISystemConfigurationComponent CreateInstance(ILogger logger, IDataComponent dataComponent)
+        public static ISystemConfiguration CreateInstance(ILogger logger, IDataComponent dataComponent)
         {
-            return Instance = new SystemConfigurationComponent(logger, dataComponent);
+            return Instance = new SystemConfiguration(logger, dataComponent);
         }
 
         #endregion

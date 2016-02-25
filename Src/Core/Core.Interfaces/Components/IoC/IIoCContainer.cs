@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Core.Interfaces.Components.IoC
 {
     public interface IIoCContainer
     {
+        List<KeyValuePair<Type, Type>> GetRegisteredTypes();
+
         void Register<TInterfaceType, TConcreteType>();
 
         void Register<TInterfaceType, TConcreteType>(LifeCycle lifeCycle);
