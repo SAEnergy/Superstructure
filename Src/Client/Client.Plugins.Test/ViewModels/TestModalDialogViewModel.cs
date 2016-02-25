@@ -20,15 +20,15 @@ namespace Client.Plugins.Test
                 int x;
                 int count = 100;
 
-                this.BeginInvokeIfRequired(() => { if (_dialog != null) { _dialog.MaxValue = count; } });
+                this.BeginInvoke(() => { if (_dialog != null) { _dialog.MaxValue = count; } });
 
                 for (x = 0; x < count; x++)
                 {
                     tok.ThrowIfCancellationRequested();
-                    this.BeginInvokeIfRequired(() => { if (_dialog != null) { _dialog.CurrentValue = x; } });
+                    this.BeginInvoke(() => { if (_dialog != null) { _dialog.CurrentValue = x; } });
                     Thread.Sleep(100);
                 }
-                this.BeginInvokeIfRequired(() => { if (_dialog != null) { _dialog.IsCancellable = true; _dialog.Close(); } });
+                this.BeginInvoke(() => { if (_dialog != null) { _dialog.IsCancellable = true; _dialog.Close(); } });
             });
         }
 

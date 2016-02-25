@@ -21,25 +21,25 @@ namespace Client.Admin.Plugins
 
         protected override void OnDisconnect(ISubscription source, Exception error)
         {
-            this.BeginInvokeIfRequired(() => Messages.Add("Disconnected. " + error.Message));
+            this.BeginInvoke(() => Messages.Add("Disconnected. " + error.Message));
             base.OnDisconnect(source, error);
         }
 
         protected override void OnConnect(ISubscription source)
         {
-            this.BeginInvokeIfRequired(() => Messages.Add("Connected to Server."));
+            this.BeginInvoke(() => Messages.Add("Connected to Server."));
             try
             {
                 var infos = Channel.GetComponents();
 
                 foreach (var info in infos)
                 {
-                    this.BeginInvokeIfRequired(() => Messages.Add("Component - " + info.TypeName));
+                    this.BeginInvoke(() => Messages.Add("Component - " + info.TypeName));
                 }
             }
             catch (Exception ex)
             {
-                this.BeginInvokeIfRequired(() => Messages.Add("Error: " + ex.Message));
+                this.BeginInvoke(() => Messages.Add("Error: " + ex.Message));
             }
         }
 

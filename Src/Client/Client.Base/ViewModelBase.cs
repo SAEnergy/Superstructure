@@ -27,12 +27,12 @@ namespace Client.Base
             //todo: log when logger is present in client
         }
 
-        protected void InvokeIfRequired(Action task)
+        protected void Invoke(Action task)
         {
-            _context.Send(delegate { task(); },null);
+            _context.Send(delegate { task(); }, null);
         }
 
-        protected void BeginInvokeIfRequired(Action task)
+        protected void BeginInvoke(Action task)
         {
             _context.Post(delegate { task(); }, null);
         }

@@ -19,26 +19,26 @@ namespace Client.Plugins.Test
 
         protected override void OnDisconnect(ISubscription source, Exception error)
         {
-            this.BeginInvokeIfRequired(() => Messages.Add("Disconnected. " + error.Message));
+            this.BeginInvoke(() => Messages.Add("Disconnected. " + error.Message));
             base.OnDisconnect(source, error);
         }
 
         protected override void OnConnect(ISubscription source)
         {
-            this.BeginInvokeIfRequired(() => Messages.Add("Connected to Server."));
+            this.BeginInvoke(() => Messages.Add("Connected to Server."));
             try
             {
                 Channel.Moo();
             }
             catch (Exception ex)
             {
-                this.BeginInvokeIfRequired(() => Messages.Add("Error: " + ex.Message));
+                this.BeginInvoke(() => Messages.Add("Error: " + ex.Message));
             }
         }
 
         public void MooBack(string moo)
         {
-            this.BeginInvokeIfRequired(() => Messages.Add("Received pong from server: " + moo));
+            this.BeginInvoke(() => Messages.Add("Received pong from server: " + moo));
         }
 
         public async void ClickTriggerException(object sender, RoutedEventArgs e)
@@ -49,7 +49,7 @@ namespace Client.Plugins.Test
             }
             catch (Exception ex)
             {
-                this.BeginInvokeIfRequired(() => Messages.Add("Error: " + ex.Message));
+                this.BeginInvoke(() => Messages.Add("Error: " + ex.Message));
             }
 
         }
