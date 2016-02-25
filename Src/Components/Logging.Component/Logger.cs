@@ -1,16 +1,16 @@
-﻿using Core.Interfaces.Base;
-using Core.Interfaces.Components.Logging;
+﻿using Core.Interfaces.Components.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using Core.Interfaces.Components.IoC;
+using Core.Interfaces.Components.Base;
 
 namespace Core.Logging
 {
     [ComponentRegistration(ComponentType.All, typeof(ILogger))]
-    [ComponentManager(Description = "Logging system.", FriendlyName = "Logger Component")]
+    [ComponentMetadata(Description = "Logging system.", FriendlyName = "Logger Component")]
     public sealed class Logger : Singleton<ILogger>, ILogger
     {
         #region Fields

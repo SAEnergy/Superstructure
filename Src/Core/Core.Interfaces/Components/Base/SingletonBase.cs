@@ -1,8 +1,7 @@
-﻿using Core.Interfaces.Components;
-using System;
+﻿using System;
 using System.Reflection;
 
-namespace Core.Interfaces.Base
+namespace Core.Interfaces.Components.Base
 {
     public abstract class SingletonBase : ComponentBase
     {

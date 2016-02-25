@@ -1,5 +1,5 @@
-﻿using Core.Interfaces.Base;
-using Core.Interfaces.Components;
+﻿using Core.Interfaces.Components;
+using Core.Interfaces.Components.Base;
 using Core.Interfaces.Components.IoC;
 using Core.Interfaces.Components.Logging;
 using Microsoft.Owin.Hosting;
@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace Server.WebHost
 {
     [ComponentRegistration(ComponentType.Server, typeof(IWebHost))]
-    [ComponentManager(AllowedActions = ComponentUserActions.Restart, Description = "Self hosted web server.", FriendlyName = "Web Server Component")]
+    [ComponentMetadata(AllowedActions = ComponentUserActions.Restart, Description = "Self hosted web server.", FriendlyName = "Web Server Component")]
     public class WebHost : Singleton<IWebHost>, IWebHost
     {
         private ILogger _logger;

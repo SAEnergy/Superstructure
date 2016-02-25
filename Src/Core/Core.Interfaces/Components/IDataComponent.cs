@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.Interfaces.Components.Base;
+using System;
 using System.Collections.Generic;
 
 namespace Core.Interfaces.Components

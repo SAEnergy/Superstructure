@@ -47,10 +47,10 @@
     </Compile>
     <Compile Include="Base\UserExtensibleEnum.cs" />
     <Compile Include="Base\IRunnable.cs" />
-    <Compile Include="Base\SingletonBase.cs" />
-    <Compile Include="Base\Singleton.cs" />
-    <Compile Include="Components\ComponentBase.cs" />
-    <Compile Include="Components\IComponentBase.cs" />
+    <Compile Include="Components\Base\SingletonBase.cs" />
+    <Compile Include="Components\Base\Singleton.cs" />
+    <Compile Include="Components\Base\ComponentBase.cs" />
+    <Compile Include="Components\Base\IComponentBase.cs" />
     <Compile Include="Components\IoC\Attributes.cs" />
     <Compile Include="Components\IoC\Enums.cs" />
     <Compile Include="Components\IoC\IIoCContainer.cs" />

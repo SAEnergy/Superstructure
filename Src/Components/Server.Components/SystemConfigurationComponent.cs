@@ -1,12 +1,12 @@
-﻿using Core.Interfaces.Base;
-using Core.Interfaces.Components.Logging;
+﻿using Core.Interfaces.Components.Logging;
 using Core.Interfaces.Components;
 using Core.Interfaces.Components.IoC;
+using Core.Interfaces.Components.Base;
 
 namespace Core.Components
 {
     [ComponentRegistration(ComponentType.Server, typeof(ISystemConfigurationComponent))]
-    [ComponentManager(Description = "Maintains system wide configurations.", FriendlyName = "System Configuration Component")]
+    [ComponentMetadata(Description = "Maintains system wide configurations.", FriendlyName = "System Configuration Component")]
     public class SystemConfigurationComponent : Singleton<ISystemConfigurationComponent>, ISystemConfigurationComponent
     {
         #region Fields

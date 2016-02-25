@@ -1,5 +1,5 @@
 ﻿using Core.Interfaces.Base;
-using System;
+using Core.Interfaces.Components.Base;
 using System.Runtime.CompilerServices;
 
 namespace Core.Interfaces.Components.Logging

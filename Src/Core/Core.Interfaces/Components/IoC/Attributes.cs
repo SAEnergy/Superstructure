@@ -18,7 +18,7 @@ namespace Core.Interfaces.Components.IoC
         }
     }
 
-    public class ComponentManagerAttribute : Attribute
+    public class ComponentMetadataAttribute : Attribute
     {
         public string Description { get; set; }
 
@@ -26,7 +26,7 @@ namespace Core.Interfaces.Components.IoC
 
         public ComponentUserActions AllowedActions { get; set; }
 
-        public ComponentManagerAttribute()
+        public ComponentMetadataAttribute()
         {
             AllowedActions = ComponentUserActions.NoActions;
         }

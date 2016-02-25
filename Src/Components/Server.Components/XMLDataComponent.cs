@@ -11,11 +11,12 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using Core.Interfaces.Components.IoC;
+using Core.Interfaces.Components.Base;
 
 namespace Core.Components
 {
     [ComponentRegistration(ComponentType.All, typeof(IDataComponent))]
-    [ComponentManager(Description = "Data access layer for XML storage.", FriendlyName = "XML Data Component")]
+    [ComponentMetadata(Description = "Data access layer for XML storage.", FriendlyName = "XML Data Component")]
     public sealed class XMLDataComponent : ComponentBase, IDataComponent
     {
         #region Fields

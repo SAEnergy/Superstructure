@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Core.Interfaces.Base
+namespace Core.Interfaces.Components.Base
 {
     public abstract class Singleton<T> : SingletonBase where T : class
     {

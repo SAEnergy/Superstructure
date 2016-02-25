@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.Models.DataContracts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
@@ -19,5 +20,8 @@ namespace Core.Interfaces.ServiceContracts
     {
         [OperationContract]
         void Stop();
+
+        [OperationContract]
+        List<ComponentInfo> GetComponents();
     }
 }

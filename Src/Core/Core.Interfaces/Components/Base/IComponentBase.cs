@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Core.Interfaces.Components
+namespace Core.Interfaces.Components.Base
 {
     public interface IComponentBase
     {

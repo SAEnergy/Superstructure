@@ -1,6 +1,6 @@
 ﻿using Core.Comm;
-using Core.Interfaces.Base;
 using Core.Interfaces.Components;
+using Core.Interfaces.Components.Base;
 using Core.Interfaces.Components.IoC;
 using Core.Interfaces.Components.Logging;
 using Core.Util;
@@ -24,7 +24,7 @@ namespace Core.Components
     }
 
     [ComponentRegistration(ComponentType.Server, typeof(IHostManagerComponent))]
-    [ComponentManager(AllowedActions = ComponentUserActions.Restart, Description = "Controller for all host endpoints.", FriendlyName = "Host Manager Component")]
+    [ComponentMetadata(AllowedActions = ComponentUserActions.Restart, Description = "Controller for all host endpoints.", FriendlyName = "Host Manager Component")]
     public sealed class HostManagerComponent : Singleton<IHostManagerComponent>, IHostManagerComponent
     {
         #region Fields

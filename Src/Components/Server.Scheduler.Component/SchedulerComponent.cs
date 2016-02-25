@@ -1,5 +1,4 @@
-﻿using Core.Interfaces.Base;
-using Core.Interfaces.Components.Logging;
+﻿using Core.Interfaces.Components.Logging;
 using Core.Interfaces.Components.Scheduler;
 using Core.Interfaces.Components;
 using System;
@@ -7,11 +6,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.Models.Persistent;
 using Core.Interfaces.Components.IoC;
+using Core.Interfaces.Components.Base;
 
 namespace Core.Scheduler
 {
     [ComponentRegistration(ComponentType.Server, typeof(ISchedulerComponent))]
-    [ComponentManager(AllowedActions = ComponentUserActions.All, Description = "Scheduling system.", FriendlyName = "Scheduler Component")]
+    [ComponentMetadata(AllowedActions = ComponentUserActions.All, Description = "Scheduling system.", FriendlyName = "Scheduler Component")]
     public sealed class SchedulerComponent : Singleton<ISchedulerComponent>, ISchedulerComponent
     {
         #region Fields

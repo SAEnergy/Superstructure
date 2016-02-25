@@ -1,5 +1,4 @@
-﻿using Core.Interfaces.Base;
-using Core.Interfaces.Components;
+﻿using Core.Interfaces.Components.Base;
 using Core.Interfaces.Components.IoC;
 using Core.Util;
 
