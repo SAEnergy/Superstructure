@@ -45,8 +45,6 @@ namespace HostService
                 _heartBeat = new Heartbeat();
 
                 StartAllRunnableTypes();
-
-                IoCContainer.Instance.Resolve<IHostManagerComponent>().StartAll();
             }
         }
 
@@ -58,8 +56,6 @@ namespace HostService
                 _heartBeat.Stop();
 
                 StopAllRunnableTypes();
-
-                IoCContainer.Instance.Resolve<IHostManagerComponent>().StopAll();
             }
         }
 

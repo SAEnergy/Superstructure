@@ -1,11 +1,9 @@
-﻿namespace Core.Interfaces.Components
+﻿using Core.Interfaces.Base;
+
+namespace Core.Interfaces.Components
 {
-    public interface IHostManagerComponent : IComponentBase
+    public interface IHostManagerComponent : IRunnable, IComponentBase
     {
-        void StartAll();
-
-        void StopAll();
-
         void RestartAll();
 
         void Stop<T>();

@@ -35,6 +35,11 @@ namespace Core.Components
 
         #endregion
 
+        #region Properties
+        public bool IsRunning { get; private set; }
+
+        #endregion
+
         #region Constructor
 
         private HostManagerComponent(ILogger logger)
@@ -55,13 +60,14 @@ namespace Core.Components
         {
             _logger.Log("HostManager restarting all hosts...");
 
-            StopAll();
-            StartAll();
+            Stop();
+            Start();
         }
 
-        public void StartAll()
+        public void Start()
         {
             _logger.Log("HostManager starting all hosts...");
+            IsRunning = true;
 
             _infos = FindAllHosts();
 
@@ -73,9 +79,10 @@ namespace Core.Components
             }
         }
 
-        public void StopAll()
+        public void Stop()
         {
             _logger.Log("HostManager stopping all hosts...");
+            IsRunning = false;
 
             foreach (var host in _infos.Values)
             {
