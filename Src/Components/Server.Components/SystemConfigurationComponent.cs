@@ -5,7 +5,8 @@ using Core.Interfaces.Components.IoC;
 
 namespace Core.Components
 {
-    [Component(ComponentType.Server, typeof(ISystemConfigurationComponent), Description = "System Configuration System", FriendlyName = "System Configuration")]
+    [ComponentRegistration(ComponentType.Server, typeof(ISystemConfigurationComponent))]
+    [ComponentManager(Description = "Maintains system wide configurations.", FriendlyName = "System Configuration Component")]
     public class SystemConfigurationComponent : Singleton<ISystemConfigurationComponent>, ISystemConfigurationComponent
     {
         #region Fields

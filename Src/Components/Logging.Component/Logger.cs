@@ -9,7 +9,8 @@ using Core.Interfaces.Components.IoC;
 
 namespace Core.Logging
 {
-    [Component(ComponentType.All, typeof(ILogger), Description = "Logging System", FriendlyName = "Logger")]
+    [ComponentRegistration(ComponentType.All, typeof(ILogger))]
+    [ComponentManager(Description = "Logging system.", FriendlyName = "Logger Component")]
     public sealed class Logger : Singleton<ILogger>, ILogger
     {
         #region Fields

@@ -14,7 +14,8 @@ using System.Threading.Tasks;
 
 namespace Server.WebHost
 {
-    [Component(ComponentType.Server, typeof(IWebHost), AllowedActions = ComponentUserActions.Restart, Description = "Web Server Host", FriendlyName = "Web Server")]
+    [ComponentRegistration(ComponentType.Server, typeof(IWebHost))]
+    [ComponentManager(AllowedActions = ComponentUserActions.Restart, Description = "Self hosted web server.", FriendlyName = "Web Server Component")]
     public class WebHost : Singleton<IWebHost>, IWebHost
     {
         private ILogger _logger;

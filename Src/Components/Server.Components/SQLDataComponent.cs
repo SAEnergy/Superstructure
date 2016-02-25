@@ -9,7 +9,8 @@ using Core.Interfaces.Components.IoC;
 
 namespace Core.Components
 {
-    [Component(ComponentType.Server, typeof(IDataComponent), AllowedActions = ComponentUserActions.NoActions, Description = "SQL Data System", FriendlyName = "SQL Data", ComponentLifeCycle = LifeCycle.Transient, DoNotRegister = true)]
+    [ComponentRegistration(ComponentType.Server, typeof(IDataComponent), DoNotRegister = true)]
+    [ComponentManager(Description = "Data access layer for SQL.", FriendlyName = "SQL Data Component")]
     public sealed class SQLDataComponent : ComponentBase, IDataComponent
     {
         #region Fields

@@ -18,7 +18,7 @@ namespace ProjectUpdater
         [Argument(Optional = true, DefaultValue = true)]
         public bool Verify { get; set; }
 
-        [Argument(Optional = true, DefaultValue = true)]
+        [Argument(Optional = true)]
         public bool IsReadOnly { get; set; }
 
         #endregion

@@ -23,7 +23,8 @@ namespace Core.Components
         public ILogger Logger { get; set; }
     }
 
-    [Component(ComponentType.Server, typeof(IHostManagerComponent), AllowedActions = ComponentUserActions.Restart, Description = "Host Manager System", FriendlyName = "Host Manager")]
+    [ComponentRegistration(ComponentType.Server, typeof(IHostManagerComponent))]
+    [ComponentManager(AllowedActions = ComponentUserActions.Restart, Description = "Controller for all host endpoints.", FriendlyName = "Host Manager Component")]
     public sealed class HostManagerComponent : Singleton<IHostManagerComponent>, IHostManagerComponent
     {
         #region Fields

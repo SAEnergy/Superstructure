@@ -14,7 +14,8 @@ using Core.Interfaces.Components.IoC;
 
 namespace Core.Components
 {
-    [Component(ComponentType.All, typeof(IDataComponent), AllowedActions = ComponentUserActions.NoActions, Description = "XML Data System", FriendlyName = "XML Data", ComponentLifeCycle = LifeCycle.Transient)]
+    [ComponentRegistration(ComponentType.All, typeof(IDataComponent))]
+    [ComponentManager(Description = "Data access layer for XML storage.", FriendlyName = "XML Data Component")]
     public sealed class XMLDataComponent : ComponentBase, IDataComponent
     {
         #region Fields

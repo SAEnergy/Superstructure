@@ -3,27 +3,31 @@
 namespace Core.Interfaces.Components.IoC
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class ComponentAttribute : Attribute
+    public class ComponentRegistrationAttribute : Attribute
     {
         public ComponentType Type { get; set; }
 
-        public LifeCycle ComponentLifeCycle { get; set; }
-
         public Type InterfaceType { get; set; }
 
+        public bool DoNotRegister { get; set; }
+
+        public ComponentRegistrationAttribute(ComponentType type, Type interfaceType)
+        {
+            Type = type;
+            InterfaceType = interfaceType;
+        }
+    }
+
+    public class ComponentManagerAttribute : Attribute
+    {
         public string Description { get; set; }
 
         public string FriendlyName { get; set; }
 
         public ComponentUserActions AllowedActions { get; set; }
 
-        public bool DoNotRegister { get; set; }
-
-        public ComponentAttribute(ComponentType type, Type interfaceType)
+        public ComponentManagerAttribute()
         {
-            Type = type;
-            InterfaceType = interfaceType;
-            ComponentLifeCycle = LifeCycle.Singleton;
             AllowedActions = ComponentUserActions.NoActions;
         }
     }

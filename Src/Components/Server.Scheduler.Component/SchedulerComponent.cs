@@ -10,7 +10,8 @@ using Core.Interfaces.Components.IoC;
 
 namespace Core.Scheduler
 {
-    [Component(ComponentType.Server, typeof(ISchedulerComponent), AllowedActions = ComponentUserActions.All, Description = "Scheduling System", FriendlyName = "Scheduler")]
+    [ComponentRegistration(ComponentType.Server, typeof(ISchedulerComponent))]
+    [ComponentManager(AllowedActions = ComponentUserActions.All, Description = "Scheduling system.", FriendlyName = "Scheduler Component")]
     public sealed class SchedulerComponent : Singleton<ISchedulerComponent>, ISchedulerComponent
     {
         #region Fields
