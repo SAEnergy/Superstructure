@@ -11,10 +11,5 @@ namespace Client.Plugins.Test
             ViewModel = new TestSubscriptionViewModel(this);
             InitializeComponent();
         }
-
-        private void ClickTriggerException(object sender, RoutedEventArgs e)
-        {
-            (ViewModel as TestSubscriptionViewModel).ClickTriggerException(sender, e);
-        }
     }
 }

@@ -3,9 +3,11 @@ using Core.Interfaces.ServiceContracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Client.Base
 {
@@ -13,14 +15,14 @@ namespace Client.Base
     {
         protected SynchronizationContext _context;
         protected ViewBase _parent;
-        
+
         public ViewModelBase(ViewBase parent)
         {
             _parent = parent;
             _context = SynchronizationContext.Current;
         }
 
-        public virtual void Dispose() {  }
+        public virtual void Dispose() { }
 
         protected virtual void HandleTransactionException(Exception error)
         {
@@ -35,6 +37,16 @@ namespace Client.Base
         protected void BeginInvoke(Action task)
         {
             _context.Post(delegate { task(); }, null);
+        }
+
+        protected void RevalidateAllCommands()
+        {
+            // Go through all of the commands in this view model and trigger a re-evaluation of the CanExecute flag.
+            foreach (PropertyInfo prop in this.GetType().GetProperties().Where(p => typeof(SimpleCommand).IsAssignableFrom(p.PropertyType)))
+            {
+                SimpleCommand commie = (SimpleCommand) prop.GetValue(this);
+                commie.FireCanExecuteChangedEvent();
+            }
         }
     }
 
@@ -54,11 +66,12 @@ namespace Client.Base
 
         protected virtual void OnConnect(ISubscription source)
         {
-
+            RevalidateAllCommands();
         }
 
         protected virtual void OnDisconnect(ISubscription source, Exception error)
         {
+            RevalidateAllCommands();
             HandleTransactionException(error);
         }
 

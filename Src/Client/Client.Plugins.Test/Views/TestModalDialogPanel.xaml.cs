@@ -13,15 +13,5 @@ namespace Client.Plugins.Test
             ViewModel = new TestModalDialogViewModel(this);
             InitializeComponent();
         }
-
-        private void ClickModalBackgroundTask(object sender, RoutedEventArgs e)
-        {
-            (ViewModel as TestModalDialogViewModel).ClickModalBackgroundTask(sender, e);
-        }
-
-        private void ClickCancellableBackgroundTask(object sender, RoutedEventArgs e)
-        {
-            (ViewModel as TestModalDialogViewModel).ClickCancellableBackgroundTask(sender, e);
-        }
     }
 }

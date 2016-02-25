@@ -11,8 +11,8 @@
     <Grid>
         <Border BorderThickness="1" Background="White" Opacity="1" Margin="0"/>
         <StackPanel>
-            <Button HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5" Margin="5" Click="ClickModalBackgroundTask">Modal Background Task</Button>
-            <Button HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5" Margin="5" Click="ClickCancellableBackgroundTask">Cancellable Background Task</Button>
+            <Button HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5" Margin="5" Command="{Binding ModalBackgroundTaskCommand}">Modal Background Task</Button>
+            <Button HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5" Margin="5" Command="{Binding CancellableBackgroundTaskCommand}">Cancellable Background Task</Button>
         </StackPanel>
     </Grid>
 </mybase:PanelBase>

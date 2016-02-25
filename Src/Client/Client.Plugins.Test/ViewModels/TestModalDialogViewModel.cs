@@ -11,7 +11,14 @@ namespace Client.Plugins.Test
         private WaitDialog _dialog;
         private CancellationTokenSource _cancel;
 
-        public TestModalDialogViewModel(ViewBase parent) : base(parent) { }
+        public SimpleCommand ModalBackgroundTaskCommand { get; private set; }
+        public SimpleCommand CancellableBackgroundTaskCommand { get; private set; }
+
+        public TestModalDialogViewModel(ViewBase parent) : base(parent)
+        {
+            ModalBackgroundTaskCommand = new SimpleCommand(ExecuteModalBackgroundTask);
+            CancellableBackgroundTaskCommand = new SimpleCommand(ExecuteCancellableBackgroundTask);
+        }
 
         private async Task Worker(CancellationToken tok)
         {
@@ -32,7 +39,7 @@ namespace Client.Plugins.Test
             });
         }
 
-        public void ClickModalBackgroundTask(object sender, RoutedEventArgs e)
+        public void ExecuteModalBackgroundTask()
         {
             _dialog = new WaitDialog(Window.GetWindow(_parent));
             _dialog.IsCancellable = false;
@@ -41,7 +48,7 @@ namespace Client.Plugins.Test
             _dialog = null;
         }
 
-        public void ClickCancellableBackgroundTask(object sender, RoutedEventArgs e)
+        public void ExecuteCancellableBackgroundTask()
         {
             _dialog = new WaitDialog(Window.GetWindow(_parent));
             _cancel = new CancellationTokenSource();
