@@ -108,7 +108,7 @@
     </ProjectReference>
     <ProjectReference Include="..\..\Components\Server.WebHost.Component\Server.WebHost.Component.csproj">
       <Project>{a9285281-4816-43c4-ae9a-aa0c5fe16d89}</Project>
-      <Name>Server.WebHost</Name>
+      <Name>Server.WebHost.Component</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

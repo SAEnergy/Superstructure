@@ -60,7 +60,7 @@
     </ProjectReference>
     <ProjectReference Include="..\..\..\Components\Logging.Component\Logging.Component.csproj">
       <Project>{27a1df0a-7fd7-4306-9054-60fa4652780e}</Project>
-      <Name>Core.Logging</Name>
+      <Name>Logging.Component</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Core\Core.Models\Core.Models.csproj">
       <Project>{803e539b-3687-4465-b272-e50816df453f}</Project>

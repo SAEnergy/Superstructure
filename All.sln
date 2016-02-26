@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HostService", "Src\Server\HostService\HostService.csproj", "{392799A9-DA4A-4552-8F44-FAD887BA9D34}"
 EndProject
@@ -86,6 +86,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Components", "Components", "{9B471AB8-7DD5-465A-B52B-E47404B7AC22}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client.Admin.Plugins", "Src\Client\Client.Admin.Plugins\Client.Admin.Plugins.csproj", "{C57BF736-5A79-464C-A7F2-6A30F512F490}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{01FE5141-A7A2-47E0-960D-716D2DC83EAC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.ScrumPoker.Interfaces", "src\Example\Example.ScrumPoker.Interfaces\Example.ScrumPoker.Interfaces.csproj", "{67D54BDC-C2B9-4187-AEA7-959B9D4C5512}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.ScrumPoker.Host", "src\Example\Example.ScrumPoker.Host\Example.ScrumPoker.Host.csproj", "{B44AC868-44BC-453B-9AC9-483E21DF6588}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.ScrumPoker.Plugin", "src\Example\Example.ScrumPoker.Plugin\Example.ScrumPoker.Plugin.csproj", "{83A72E91-82A0-4B29-8144-5D22F2D07013}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -221,6 +229,18 @@ Global
 		{C57BF736-5A79-464C-A7F2-6A30F512F490}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C57BF736-5A79-464C-A7F2-6A30F512F490}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C57BF736-5A79-464C-A7F2-6A30F512F490}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67D54BDC-C2B9-4187-AEA7-959B9D4C5512}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67D54BDC-C2B9-4187-AEA7-959B9D4C5512}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67D54BDC-C2B9-4187-AEA7-959B9D4C5512}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67D54BDC-C2B9-4187-AEA7-959B9D4C5512}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B44AC868-44BC-453B-9AC9-483E21DF6588}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B44AC868-44BC-453B-9AC9-483E21DF6588}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B44AC868-44BC-453B-9AC9-483E21DF6588}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B44AC868-44BC-453B-9AC9-483E21DF6588}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83A72E91-82A0-4B29-8144-5D22F2D07013}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83A72E91-82A0-4B29-8144-5D22F2D07013}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83A72E91-82A0-4B29-8144-5D22F2D07013}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83A72E91-82A0-4B29-8144-5D22F2D07013}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -262,5 +282,8 @@ Global
 		{58BDF1AA-6816-438B-920E-16B10BAE3DA8} = {FA0A3D8E-6753-49DB-AF8F-E5938FF494D8}
 		{A9285281-4816-43C4-AE9A-AA0C5FE16D89} = {9B471AB8-7DD5-465A-B52B-E47404B7AC22}
 		{C57BF736-5A79-464C-A7F2-6A30F512F490} = {4A268B4F-6F2F-4225-ABCD-CDED70CF33D0}
+		{67D54BDC-C2B9-4187-AEA7-959B9D4C5512} = {01FE5141-A7A2-47E0-960D-716D2DC83EAC}
+		{B44AC868-44BC-453B-9AC9-483E21DF6588} = {01FE5141-A7A2-47E0-960D-716D2DC83EAC}
+		{83A72E91-82A0-4B29-8144-5D22F2D07013} = {01FE5141-A7A2-47E0-960D-716D2DC83EAC}
 	EndGlobalSection
 EndGlobal

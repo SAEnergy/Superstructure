@@ -58,7 +58,7 @@ namespace Client.Main
                 }
                 if (atty != null && !string.IsNullOrWhiteSpace(atty.IconPath))
                 {
-                    info.Icon = WPFHelpers.GetImage(atty.IconPath);
+                    info.Icon = WPFHelpers.GetImage(atty.IconPath, info.PluginType.Assembly);
                 }
                 if (info.Icon == null)
                 {

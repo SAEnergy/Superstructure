@@ -29,7 +29,7 @@ namespace Core.Components
     {
         #region Fields
 
-        private const string _dllSearchPattern = "*Hosts.dll";
+        private const string _dllSearchPattern = "*Host*.dll";
         private readonly ILogger _logger;
 
         private Dictionary<Type, ServiceHostInfo> _infos;
