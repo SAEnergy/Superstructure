@@ -30,13 +30,13 @@ namespace Server.WebHost
 
         public void Start()
         {
-            _host = WebApp.Start<OwinStartup>("http://+:9596");
+            //_host = WebApp.Start<OwinStartup>("http://+:9596");
             IsRunning = true;
         }
 
         public void Stop()
         {
-            _host.Dispose();
+            //_host.Dispose();
             IsRunning = false;
         }
 
