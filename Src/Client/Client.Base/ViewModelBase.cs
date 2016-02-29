@@ -81,5 +81,20 @@ namespace Client.Base
             _sub.Stop();
             base.Dispose();
         }
+
+        protected Task Execute(Action action)
+        {
+            return Task.Run(()=> 
+            {
+                try
+                {
+                    action();
+                }
+                catch(Exception ex)
+                {
+                    HandleTransactionException(ex);
+                }
+            });
+        }
     }
 }

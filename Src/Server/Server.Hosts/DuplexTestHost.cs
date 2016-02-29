@@ -12,14 +12,12 @@ using System.Threading;
 namespace Server.Hosts
 {
     [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, InstanceContextMode = InstanceContextMode.PerSession)]
-    public class DuplexTestHost : ServiceHostBase<IDuplexTest>, IDuplexTest
+    public class DuplexTestHost : ServiceHostBase<IDuplexTest, IDuplexTestCallback>, IDuplexTest
     {
-        private IDuplexTestCallback _callback;
         private Thread _worker;
 
         public DuplexTestHost()
         {
-            _callback = OperationContext.Current.GetCallbackChannel<IDuplexTestCallback>();
             _worker = new Thread(new ThreadStart(WorkerThread));
             _worker.Start();
         }

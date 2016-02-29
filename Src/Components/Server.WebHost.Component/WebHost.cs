@@ -19,7 +19,7 @@ namespace Server.WebHost
     public class WebHost : Singleton<IWebHost>, IWebHost
     {
         private ILogger _logger;
-        private IDisposable _host;
+        //private IDisposable _host;
 
         private WebHost(ILogger logger)
         {

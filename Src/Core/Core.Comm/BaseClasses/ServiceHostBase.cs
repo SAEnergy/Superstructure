@@ -14,19 +14,21 @@ using System.Threading.Tasks;
 
 namespace Core.Comm.BaseClasses
 {
-    public class ServiceHostBase<T> : IServiceHost, IUserAuthentication, IDisposable  where T : IUserAuthentication
+    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, InstanceContextMode = InstanceContextMode.PerSession)]
+    public class ServiceHostBase<CHANNEL> : IServiceHost, IUserAuthentication, IDisposable where CHANNEL : IUserAuthentication
     {
         protected ILogger _logger;
+        protected static List<IServiceHost> _instances = new List<IServiceHost>();
 
         public Type InterfaceType
         {
-            get { return typeof(T); }
+            get { return typeof(CHANNEL); }
         }
 
         // called via reflection to find implemented service contract
         public static Type GetInterfaceType()
         {
-            return typeof(T);
+            return typeof(CHANNEL);
         }
 
 
@@ -37,13 +39,83 @@ namespace Core.Comm.BaseClasses
 
         public virtual void Dispose()
         {
+            lock (_instances)
+            {
+                _instances.Remove(this);
+            }
             _logger.Log("Host of type " + this.GetType() + " closed.");
         }
 
         public ServiceHostBase()
         {
-            _logger = (ILogger) IoCContainer.Instance.Resolve(typeof(ILogger));
+            _logger = (ILogger)IoCContainer.Instance.Resolve(typeof(ILogger));
             _logger.Log("Host of type " + this.GetType() + " created.");
+            lock (_instances)
+            {
+                _instances.Add(this);
+            }
+        }
+
+        protected I[] GetInstances<I>()
+        {
+            lock (_instances)
+            {
+                return _instances.OfType<I>().ToArray();
+            }
+        }
+    }
+
+
+    public class ServiceHostBase<CHANNEL, CALLBACK> : ServiceHostBase<CHANNEL> where CHANNEL : IUserAuthentication
+    {
+        protected CALLBACK _callback;
+
+        public ServiceHostBase()
+        {
+            _callback = OperationContext.Current.GetCallbackChannel<CALLBACK>();
+        }
+
+        private void Broadcast(Action<CALLBACK> action, bool includeSelf)
+        {
+            List<CALLBACK> callbacks = new List<CALLBACK>();
+            lock (_instances)
+            {
+                if (includeSelf)
+                {
+                    callbacks.AddRange(_instances.OfType<ServiceHostBase<CHANNEL, CALLBACK>>().Select(c => c._callback));
+                }
+                else
+                {
+                    callbacks.AddRange(_instances.OfType<ServiceHostBase<CHANNEL, CALLBACK>>().Where(i=>i!= this).Select(c => c._callback));
+                }
+            }
+            foreach (CALLBACK callback in callbacks)
+            {
+                Task.Run(() =>
+                {
+                    try
+                    {
+                        action.Invoke(callback);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Log("Exception during callback.  Host=" + typeof(CHANNEL).Name + ", Message=" + ex.Message, LogMessageSeverity.Warning);
+                    }
+                }
+                );
+            }
+        }
+        // send a message to all hosts, including self
+        protected void Broadcast(Action<CALLBACK> action)
+        {
+            Broadcast(action, true);
+
+        }
+
+        // send a message to all other hosts, excluding self
+        protected void BroadcastOther(Action<CALLBACK> action)
+        {
+            Broadcast(action, false);
         }
     }
 }

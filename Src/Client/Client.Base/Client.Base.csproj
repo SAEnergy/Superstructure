@@ -53,6 +53,7 @@
     <Compile Include="Dialogs\WaitDialog.xaml.cs">
       <DependentUpon>WaitDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ModelBase.cs" />
     <Compile Include="Settings\ClientSettingsBase.cs" />
     <Compile Include="Settings\ClientSettingsEngine.cs" />
     <Compile Include="Dialogs\DialogBase.cs" />
