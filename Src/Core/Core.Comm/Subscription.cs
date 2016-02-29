@@ -66,7 +66,6 @@ namespace Core.Comm
 
                     if (_factory.State != CommunicationState.Opened)
                     {
-
                         try
                         {
                             _factory.Open();
@@ -84,6 +83,20 @@ namespace Core.Comm
                         {
 
                         }
+                        catch (Exception ex)
+                        {
+                            _lastException = ex;
+                            OnDisconnect(ex);
+                        }
+                    }
+                    else
+                    {
+                        _resetEvent.WaitOne(300000);
+                        try
+                        {
+                            Channel.Ping();
+                        }
+                        catch (ThreadAbortException) { }
                         catch (Exception ex)
                         {
                             _lastException = ex;
