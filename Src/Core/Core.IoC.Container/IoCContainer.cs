@@ -82,6 +82,11 @@ namespace Core.IoC.Container
 
             if (!_registeredObjects.TryGetValue(interfaceType, out obj))
             {
+                if(interfaceType == typeof(IIoCContainer))
+                {
+                    return _instance;
+                }
+
                 throw new KeyNotFoundException(string.Format("The type \"{0}\" has not been registered.", interfaceType.Name));
             }
 

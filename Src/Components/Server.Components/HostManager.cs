@@ -14,7 +14,7 @@ using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using System.ServiceModel.Dispatcher;
 
-namespace Core.Components
+namespace Server.Components
 {
     public class ServiceHostInfo
     {

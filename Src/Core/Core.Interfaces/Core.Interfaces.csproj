@@ -51,6 +51,7 @@
     <Compile Include="Components\Base\Singleton.cs" />
     <Compile Include="Components\Base\ComponentBase.cs" />
     <Compile Include="Components\Base\IComponentBase.cs" />
+    <Compile Include="Components\IComponentManager.cs" />
     <Compile Include="Components\IoC\Attributes.cs" />
     <Compile Include="Components\IoC\Enums.cs" />
     <Compile Include="Components\IoC\IIoCContainer.cs" />
@@ -63,7 +64,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Components\Scheduler\Enums.cs" />
     <Compile Include="Components\Scheduler\IJob.cs" />
-    <Compile Include="ServiceContracts\IComponentManager.cs" />
+    <Compile Include="ServiceContracts\IComponentService.cs" />
     <Compile Include="ServiceContracts\IDuplexTest.cs" />
     <Compile Include="ServiceContracts\ILogSubscription.cs" />
     <Compile Include="ServiceContracts\IRemoteLogging.cs" />

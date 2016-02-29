@@ -9,19 +9,19 @@ using System.Threading.Tasks;
 namespace Core.Interfaces.ServiceContracts
 {
     [ServiceContract]
-    public interface IComponentManagerCallback
+    public interface IComponentServiceCallback
     {
         [OperationContract(IsOneWay = true)]
         void MooBack(string moo);
     }
 
-    [ServiceContract(CallbackContract = typeof(IComponentManagerCallback))]
-    public interface IComponentManager : IUserAuthentication
+    [ServiceContract(CallbackContract = typeof(IComponentServiceCallback))]
+    public interface IComponentService : IUserAuthentication
     {
         [OperationContract]
         void Stop();
 
         [OperationContract]
-        List<ComponentInfo> GetComponents();
+        ComponentInfo[] GetComponents();
     }
 }

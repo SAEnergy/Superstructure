@@ -7,7 +7,7 @@ using System.Collections.ObjectModel;
 
 namespace Client.Admin.Plugins
 {
-    public class ComponentManagerViewModel : ViewModelBase<IComponentManager>, IComponentManagerCallback
+    public class ComponentManagerViewModel : ViewModelBase<IComponentService>, IComponentServiceCallback
     {
         public ObservableCollection<ComponentInfo> Components { get; private set; }
 

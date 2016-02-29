@@ -6,7 +6,7 @@ using Core.Interfaces.Components.Logging;
 using Core.Models.Persistent;
 using Core.Interfaces.Components;
 using System.Linq;
-using Core.Components;
+using Server.Components;
 
 namespace Core.Components.Test
 {

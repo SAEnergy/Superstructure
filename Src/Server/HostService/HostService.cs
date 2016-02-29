@@ -44,7 +44,7 @@ namespace HostService
                 IsRunning = true;
                 _heartBeat = new Heartbeat();
 
-                StartAllRunnableTypes();
+                IoCContainer.Instance.Resolve<IComponentManager>().StartAll();
             }
         }
 
@@ -55,59 +55,8 @@ namespace HostService
                 IsRunning = false;
                 _heartBeat.Stop();
 
-                StopAllRunnableTypes();
+                IoCContainer.Instance.Resolve<IComponentManager>().StopAll();
             }
-        }
-
-        #endregion
-
-        #region Private Methods
-
-        private void StartAllRunnableTypes()
-        {
-            _logger.Log("Starting all runnable components");
-
-            foreach (var type in GetRunnableRegisteredTypes())
-            {
-                _logger.Log(string.Format("Starting component of type {0}", type.Name));
-
-                var runnable = IoCContainer.Instance.Resolve(type) as IRunnable;
-
-                if(runnable != null)
-                {
-                    runnable.Start();
-                }
-                else
-                {
-                    _logger.Log(string.Format("Failed to get runnable object from type {0}.", type.Name), LogMessageSeverity.Error);
-                }
-            }
-        }
-
-        private void StopAllRunnableTypes()
-        {
-            _logger.Log("Stopping all runnable components");
-
-            foreach (var type in GetRunnableRegisteredTypes())
-            {
-                _logger.Log(string.Format("Stopping component of type {0}", type.Name));
-
-                var runnable = IoCContainer.Instance.Resolve(type) as IRunnable;
-
-                if (runnable != null)
-                {
-                    runnable.Stop();
-                }
-                else
-                {
-                    _logger.Log(string.Format("Failed to get runnable object from type {0}.", type.Name), LogMessageSeverity.Error);
-                }
-            }
-        }
-
-        private List<Type> GetRunnableRegisteredTypes()
-        {
-            return IoCContainer.Instance.GetRegisteredTypes().Select(k => k.Key).Where(i => typeof(IRunnable).IsAssignableFrom(i) && i != typeof(ILogger)).ToList();
         }
 
         #endregion

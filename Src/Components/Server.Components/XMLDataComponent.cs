@@ -13,7 +13,7 @@ using System.Xml.Serialization;
 using Core.Interfaces.Components.IoC;
 using Core.Interfaces.Components.Base;
 
-namespace Core.Components
+namespace Server.Components
 {
     [ComponentRegistration(ComponentType.All, typeof(IDataComponent))]
     [ComponentMetadata(Description = "Data access layer for XML storage.", FriendlyName = "XML Data Component")]

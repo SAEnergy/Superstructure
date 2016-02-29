@@ -3,7 +3,7 @@ using Core.Interfaces.Components;
 using Core.Interfaces.Components.IoC;
 using Core.Interfaces.Components.Base;
 
-namespace Core.Components
+namespace Server.Components
 {
     [ComponentRegistration(ComponentType.Server, typeof(ISystemConfiguration))]
     [ComponentMetadata(Description = "Maintains system wide configurations.", FriendlyName = "System Configuration Component")]

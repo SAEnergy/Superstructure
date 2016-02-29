@@ -8,7 +8,7 @@ using System.Linq;
 using Core.Interfaces.Components.IoC;
 using Core.Interfaces.Components.Base;
 
-namespace Core.Components
+namespace Server.Components
 {
     [ComponentRegistration(ComponentType.Server, typeof(IDataComponent), DoNotRegister = true)]
     [ComponentMetadata(Description = "Data access layer for SQL.", FriendlyName = "SQL Data Component")]
