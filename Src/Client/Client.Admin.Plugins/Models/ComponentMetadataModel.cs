@@ -14,11 +14,14 @@ namespace Client.Admin.Plugins.Models
         public SimpleCommand StopCommand { get; private set; }
         public SimpleCommand RestartCommand { get; private set; }
 
+        public SimpleCommand DisableCommand { get; private set; }
+
         public ComponentMetadataModel()
         {
             StartCommand = new SimpleCommand();
             StopCommand = new SimpleCommand();
             RestartCommand = new SimpleCommand();
+            DisableCommand = new SimpleCommand();
         }
     }
 }

@@ -21,5 +21,7 @@ namespace Core.Interfaces.Components
         void StartComponent(int componentId);
 
         void RestartComponent(int componentId);
+
+        void DisableComponent(int componentId);
     }
 }

@@ -3,6 +3,7 @@ using Core.Interfaces.Components;
 using Core.Interfaces.Components.IoC;
 using Core.Interfaces.Components.Base;
 using Core.Models;
+using System;
 
 namespace Server.Components
 {
@@ -32,6 +33,11 @@ namespace Server.Components
         public static ISystemConfiguration CreateInstance(ILogger logger, IDataComponent dataComponent)
         {
             return Instance = new SystemConfiguration(logger, dataComponent);
+        }
+
+        public T GetConfig<T>(string sectionName, string configName)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

@@ -23,6 +23,8 @@ namespace Core.Models.DataContracts
 
         public ComponentStatus Status { get; set; }
 
+        public bool IsDisabled { get; set; }
+
         public int CompareTo(ComponentMetadata other)
         {
             throw new NotImplementedException();

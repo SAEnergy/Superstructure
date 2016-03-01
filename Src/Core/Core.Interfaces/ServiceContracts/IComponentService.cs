@@ -28,6 +28,9 @@ namespace Core.Interfaces.ServiceContracts
         void Restart(int componentId);
 
         [OperationContract]
+        void Disable(int componentId);
+
+        [OperationContract]
         ComponentMetadata[] GetComponents();
     }
 }

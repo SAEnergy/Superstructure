@@ -48,6 +48,7 @@ namespace Client.Admin.Plugins
                         model.StopCommand.ParameterizedExecuteCallback += ExecuteStopCommand;
                         model.StartCommand.ParameterizedExecuteCallback += ExecuteStartCommand;
                         model.RestartCommand.ParameterizedExecuteCallback += ExecuteRestartCommand;
+                        model.DisableCommand.ParameterizedExecuteCallback += ExecuteDisableCommand;
                         Components.Add(model);
                     });
                 }
@@ -87,6 +88,16 @@ namespace Client.Admin.Plugins
             if (realComponent != null)
             {
                 Execute(() => Channel.Restart(realComponent.OriginalObject.ComponentId));
+            }
+        }
+
+        private void ExecuteDisableCommand(object component)
+        {
+            var realComponent = component as ComponentMetadataModel;
+
+            if (realComponent != null)
+            {
+                Execute(() => Channel.Disable(realComponent.OriginalObject.ComponentId));
             }
         }
 

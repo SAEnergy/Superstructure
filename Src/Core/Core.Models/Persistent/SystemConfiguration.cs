@@ -9,7 +9,10 @@ namespace Core.Models.Persistent
         public int SystemConfigurationId { get; set; }
 
         [StringLength(255)]
-        public string Key { get; set; }
+        public string SectionName { get; set; }
+
+        [StringLength(255)]
+        public string ConfigName { get; set; }
 
         [StringLength(255)]
         public string Value { get; set; }

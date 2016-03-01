@@ -43,5 +43,10 @@ namespace Server.Hosts
         {
             IoCContainer.Instance.Resolve<IComponentManager>().StopComponent(componentId);
         }
+
+        public void Disable(int componentId)
+        {
+            IoCContainer.Instance.Resolve<IComponentManager>().DisableComponent(componentId);
+        }
     }
 }

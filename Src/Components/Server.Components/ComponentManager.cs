@@ -24,6 +24,7 @@ namespace Server.Components
 
         private readonly ILogger _logger;
         private readonly IIoCContainer _container;
+        private readonly ISystemConfiguration _config;
 
         private Dictionary<Type, ComponentMetadata> _metadataCache;
 
@@ -31,10 +32,11 @@ namespace Server.Components
 
         #region Constructor
 
-        private ComponentManager(ILogger logger, IIoCContainer container)
+        private ComponentManager(ILogger logger, IIoCContainer container, ISystemConfiguration config)
         {
             _logger = logger;
             _container = container;
+            _config = config;
 
             _metadataCache = new Dictionary<Type, ComponentMetadata>();
         }
@@ -43,9 +45,9 @@ namespace Server.Components
 
         #region Public Methods
 
-        public static IComponentManager CreateInstance(ILogger logger, IIoCContainer container)
+        public static IComponentManager CreateInstance(ILogger logger, IIoCContainer container, ISystemConfiguration config)
         {
-            return Instance = new ComponentManager(logger, container);
+            return Instance = new ComponentManager(logger, container, config);
         }
 
         public ComponentMetadata[] GetComponents()
@@ -68,8 +70,6 @@ namespace Server.Components
             {
                 _logger.Log(string.Format("Starting component of type {0}", type.Key.Name));
 
-                var metadata = GetMetadata(type);
-
                 StartRunnable(GetIRunnable(type.Key));
             }
         }
@@ -82,11 +82,7 @@ namespace Server.Components
             {
                 _logger.Log(string.Format("Stopping component of type {0}", type.Key.Name));
 
-                var metadata = GetMetadata(type);
-
                 StopRunnable(GetIRunnable(type.Key));
-
-                metadata.Status = ComponentStatus.Stopped;
             }
         }
 
@@ -96,7 +92,7 @@ namespace Server.Components
 
             var type = GetComponentType(componentId);
 
-            if(type.Key != null)
+            if (type.Key != null)
             {
                 if (type.Value.UserActions.HasFlag(ComponentUserActions.Start))
                 {
@@ -148,17 +144,46 @@ namespace Server.Components
             }
         }
 
+        public void DisableComponent(int componentId)
+        {
+            _logger.Log(string.Format("Attempting to disable component with id \"{0}\".", componentId));
+
+            var type = GetComponentType(componentId);
+
+            if (type.Key != null)
+            {
+                if (type.Value.UserActions.HasFlag(ComponentUserActions.Disable))
+                {
+                    if (!type.Value.IsDisabled)
+                    {
+                        StopRunnable(GetIRunnable(type.Key));
+                        type.Value.IsDisabled = true;
+
+                        _logger.Log(string.Format("Component with id \"{0}\" has been disabled.", type.Value.FriendlyName));
+                    }
+                    else
+                    {
+                        _logger.Log(string.Format("Component with id \"{0}\" has already been disabled.", type.Value.FriendlyName), LogMessageSeverity.Warning);
+                    }
+                }
+                else
+                {
+                    _logger.Log(string.Format("Cannot disable component \"{0}\".", type.Value.FriendlyName), LogMessageSeverity.Warning);
+                }
+            }
+        }
+
         #endregion
 
         #region Private Methods
 
-        private KeyValuePair<Type, ComponentMetadata>  GetComponentType(int componentId)
+        private KeyValuePair<Type, ComponentMetadata> GetComponentType(int componentId)
         {
             KeyValuePair<Type, ComponentMetadata> kvp = new KeyValuePair<Type, ComponentMetadata>();
 
             var query = _metadataCache.Where(k => k.Value.ComponentId == componentId);
 
-            if(query.Any())
+            if (query.Any())
             {
                 kvp = query.First();
 
@@ -174,9 +199,21 @@ namespace Server.Components
             {
                 if (!runnable.IsRunning)
                 {
-                    runnable.Start();
+                    var metadata = GetMetadata(runnable.GetType());
 
-                    SetStatus(runnable.GetType(), ComponentStatus.Running);
+                    if (metadata != null)
+                    {
+                        if (!metadata.IsDisabled)
+                        {
+                            runnable.Start();
+
+                            SetStatus(metadata, ComponentStatus.Running);
+                        }
+                        else
+                        {
+                            _logger.Log(string.Format("Cannot start component \"{0}\" because it is disabled.", metadata.FriendlyName), LogMessageSeverity.Warning);
+                        }
+                    }
                 }
                 else
                 {
@@ -206,28 +243,25 @@ namespace Server.Components
         {
             if (type != null)
             {
-                IEnumerable<KeyValuePair<Type, Type>> query;
+                SetStatus(GetMetadata(type), status);
+            }
+            else
+            {
+                _logger.Log(string.Format("Unable to set status of component \"{0}\"", type.Name), LogMessageSeverity.Error);
+            }
+        }
 
-                if(type.IsInterface)
-                {
-                    query = _container.GetRegisteredTypes().Where(k => k.Key == type);
-                }
-                else
-                {
-                    query = _container.GetRegisteredTypes().Where(k => k.Value == type);
-                }
+        private void SetStatus(ComponentMetadata info, ComponentStatus status)
+        {
+            if(info != null)
+            {
+                info.Status = status;
 
-                if(query.Any())
-                {
-                    var info = GetMetadata(query.First());
-                    info.Status = status;
-
-                    _logger.Log(string.Format("Set component \"{0}\" status to \"{1}\".", info.FriendlyName, info.Status));
-                }
-                else
-                {
-                    _logger.Log(string.Format("Unable to set status of component \"{0}\"", type.Name), LogMessageSeverity.Error);
-                }
+                _logger.Log(string.Format("Set component \"{0}\" status to \"{1}\".", info.FriendlyName, info.Status));
+            }
+            else
+            {
+                _logger.Log("Unable to set status, Null argument provided.", LogMessageSeverity.Error);
             }
         }
 
@@ -236,7 +270,7 @@ namespace Server.Components
             return _container.Resolve(type) as IRunnable;
         }
 
-        private List<KeyValuePair<Type,Type>> GetRunnableRegisteredTypes()
+        private List<KeyValuePair<Type, Type>> GetRunnableRegisteredTypes()
         {
             return _container.GetRegisteredTypes().Where(i => typeof(IRunnable).IsAssignableFrom(i.Key) && i.Key != typeof(ILogger)).ToList();
         }
@@ -276,6 +310,32 @@ namespace Server.Components
             return dependencies;
         }
 
+        private ComponentMetadata GetMetadata(Type type)
+        {
+            ComponentMetadata info = null;
+
+            if (type != null)
+            {
+                IEnumerable<KeyValuePair<Type, Type>> query;
+
+                if (type.IsInterface)
+                {
+                    query = _container.GetRegisteredTypes().Where(k => k.Key == type);
+                }
+                else
+                {
+                    query = _container.GetRegisteredTypes().Where(k => k.Value == type);
+                }
+
+                if (query.Any())
+                {
+                    info = GetMetadata(query.First());
+                }
+            }
+
+            return info;
+        }
+
         private ComponentMetadata GetMetadata(KeyValuePair<Type, Type> type)
         {
             ComponentMetadata info;
@@ -297,10 +357,14 @@ namespace Server.Components
 
                 var regAtty = type.Value.GetAttribute<ComponentRegistrationAttribute>();
 
-                if(regAtty != null)
+                if (regAtty != null)
                 {
                     info.Type = regAtty.Type;
                 }
+
+                //TODO: use configuration system to get the real data
+                //info.IsDisabled = _config.GetConfig<bool>(GetType().Name,string.Format(type.Value.Name));
+                info.IsDisabled = false;
 
                 info.Dependencies = GetDependencies(type.Value).ToArray();
 

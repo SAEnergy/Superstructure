@@ -9,5 +9,6 @@ namespace Core.Interfaces.Components
 {
     public interface ISystemConfiguration : IComponentBase
     {
+        T GetConfig<T>(string sectionName, string configName);
     }
 }
