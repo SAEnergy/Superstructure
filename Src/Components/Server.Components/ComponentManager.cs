@@ -120,7 +120,7 @@ namespace Server.Components
             return _container.GetRegisteredTypes().Select(k => k.Key).Where(i => typeof(IRunnable).IsAssignableFrom(i) && i != typeof(ILogger)).ToList();
         }
 
-        private List<ComponentMetadata> GetDependencies(Type type, List<KeyValuePair<Type, Type>> typesList)
+        private List<ComponentMetadata> GetDependencies(Type type)
         {
             var dependencies = new List<ComponentMetadata>();
 
@@ -138,7 +138,7 @@ namespace Server.Components
                         {
                             if (parameter.ParameterType.IsInterface)
                             {
-                                var query = typesList.Where(p => p.Key == parameter.ParameterType);
+                                var query = _container.GetRegisteredTypes().Where(p => p.Key == parameter.ParameterType);
 
                                 if (query.Any())
                                 {
@@ -173,7 +173,7 @@ namespace Server.Components
                     info.FriendlyName = atty.FriendlyName;
                 }
 
-                info.Dependencies = GetDependencies(type.Value, _container.GetRegisteredTypes()).ToArray();
+                info.Dependencies = GetDependencies(type.Value).ToArray();
 
                 info.ComponentId = info.GetHashCode();
 

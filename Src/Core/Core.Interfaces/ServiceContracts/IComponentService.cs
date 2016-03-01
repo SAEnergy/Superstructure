@@ -19,7 +19,13 @@ namespace Core.Interfaces.ServiceContracts
     public interface IComponentService : IUserAuthentication
     {
         [OperationContract]
-        void Stop();
+        void Stop(int componentId);
+
+        [OperationContract]
+        void Start(int componentId);
+
+        [OperationContract]
+        void Restart(int componentId);
 
         [OperationContract]
         ComponentMetadata[] GetComponents();

@@ -24,14 +24,24 @@ namespace Server.Hosts
             _callback = OperationContext.Current.GetCallbackChannel<IComponentServiceCallback>();
         }
 
-        public void Stop()
+        public ComponentMetadata[] GetComponents()
+        {
+            return IoCContainer.Instance.Resolve<IComponentManager>().GetComponents();
+        }
+
+        public void Start(int componentId)
         {
             throw new NotImplementedException();
         }
 
-        public ComponentMetadata[] GetComponents()
+        public void Restart(int componentId)
         {
-            return IoCContainer.Instance.Resolve<IComponentManager>().GetComponents();
+            throw new NotImplementedException();
+        }
+
+        public void Stop(int componentId)
+        {
+            throw new NotImplementedException();
         }
     }
 }
