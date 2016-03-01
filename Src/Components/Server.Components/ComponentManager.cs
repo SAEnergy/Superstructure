@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Core.Models.DataContracts;
 using Core.Util;
+using System.Reflection;
 
 namespace Server.Components
 {
@@ -23,6 +24,8 @@ namespace Server.Components
         private readonly ILogger _logger;
         private readonly IIoCContainer _container;
 
+        private Dictionary<Type, ComponentMetadata> _metadataCache;
+
         #endregion
 
         #region Constructor
@@ -31,6 +34,8 @@ namespace Server.Components
         {
             _logger = logger;
             _container = container;
+
+            _metadataCache = new Dictionary<Type, ComponentMetadata>();
         }
 
         #endregion
@@ -42,25 +47,13 @@ namespace Server.Components
             return Instance = new ComponentManager(logger, container);
         }
 
-        public ComponentInfo[] GetComponents()
+        public ComponentMetadata[] GetComponents()
         {
-            var infos = new List<ComponentInfo>();
+            var infos = new List<ComponentMetadata>();
 
             foreach (var type in _container.GetRegisteredTypes())
             {
-                var info = new ComponentInfo();
-                info.InterfaceTypeName = type.Key.Name;
-                info.ConcreteTypeName = type.Value.Name;
-
-                var atty = type.Value.GetAttribute<ComponentMetadataAttribute>();
-
-                if (atty != null)
-                {
-                    info.Description = atty.Description;
-                    info.FriendlyName = atty.FriendlyName;
-                }
-
-                infos.Add(info);
+                infos.Add(GetMetadata(type));
             }
 
             return infos.ToArray();
@@ -87,7 +80,7 @@ namespace Server.Components
             }
         }
 
-        public void StartComponent(ComponentInfo info)
+        public void StartComponent(ComponentMetadata info)
         {
             throw new NotImplementedException();
         }
@@ -113,7 +106,7 @@ namespace Server.Components
             }
         }
 
-        public void StopComponent(ComponentInfo info)
+        public void StopComponent(ComponentMetadata info)
         {
             throw new NotImplementedException();
         }
@@ -125,6 +118,69 @@ namespace Server.Components
         private List<Type> GetRunnableRegisteredTypes()
         {
             return _container.GetRegisteredTypes().Select(k => k.Key).Where(i => typeof(IRunnable).IsAssignableFrom(i) && i != typeof(ILogger)).ToList();
+        }
+
+        private List<ComponentMetadata> GetDependencies(Type type, List<KeyValuePair<Type, Type>> typesList)
+        {
+            var dependencies = new List<ComponentMetadata>();
+
+            if (type != null)
+            {
+                var constructor = type.GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public).FirstOrDefault();
+
+                if (constructor != null)
+                {
+                    var parameterInfoes = constructor.GetParameters().ToList();
+
+                    if (parameterInfoes.Count > 0)
+                    {
+                        foreach (var parameter in parameterInfoes)
+                        {
+                            if (parameter.ParameterType.IsInterface)
+                            {
+                                var query = typesList.Where(p => p.Key == parameter.ParameterType);
+
+                                if (query.Any())
+                                {
+                                    var kvp = query.First();
+
+                                    dependencies.Add(GetMetadata(kvp));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return dependencies;
+        }
+
+        private ComponentMetadata GetMetadata(KeyValuePair<Type, Type> type)
+        {
+            ComponentMetadata info;
+
+            if (!_metadataCache.TryGetValue(type.Key, out info))
+            {
+                info = new ComponentMetadata();
+                info.InterfaceTypeName = type.Key.Name;
+                info.ConcreteTypeName = type.Value.Name;
+
+                var atty = type.Value.GetAttribute<ComponentMetadataAttribute>();
+
+                if (atty != null)
+                {
+                    info.Description = atty.Description;
+                    info.FriendlyName = atty.FriendlyName;
+                }
+
+                info.Dependencies = GetDependencies(type.Value, _container.GetRegisteredTypes()).ToArray();
+
+                info.ComponentId = info.GetHashCode();
+
+                _metadataCache.Add(type.Key, info);
+            }
+
+            return info;
         }
 
         #endregion

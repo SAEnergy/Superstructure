@@ -22,6 +22,6 @@ namespace Core.Interfaces.ServiceContracts
         void Stop();
 
         [OperationContract]
-        ComponentInfo[] GetComponents();
+        ComponentMetadata[] GetComponents();
     }
 }

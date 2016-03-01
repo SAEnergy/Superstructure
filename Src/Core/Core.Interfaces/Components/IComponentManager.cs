@@ -14,10 +14,10 @@ namespace Core.Interfaces.Components
 
         void StopAll();
 
-        ComponentInfo[] GetComponents();
+        ComponentMetadata[] GetComponents();
 
-        void StopComponent(ComponentInfo info);
+        void StopComponent(ComponentMetadata info);
 
-        void StartComponent(ComponentInfo info);
+        void StartComponent(ComponentMetadata info);
     }
 }

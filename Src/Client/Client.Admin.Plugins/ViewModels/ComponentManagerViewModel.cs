@@ -9,11 +9,11 @@ namespace Client.Admin.Plugins
 {
     public class ComponentManagerViewModel : ViewModelBase<IComponentService>, IComponentServiceCallback
     {
-        public ObservableCollection<ComponentInfo> Components { get; private set; }
+        public ObservableCollection<ComponentMetadata> Components { get; private set; }
 
         public ComponentManagerViewModel(ViewBase parent) : base(parent)
         {
-            Components = new ObservableCollection<ComponentInfo>();
+            Components = new ObservableCollection<ComponentMetadata>();
         }
 
         public void MooBack(string moo)

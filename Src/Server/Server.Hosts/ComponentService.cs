@@ -29,7 +29,7 @@ namespace Server.Hosts
             throw new NotImplementedException();
         }
 
-        public ComponentInfo[] GetComponents()
+        public ComponentMetadata[] GetComponents()
         {
             return IoCContainer.Instance.Resolve<IComponentManager>().GetComponents();
         }

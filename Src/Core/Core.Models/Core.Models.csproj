@@ -47,7 +47,7 @@
     </Compile>
     <Compile Include="ComplexTypes\AuditInfo.cs" />
     <Compile Include="ComplexTypes\TimeSpanBool.cs" />
-    <Compile Include="DataContracts\ComponentInfo.cs" />
+    <Compile Include="DataContracts\ComponentMetadata.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Persistent\JobConfiguration.cs" />
     <Compile Include="Persistent\SystemConfiguration.cs" />
