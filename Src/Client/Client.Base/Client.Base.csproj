@@ -50,6 +50,8 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Attributes.cs" />
+    <Compile Include="Converters\EnumFlagsToBooleanConverter.cs" />
+    <Compile Include="Converters\EnumToBooleanConverter.cs" />
     <Compile Include="Dialogs\WaitDialog.xaml.cs">
       <DependentUpon>WaitDialog.xaml</DependentUpon>
     </Compile>

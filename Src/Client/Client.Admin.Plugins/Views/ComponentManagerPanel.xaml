@@ -6,10 +6,46 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:local="clr-namespace:Client.Admin.Plugins"
     xmlns:mybase="clr-namespace:Client.Base;assembly=Client.Base"
+    xmlns:models="clr-namespace:Core.Models;assembly=Core.Models"
     mc:Ignorable="d" >
     <Grid>
         <Border BorderThickness="1" Background="White" Opacity="1" Margin="0"/>
-        <DataGrid ItemsSource="{Binding Path=Components}" CanUserAddRows="False">
-        </DataGrid>
+        <ListBox Grid.Row="1" ItemsSource="{Binding Components}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <DataTemplate.Resources>
+                        <mybase:EnumFlagsToBooleanConverter x:Key="EnumFlagsToBooleanConverter" />
+                    </DataTemplate.Resources>
+                    <Grid>
+                        <Grid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Start" IsEnabled="{Binding Path=UserActions, Converter={StaticResource EnumFlagsToBooleanConverter}, ConverterParameter={x:Static models:ComponentUserActions.Start}}">
+                                    <MenuItem.Icon>
+                                        <Image Source="{Binding Path=DataContext.StartIcon, RelativeSource={RelativeSource AncestorType=local:ComponentManagerPanel}}" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Stop" IsEnabled="{Binding Path=UserActions, Converter={StaticResource EnumFlagsToBooleanConverter}, ConverterParameter={x:Static models:ComponentUserActions.Stop}}">
+                                    <MenuItem.Icon>
+                                        <Image Source="{Binding Path=DataContext.StopIcon, RelativeSource={RelativeSource AncestorType=local:ComponentManagerPanel}}" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Restart" IsEnabled="{Binding Path=UserActions, Converter={StaticResource EnumFlagsToBooleanConverter}, ConverterParameter={x:Static models:ComponentUserActions.Restart}}" >
+                                    <MenuItem.Icon>
+                                        <Image Source="{Binding Path=RestartIcon, RelativeSource={RelativeSource AncestorType=local:ComponentManagerPanel}}" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                            </ContextMenu>
+                        </Grid.ContextMenu>
+                        <Expander Header="{Binding Path=FriendlyName}">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="{Binding Path=Description}"/>
+                                <TextBlock Text="{Binding Path=InterfaceTypeName}"/>
+                                <TextBlock Text="{Binding Path=ConcreteTypeName}"/>
+                            </StackPanel>
+                        </Expander>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
 </mybase:PanelBase>
