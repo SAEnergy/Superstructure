@@ -86,14 +86,18 @@ namespace Server.Components
             }
         }
 
-        public void StartComponent(int componentId)
+        public ComponentMetadata StartComponent(int componentId)
         {
+            ComponentMetadata rc = null;
+
             _logger.Log(string.Format("Attempting to start component with id \"{0}\".", componentId));
 
             var type = GetComponentType(componentId);
 
             if (type.Key != null)
             {
+                rc = type.Value;
+
                 if (type.Value.UserActions.HasFlag(ComponentUserActions.Start))
                 {
                     StartRunnable(GetIRunnable(type.Key));
@@ -103,16 +107,22 @@ namespace Server.Components
                     _logger.Log(string.Format("Cannot start component \"{0}\".  This component is not startable", type.Value.FriendlyName), LogMessageSeverity.Warning);
                 }
             }
+
+            return rc;
         }
 
-        public void StopComponent(int componentId)
+        public ComponentMetadata StopComponent(int componentId)
         {
+            ComponentMetadata rc = null;
+
             _logger.Log(string.Format("Attempting to stop component with id \"{0}\".", componentId));
 
             var type = GetComponentType(componentId);
 
             if (type.Key != null)
             {
+                rc = type.Value;
+
                 if (type.Value.UserActions.HasFlag(ComponentUserActions.Stop))
                 {
                     StopRunnable(GetIRunnable(type.Key));
@@ -122,16 +132,22 @@ namespace Server.Components
                     _logger.Log(string.Format("Cannot stop component \"{0}\".  This component is not stopable", type.Value.FriendlyName), LogMessageSeverity.Warning);
                 }
             }
+
+            return rc;
         }
 
-        public void RestartComponent(int componentId)
+        public ComponentMetadata RestartComponent(int componentId)
         {
+            ComponentMetadata rc = null;
+
             _logger.Log(string.Format("Attempting to restart component with id \"{0}\".", componentId));
 
             var type = GetComponentType(componentId);
 
             if (type.Key != null)
             {
+                rc = type.Value;
+
                 if (type.Value.UserActions.HasFlag(ComponentUserActions.Restart))
                 {
                     StopRunnable(GetIRunnable(type.Key));
@@ -142,16 +158,22 @@ namespace Server.Components
                     _logger.Log(string.Format("Cannot restart component \"{0}\".  This component is not restartable", type.Value.FriendlyName), LogMessageSeverity.Warning);
                 }
             }
+
+            return rc;
         }
 
-        public void DisableComponent(int componentId)
+        public ComponentMetadata DisableComponent(int componentId)
         {
+            ComponentMetadata rc = null;
+
             _logger.Log(string.Format("Attempting to disable component with id \"{0}\".", componentId));
 
             var type = GetComponentType(componentId);
 
             if (type.Key != null)
             {
+                rc = type.Value;
+
                 if (type.Value.UserActions.HasFlag(ComponentUserActions.Disable))
                 {
                     if (!type.Value.IsDisabled)
@@ -171,6 +193,8 @@ namespace Server.Components
                     _logger.Log(string.Format("Cannot disable component \"{0}\".", type.Value.FriendlyName), LogMessageSeverity.Warning);
                 }
             }
+
+            return rc;
         }
 
         #endregion

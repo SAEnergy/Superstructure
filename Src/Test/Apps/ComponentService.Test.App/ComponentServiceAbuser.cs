@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Models.DataContracts;
 
 namespace ComponentService.Test.App
 {
@@ -38,11 +39,6 @@ namespace ComponentService.Test.App
         {
             _logger.Log("Connected to server");
             CanRun = true;
-        }
-
-        public void MooBack(string moo)
-        {
-            throw new NotImplementedException();
         }
 
         public void Start()
@@ -104,6 +100,11 @@ namespace ComponentService.Test.App
                     Thread.Sleep(1000);
                 }
             }
+        }
+
+        public void ComponentUpdated(ComponentMetadata component)
+        {
+            _logger.Log(string.Format("Component \"{0}\" status is now \"{1}\"", component.Status));
         }
     }
 }

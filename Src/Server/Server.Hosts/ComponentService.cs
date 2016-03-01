@@ -15,13 +15,10 @@ using System.Threading.Tasks;
 namespace Server.Hosts
 {
     [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, InstanceContextMode = InstanceContextMode.PerSession)]
-    public class ComponentService : ServiceHostBase<IComponentService>, IComponentService
+    public class ComponentService : ServiceHostBase<IComponentService, IComponentServiceCallback>, IComponentService
     {
-        private IComponentServiceCallback _callback;
-
         public ComponentService()
         {
-            _callback = OperationContext.Current.GetCallbackChannel<IComponentServiceCallback>();
         }
 
         public ComponentMetadata[] GetComponents()
@@ -31,22 +28,44 @@ namespace Server.Hosts
 
         public void Start(int componentId)
         {
-            IoCContainer.Instance.Resolve<IComponentManager>().StartComponent(componentId);
+            var rc = IoCContainer.Instance.Resolve<IComponentManager>().StartComponent(componentId);
+            UpdateAllUsers(rc);
         }
 
         public void Restart(int componentId)
         {
-            IoCContainer.Instance.Resolve<IComponentManager>().RestartComponent(componentId);
+            var rc = IoCContainer.Instance.Resolve<IComponentManager>().RestartComponent(componentId);
+            UpdateAllUsers(rc);
         }
 
         public void Stop(int componentId)
         {
-            IoCContainer.Instance.Resolve<IComponentManager>().StopComponent(componentId);
+            var rc = IoCContainer.Instance.Resolve<IComponentManager>().StopComponent(componentId);
+            UpdateAllUsers(rc);
         }
 
         public void Disable(int componentId)
         {
-            IoCContainer.Instance.Resolve<IComponentManager>().DisableComponent(componentId);
+            var rc = IoCContainer.Instance.Resolve<IComponentManager>().DisableComponent(componentId);
+            UpdateAllUsers(rc);
         }
+
+        #region Private Methods
+
+        private void UpdateAllUsers(ComponentMetadata data)
+        {
+            if (data != null)
+            {
+                lock (_instances)
+                {
+                    foreach (var host in GetInstances<ComponentService>())
+                    {
+                        host.Broadcast((IComponentServiceCallback c) => c.ComponentUpdated(data));
+                    }
+                }
+            }
+        }
+
+        #endregion
     }
 }

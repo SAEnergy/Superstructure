@@ -12,7 +12,7 @@ namespace Core.Interfaces.ServiceContracts
     public interface IComponentServiceCallback
     {
         [OperationContract(IsOneWay = true)]
-        void MooBack(string moo);
+        void ComponentUpdated(ComponentMetadata component);
     }
 
     [ServiceContract(CallbackContract = typeof(IComponentServiceCallback))]

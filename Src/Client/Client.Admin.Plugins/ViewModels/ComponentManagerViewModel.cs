@@ -7,6 +7,7 @@ using Core.Models.DataContracts;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows.Media;
+using System.Linq;
 
 namespace Client.Admin.Plugins
 {
@@ -27,10 +28,6 @@ namespace Client.Admin.Plugins
             StartIcon = WPFHelpers.GetImage("images/media-play.png");
             StopIcon = WPFHelpers.GetImage("images/media-stop.png");
             RestartIcon = WPFHelpers.GetImage("images/reload.png");
-        }
-
-        public void MooBack(string moo)
-        {
         }
 
         protected override void OnConnect(ISubscription source)
@@ -57,6 +54,41 @@ namespace Client.Admin.Plugins
             {
                 //nom nom nom
             }
+
+            base.OnConnect(source);
+        }
+
+        protected override void OnDisconnect(ISubscription source, Exception error)
+        {
+            this.BeginInvoke(() =>
+            {
+                Components.Clear();
+            });
+
+            base.OnDisconnect(source, error);
+        }
+
+        public void ComponentUpdated(ComponentMetadata component)
+        {
+            this.BeginInvoke(() =>
+            {
+                var oldComponent = Components.Where(c => c.OriginalObject.ComponentId == component.ComponentId).FirstOrDefault();
+
+                if(oldComponent != null)
+                {
+                    oldComponent.UpdateFrom(component);
+                }
+                else
+                {
+                    ComponentMetadataModel model = new ComponentMetadataModel();
+                    model.UpdateFrom(component);
+                    model.StopCommand.ParameterizedExecuteCallback += ExecuteStopCommand;
+                    model.StartCommand.ParameterizedExecuteCallback += ExecuteStartCommand;
+                    model.RestartCommand.ParameterizedExecuteCallback += ExecuteRestartCommand;
+                    model.DisableCommand.ParameterizedExecuteCallback += ExecuteDisableCommand;
+                    Components.Add(model);
+                }
+            });
         }
 
         #region Private Methods
