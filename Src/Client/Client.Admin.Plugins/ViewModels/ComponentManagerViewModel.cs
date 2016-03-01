@@ -15,6 +15,10 @@ namespace Client.Admin.Plugins
 
         public SimpleCommand StartComponent { get; private set; }
 
+        public SimpleCommand StopComponent { get; private set; }
+
+        public SimpleCommand RestartComponent { get; private set; }
+
         public ImageSource StartIcon { get; private set; }
 
         public ImageSource StopIcon { get; private set; }
@@ -25,7 +29,9 @@ namespace Client.Admin.Plugins
         {
             Components = new ObservableCollection<ComponentMetadata>();
 
-            StartComponent = new SimpleCommand(ExecuteStopCommand);
+            StartComponent = new SimpleCommand(new Action<object>(ExecuteStartCommand));
+            StopComponent = new SimpleCommand(new Action<object>(ExecuteStopCommand));
+            RestartComponent = new SimpleCommand(new Action<object>(ExecuteRestartCommand));
 
             StartIcon = WPFHelpers.GetImage("images/media-play.png");
             StopIcon = WPFHelpers.GetImage("images/media-stop.png");
@@ -55,9 +61,34 @@ namespace Client.Admin.Plugins
 
         #region Private Methods
 
-        private void ExecuteStopCommand()
+        private void ExecuteStopCommand(object component)
         {
-            Execute(() => Channel.Stop(5));
+            var realComponent = component as ComponentMetadata;
+
+            if (realComponent != null)
+            {
+                Execute(() => Channel.Stop(realComponent.ComponentId));
+            }
+        }
+
+        private void ExecuteStartCommand(object component)
+        {
+            var realComponent = component as ComponentMetadata;
+
+            if (realComponent != null)
+            {
+                Execute(() => Channel.Start(realComponent.ComponentId));
+            }
+        }
+
+        private void ExecuteRestartCommand(object component)
+        {
+            var realComponent = component as ComponentMetadata;
+
+            if (realComponent != null)
+            {
+                Execute(() => Channel.Restart(realComponent.ComponentId));
+            }
         }
 
         #endregion
