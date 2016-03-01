@@ -15,7 +15,6 @@ namespace ComponentService.Test.App
     {
         private readonly Subscription<IComponentService> _conn;
         private readonly ILogger _logger;
-        private bool CanRun = false;
         private bool Run = false;
         private Thread _worker;
 
@@ -32,13 +31,11 @@ namespace ComponentService.Test.App
         private void _conn_Disconnected(ISubscription source, Exception ex)
         {
             _logger.Log("Disconnected from server");
-            CanRun = false;
         }
 
         private void _conn_Connected(ISubscription source)
         {
             _logger.Log("Connected to server");
-            CanRun = true;
         }
 
         public void Start()
@@ -69,29 +66,45 @@ namespace ComponentService.Test.App
 
             while (Run)
             {
-                if(CanRun)
+                if(_conn.State == SubscriptionState.Connected)
                 {
                     var channel = _conn.Channel;
 
-                    foreach (var component in channel.GetComponents())
+                    try
                     {
-                        var val = rnd.Next(0, 2);
-                        switch(val)
+                        foreach (var component in channel.GetComponents())
                         {
-                            case 0:
-                                channel.Stop(component.ComponentId);
-                                break;
-                            case 1:
-                                channel.Start(component.ComponentId);
-                                break;
-                            case 2:
-                                channel.Restart(component.ComponentId);
-                                break;
-                            default:
-                                break;
-                        }
+                            if(component.FriendlyName == "Host Manager Component")
+                            {
+                                //we are using this one...
+                                continue;
+                            }
 
-                        Thread.Sleep(100);
+                            var val = rnd.Next(0, 3);
+                            switch (val)
+                            {
+                                case 0:
+                                    channel.Stop(component.ComponentId);
+                                    break;
+                                case 1:
+                                    channel.Start(component.ComponentId);
+                                    break;
+                                case 2:
+                                    channel.Restart(component.ComponentId);
+                                    break;
+                                case 3:
+                                    channel.Disable(component.ComponentId);
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                            Thread.Sleep(100);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        _logger.Log("Exception while working...");
                     }
                 }
                 else
@@ -104,7 +117,7 @@ namespace ComponentService.Test.App
 
         public void ComponentUpdated(ComponentMetadata component)
         {
-            _logger.Log(string.Format("Component \"{0}\" status is now \"{1}\"", component.Status));
+            _logger.Log(string.Format("Component \"{0}\" status is now \"{1}\"",component.FriendlyName, component.Status));
         }
     }
 }
