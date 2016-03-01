@@ -1,4 +1,5 @@
 ﻿using Core.Interfaces.Base;
+using Core.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

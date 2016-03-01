@@ -19,6 +19,10 @@ namespace Client.Base
         private CanExecuteCallback _canExecuteCallback;
         private SynchronizationContext _context;
 
+        public event CanExecuteCallback CanExecuteCallback;
+        public event Action ExecuteCallback;
+        public event Action<object> ParameterizedExecuteCallback;
+
         public void FireCanExecuteChangedEvent()
         {
             _context.Send(delegate { if (CanExecuteChanged != null) { CanExecuteChanged(this, null); } }, null);
@@ -27,6 +31,7 @@ namespace Client.Base
         public bool CanExecute(object parameter)
         {
             if (_canExecuteCallback != null) { return _canExecuteCallback(); }
+            if (CanExecuteCallback!= null) { return CanExecuteCallback(); }
             return true;
         }
 
@@ -34,6 +39,8 @@ namespace Client.Base
         {
             if (_action != null) { _action(); }
             if (_paramAction != null) { _paramAction(parameter); }
+            if (ExecuteCallback != null) { ExecuteCallback(); }
+            if (ParameterizedExecuteCallback != null) { ParameterizedExecuteCallback(parameter); }
         }
 
         public SimpleCommand()

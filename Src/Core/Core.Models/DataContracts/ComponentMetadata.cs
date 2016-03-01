@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Linq;
 
 namespace Core.Models.DataContracts
 {
-    public class ComponentMetadata
+    public class ComponentMetadata : ICloneable<ComponentMetadata>
     {
         public int ComponentId { get; set; }
 
@@ -19,6 +20,18 @@ namespace Core.Models.DataContracts
         public ComponentType Type { get; set; }
 
         public ComponentUserActions UserActions { get; set; }
+
+        public int CompareTo(ComponentMetadata other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ComponentMetadata Clone()
+        {
+            ComponentMetadata newVal = (ComponentMetadata)this.MemberwiseClone();
+            if (this.Dependencies != null) { newVal.Dependencies = this.Dependencies.Select(c => c.Clone()).ToArray(); }
+            return newVal;
+        }
 
         //other data
     }

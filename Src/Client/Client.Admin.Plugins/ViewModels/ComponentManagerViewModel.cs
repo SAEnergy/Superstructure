@@ -1,4 +1,5 @@
-﻿using Client.Base;
+﻿using Client.Admin.Plugins.Models;
+using Client.Base;
 using Client.Resources;
 using Core.Comm;
 using Core.Interfaces.ServiceContracts;
@@ -11,13 +12,9 @@ namespace Client.Admin.Plugins
 {
     public class ComponentManagerViewModel : ViewModelBase<IComponentService>, IComponentServiceCallback
     {
-        public ObservableCollection<ComponentMetadata> Components { get; private set; }
+        public ObservableCollection<ComponentMetadataModel> Components { get; private set; }
 
-        public SimpleCommand StartComponent { get; private set; }
 
-        public SimpleCommand StopComponent { get; private set; }
-
-        public SimpleCommand RestartComponent { get; private set; }
 
         public ImageSource StartIcon { get; private set; }
 
@@ -27,11 +24,7 @@ namespace Client.Admin.Plugins
 
         public ComponentManagerViewModel(ViewBase parent) : base(parent)
         {
-            Components = new ObservableCollection<ComponentMetadata>();
-
-            StartComponent = new SimpleCommand(new Action<object>(ExecuteStartCommand));
-            StopComponent = new SimpleCommand(new Action<object>(ExecuteStopCommand));
-            RestartComponent = new SimpleCommand(new Action<object>(ExecuteRestartCommand));
+            Components = new ObservableCollection<ComponentMetadataModel>();
 
             StartIcon = WPFHelpers.GetImage("images/media-play.png");
             StopIcon = WPFHelpers.GetImage("images/media-stop.png");
@@ -50,7 +43,15 @@ namespace Client.Admin.Plugins
 
                 foreach (var info in infos)
                 {
-                    this.BeginInvoke(() => Components.Add(info));
+                    this.BeginInvoke(() =>
+                    {
+                        ComponentMetadataModel model = new ComponentMetadataModel();
+                        model.UpdateFrom(info);
+                        model.StopCommand.ParameterizedExecuteCallback += ExecuteStopCommand;
+                        model.StartCommand.ParameterizedExecuteCallback += ExecuteStartCommand;
+                        model.RestartCommand.ParameterizedExecuteCallback += ExecuteRestartCommand;
+                        Components.Add(model);
+                    });
                 }
             }
             catch

@@ -49,6 +49,7 @@
     <Compile Include="ComplexTypes\TimeSpanBool.cs" />
     <Compile Include="DataContracts\ComponentMetadata.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="ICloneable.cs" />
     <Compile Include="Persistent\JobConfiguration.cs" />
     <Compile Include="Persistent\SystemConfiguration.cs" />
     <Compile Include="Persistent\User.cs" />

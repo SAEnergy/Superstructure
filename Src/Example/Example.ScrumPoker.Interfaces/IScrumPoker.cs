@@ -1,5 +1,6 @@
 ﻿using Core.Interfaces.Base;
 using Core.Interfaces.ServiceContracts;
+using Core.Models;
 using System;
 using System.ServiceModel;
 

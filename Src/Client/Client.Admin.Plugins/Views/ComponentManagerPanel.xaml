@@ -36,11 +36,11 @@
                                 </MenuItem>
                             </ContextMenu>
                         </Grid.ContextMenu>
-                        <Expander Header="{Binding Path=FriendlyName}">
+                        <Expander Header="{Binding Path=OriginalObject.FriendlyName}">
                             <StackPanel Orientation="Vertical">
-                                <TextBlock Text="{Binding Path=Description}"/>
-                                <TextBlock Text="{Binding Path=InterfaceTypeName}"/>
-                                <TextBlock Text="{Binding Path=ConcreteTypeName}"/>
+                                <TextBlock Text="{Binding Path=OriginalObject.Description}"/>
+                                <TextBlock Text="{Binding Path=OriginalObject.InterfaceTypeName}"/>
+                                <TextBlock Text="{Binding Path=OriginalObject.ConcreteTypeName}"/>
                             </StackPanel>
                         </Expander>
                     </Grid>

@@ -47,6 +47,7 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Models\ComponentMetadataModel.cs" />
     <Compile Include="ViewModels\ComponentManagerViewModel.cs" />
     <Compile Include="Views\ComponentManagerPanel.xaml.cs">
       <DependentUpon>ComponentManagerPanel.xaml</DependentUpon>
@@ -81,6 +82,7 @@
       <Name>Client.Resources</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
