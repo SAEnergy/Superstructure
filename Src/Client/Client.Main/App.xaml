@@ -8,5 +8,9 @@
             <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
             <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}"/>
         </Style>
+        <Style TargetType="ScrollViewer">
+            <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+        </Style>
     </Application.Resources>
 </Application>

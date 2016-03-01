@@ -13,6 +13,7 @@
     Width="640"
     Height="480"
     Icon="/Client.Resources;Component/Icons/leaf.ico"
+    SnapsToDevicePixels="True"
     >
     <local:MainWindowView x:Name="mainWindowView"/>
 </base:DialogBase>

@@ -7,33 +7,143 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:local="clr-namespace:Example.ScrumPoker.Plugin"
     mc:Ignorable="d" 
+    Background="Transparent"
     >
+    <base:PanelBase.Resources>
+        <VisualBrush x:Key="CardBackBrush" TileMode="Tile" Viewport="0,0,10,10" ViewportUnits="Absolute" Viewbox="0,0,10,10" ViewboxUnits="Absolute">
+            <VisualBrush.Visual>
+                <Grid>
+                    <Path Data="M 0 10 L 10 0" Stroke="Gray" />
+                    <Path Data="M 0 0 L 10 10" Stroke="Gray" />
+                </Grid>
+            </VisualBrush.Visual>
+        </VisualBrush>
+        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Padding" Value="4"/>
+            <Setter Property="Margin" Value="4"/>
+        </Style>
+        <Style TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+            <Setter Property="Padding" Value="4"/>
+            <Setter Property="Margin" Value="4"/>
+        </Style>
+        <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Padding" Value="4"/>
+            <Setter Property="Margin" Value="4"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+    </base:PanelBase.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="4"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="4"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="4"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <StackPanel>
-            <TextBox Grid.Row="0" Text="{Binding Path=Story.Name, UpdateSourceTrigger=PropertyChanged, Delay=500,Mode=TwoWay}"/>
-            <TextBox Grid.Row="1" Text="{Binding Path=Me.Name, UpdateSourceTrigger=PropertyChanged, Delay=500,Mode=TwoWay}"/>
-            <Button Command="{Binding Path=ResetGameCommand}">Reset Gmae</Button>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Border BorderThickness="0" Background="White" Opacity="1" Margin="0" Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="99"/>
+        <Border BorderThickness="0" Background="White" Opacity="1" Margin="0" Grid.Row="3" Grid.ColumnSpan="99"/>
+        <Border BorderThickness="0" Background="White" Opacity="1" Margin="0" Grid.Row="5" Grid.ColumnSpan="99"/>
+        <Border BorderThickness="0" Background="White" Opacity="1" Margin="0" Grid.Row="7" Grid.ColumnSpan="99"/>
+        <Label Grid.Row="0">Story Name:</Label>
+        <Label Grid.Row="1">Player Name:</Label>
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=Story.Name, UpdateSourceTrigger=PropertyChanged, Delay=1000,Mode=TwoWay}"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=Me.Name, UpdateSourceTrigger=PropertyChanged, Delay=1000,Mode=TwoWay}"/>
+        <StackPanel Grid.Row="3" Grid.ColumnSpan="99" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Command="{Binding Path=ResetGameCommand}">Reset Game</Button>
             <Button Command="{Binding Path=FlipCardsCommand}">Flip Cards</Button>
-            <Button Command="{Binding Path=RescindVoteCommand}">RescindVote</Button>
         </StackPanel>
-        <ListBox Grid.Row="1" ItemsSource="{Binding Players}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock Text="{Binding Path=Name}"/>
-                        <TextBlock Text="{Binding Path=OriginalObject.ID}"/>
-                        <TextBlock Text="{Binding Path=OriginalObject.HasVoted}"/>
-                        <TextBlock Text="{Binding Path=SelectedCard.DisplayName}"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        <ListBox Grid.Row="2"  ItemsSource="{Binding Path=AvailableCards}" SelectedValue="{Binding Path=Me.SelectedCard,Mode=TwoWay}" IsSynchronizedWithCurrentItem="True">
+        <ScrollViewer Grid.Row="5"  Grid.ColumnSpan="99">
+            <ItemsControl ItemsSource="{Binding Players}" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical">
+                            <Grid>
+                                <!-- background first -->
+                                <Rectangle RadiusX="8" RadiusY="8" StrokeThickness="0" Margin="4" >
+                                    <Rectangle.Style>
+                                        <Style TargetType="Rectangle">
+                                            <Setter Property="Fill" Value="{Binding BackgroundBrush}"/>
+                                            <Setter Property="Opacity" Value="0.33"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Path=OriginalObject.HasVoted}" Value="False">
+                                                    <Setter Property="Fill" Value="Transparent"/>
+                                                </DataTrigger>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding Path=OriginalObject.HasVoted}" Value="True"/>
+                                                        <Condition Binding="{Binding Path=OriginalObject.SelectedCard}" Value="{x:Null}"/>
+                                                    </MultiDataTrigger.Conditions>
+                                                    <MultiDataTrigger.Setters>
+                                                        <Setter Property="Opacity" Value="1"/>
+                                                    </MultiDataTrigger.Setters>
+                                                </MultiDataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Rectangle.Style>
+                                </Rectangle>
+
+                                <!-- card back overlay -->
+                                <Rectangle RadiusX="8" RadiusY="8" StrokeThickness="0" Margin="4" Fill="{StaticResource CardBackBrush}">
+                                    <Rectangle.Style>
+                                        <Style TargetType="Rectangle">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding Path=OriginalObject.HasVoted}" Value="True"/>
+                                                        <Condition Binding="{Binding Path=OriginalObject.SelectedCard}" Value="{x:Null}"/>
+                                                    </MultiDataTrigger.Conditions>
+                                                    <MultiDataTrigger.Setters>
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </MultiDataTrigger.Setters>
+                                                </MultiDataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Rectangle.Style>
+                                </Rectangle>
+
+                                <!-- border brush -->
+                                <Rectangle RadiusX="8" RadiusY="8" Stroke="Black" StrokeThickness="3" Margin="4" >
+                                    <Rectangle.Style>
+                                        <Style TargetType="Rectangle">
+                                            <Setter Property="StrokeDashArray" Value=""/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Path=OriginalObject.HasVoted}" Value="False">
+                                                    <Setter Property="StrokeDashArray" Value="2 2"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Rectangle.Style>
+                                </Rectangle>
+
+
+                                <Viewbox Width="100" Height="150" Stretch="Uniform" Margin="4">
+                                    <TextBlock Text="{Binding Path=SelectedCard.DisplayName}" FontWeight="Bold" FontSize="100" Padding="0" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </Viewbox>
+                            </Grid>
+                            <Viewbox Width="100" Height="25" Stretch="Uniform" Margin="4">
+                                <TextBlock Text="{Binding Path=Name}" Padding="0" Margin="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </Viewbox>
+                            <!--<TextBlock Text="{Binding Path=OriginalObject.HasVoted}"/>
+                        <TextBlock Text="{Binding Path=SelectedCard.DisplayName}"/>-->
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </ScrollViewer>
+        <ListBox Grid.Row="7" Grid.ColumnSpan="99" BorderThickness="0" ItemsSource="{Binding Path=AvailableCards}" SelectedValue="{Binding Path=Me.SelectedCard,Mode=TwoWay}" IsSynchronizedWithCurrentItem="True">
             <ListBox.ItemContainerStyle>
                 <Style TargetType="ListBoxItem">
                     <Setter Property="Margin" Value="0"/>

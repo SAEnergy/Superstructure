@@ -3,7 +3,7 @@ using Core.Comm;
 using Example.ScrumPoker.Interfaces;
 using System;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
+using System.Linq;
 
 namespace Example.ScrumPoker.Plugin
 {
@@ -15,13 +15,11 @@ namespace Example.ScrumPoker.Plugin
         public ScrumPokerPlayerModel Me { get; protected set; }
 
         public SimpleCommand FlipCardsCommand { get; private set; }
-        public SimpleCommand RescindVoteCommand { get; private set; }
         public SimpleCommand ResetGameCommand { get; private set; }
 
         public ScrumPokerViewModel(ViewBase parent) : base(parent)
         {
             FlipCardsCommand = new SimpleCommand(ExecuteFlipCardsCommand);
-            RescindVoteCommand = new SimpleCommand(ExecuteRescindVoteCommand);
             ResetGameCommand = new SimpleCommand(ExecuteResetGameCommand);
 
             AvailableCards = new ObservableCollection<ScrumPokerCard>();
@@ -60,7 +58,7 @@ namespace Example.ScrumPoker.Plugin
 
             foreach (ScrumPokerPlayer player in Channel.GetPlayers())
             {
-                BeginInvoke(() => PlayerAdded(player));
+                BeginInvoke(() => PlayerUpdated(player));
             }
         }
 
@@ -79,17 +77,24 @@ namespace Example.ScrumPoker.Plugin
             Story.UpdateFrom(story);
         }
 
-        public void PlayerAdded(ScrumPokerPlayer player)
-        {
-            BeginInvoke(() => Players.Add(new ScrumPokerPlayerModel(player)));
-        }
-
         public void PlayerRemoved(ScrumPokerPlayer player)
         {
+            if (player==null) { return; }
+            this.BeginInvoke(() =>
+            {
+            foreach (ScrumPokerPlayerModel p in Players.ToArray())
+                {
+                    if (p.OriginalObject.ID == player.ID)
+                    {
+                        Players.Remove(p);
+                    }
+                }
+            });
         }
 
         public void PlayerUpdated(ScrumPokerPlayer player)
         {
+            if (player == null) { return; }
             this.BeginInvoke(() =>
             {
                 if (Me.OriginalObject.ID == player.ID) { Me.UpdateFrom(player); }
@@ -99,19 +104,17 @@ namespace Example.ScrumPoker.Plugin
                     if (p.OriginalObject.ID == player.ID)
                     {
                         p.UpdateFrom(player);
+                        return;
                     }
                 }
+                // not found
+                Players.Add(new ScrumPokerPlayerModel(player));
             });
         }
 
         private void ExecuteResetGameCommand()
         {
             Execute(() => Channel.ResetGame());
-        }
-
-        private void ExecuteRescindVoteCommand()
-        {
-            Me.ResetVote();
         }
 
         private void ExecuteFlipCardsCommand()

@@ -89,18 +89,12 @@ namespace Core.Comm.BaseClasses
                     callbacks.AddRange(_instances.OfType<ServiceHostBase<CHANNEL, CALLBACK>>().Where(i=>i!= this).Select(c => c._callback));
                 }
             }
-            foreach (CALLBACK callback in callbacks)
+            foreach (CALLBACK iter in callbacks)
             {
+                CALLBACK callback = iter;
                 Task.Run(() =>
                 {
-                    try
-                    {
-                        action.Invoke(callback);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Log("Exception during callback.  Host=" + typeof(CHANNEL).Name + ", Message=" + ex.Message, LogMessageSeverity.Warning);
-                    }
+                    TryCallBack(action, callback);
                 }
                 );
             }
@@ -116,6 +110,33 @@ namespace Core.Comm.BaseClasses
         protected void BroadcastOther(Action<CALLBACK> action)
         {
             Broadcast(action, false);
+        }
+
+        private void TryCallBack(Action<CALLBACK> action,CALLBACK callback)
+        {
+            try
+            {
+                action.Invoke(callback);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log("Exception during callback.  Host=" + typeof(CHANNEL).Name + ", Message=" + ex.Message, LogMessageSeverity.Warning);
+            }
+        }
+
+
+        // send a message only to single client
+        protected void Send(Action<CALLBACK> action)
+        {
+            TryCallBack(action, _callback);
+        }
+        // asynchronously a message only to single client
+        protected void Post(Action<CALLBACK> action)
+        {
+            Task.Run(() =>
+            {
+                TryCallBack(action, _callback);
+            });
         }
     }
 }

@@ -13,13 +13,10 @@ namespace Example.ScrumPoker.Interfaces
         void StoryUpdated(ScrumPokerStory game);
 
         [OperationContract(IsOneWay = true)]
-        void PlayerAdded(ScrumPokerPlayer player);
+        void PlayerUpdated(ScrumPokerPlayer player);
 
         [OperationContract(IsOneWay = true)]
         void PlayerRemoved(ScrumPokerPlayer player);
-
-        [OperationContract(IsOneWay = true)]
-        void PlayerUpdated(ScrumPokerPlayer player);
     }
 
     [ServiceContract(CallbackContract = typeof(IScrumPokerCallback))]
@@ -51,10 +48,10 @@ namespace Example.ScrumPoker.Interfaces
     {
         public string Name { get; set; }
         public Guid ID { get; set; }
+        public Tuple<byte, byte, byte> CardColor { get; set; }
         public bool HasVoted { get; set; }
         public ScrumPokerCard SelectedCard { get; set; }
 
-        public ScrumPokerPlayer() { Name = "Player Name"; ID = Guid.NewGuid(); }
         public ScrumPokerPlayer Clone() { return (ScrumPokerPlayer)this.MemberwiseClone(); }
     }
 
@@ -69,6 +66,32 @@ namespace Example.ScrumPoker.Interfaces
     {
         public string DisplayName { get; set; }
         public double NumericValue { get; set; }
+
+        public static bool operator ==(ScrumPokerCard a, ScrumPokerCard b)
+        {
+            if (((object)a) == null && ((object)b) == null) { return true; }
+            if (((object)a) != null && ((object)b) == null) { return false; }
+            if (((object)a) == null && ((object)b) != null) { return false; }
+            return a.DisplayName == b.DisplayName && a.NumericValue == b.NumericValue;
+        }
+        public static bool operator !=(ScrumPokerCard a, ScrumPokerCard b)
+        {
+            return !(a == b);
+        }
+
+        public override bool Equals(object obj)
+        {
+            ScrumPokerCard other = obj as ScrumPokerCard;
+            if (other == null) { return false; }
+            if (other.NumericValue != this.NumericValue) { return false; }
+            if (other.DisplayName != this.DisplayName) { return false; }
+            return true;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 
 }
