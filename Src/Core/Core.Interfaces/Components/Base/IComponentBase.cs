@@ -1,4 +1,4 @@
-﻿using Core.Interfaces.Components.IoC;
+﻿using Core.Models;
 using System;
 using System.Collections.Generic;
 

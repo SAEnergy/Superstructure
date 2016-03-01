@@ -2,6 +2,7 @@
 using Core.Interfaces.Components;
 using Core.Interfaces.Components.IoC;
 using Core.Interfaces.Components.Base;
+using Core.Models;
 
 namespace Server.Components
 {

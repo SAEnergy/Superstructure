@@ -1,5 +1,6 @@
 ﻿using Core.Interfaces.Components.Base;
 using Core.Interfaces.Components.IoC;
+using Core.Models;
 using Core.Util;
 
 namespace Core.IoC.Container

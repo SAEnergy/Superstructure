@@ -16,6 +16,10 @@ namespace Core.Models.DataContracts
 
         public ComponentMetadata[] Dependencies { get; set; }
 
+        public ComponentType Type { get; set; }
+
+        public ComponentUserActions UserActions { get; set; }
+
         //other data
     }
 }

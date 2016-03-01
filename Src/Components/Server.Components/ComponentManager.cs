@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Core.Models.DataContracts;
 using Core.Util;
 using System.Reflection;
+using Core.Models;
 
 namespace Server.Components
 {
@@ -165,12 +166,20 @@ namespace Server.Components
                 info.InterfaceTypeName = type.Key.Name;
                 info.ConcreteTypeName = type.Value.Name;
 
-                var atty = type.Value.GetAttribute<ComponentMetadataAttribute>();
+                var metaAtty = type.Value.GetAttribute<ComponentMetadataAttribute>();
 
-                if (atty != null)
+                if (metaAtty != null)
                 {
-                    info.Description = atty.Description;
-                    info.FriendlyName = atty.FriendlyName;
+                    info.Description = metaAtty.Description;
+                    info.FriendlyName = metaAtty.FriendlyName;
+                    info.UserActions = metaAtty.AllowedActions;
+                }
+
+                var regAtty = type.Value.GetAttribute<ComponentRegistrationAttribute>();
+
+                if(regAtty != null)
+                {
+                    info.Type = regAtty.Type;
                 }
 
                 info.Dependencies = GetDependencies(type.Value).ToArray();

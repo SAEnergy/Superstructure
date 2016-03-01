@@ -8,7 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
-using Core.Interfaces.Components.IoC;
+using Core.Models;
 
 namespace Test.Mocks
 {

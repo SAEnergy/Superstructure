@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using System;
-using Core.Interfaces.Components.IoC;
+using Core.Models;
 using System.Collections.Generic;
 
 namespace Test.Mocks

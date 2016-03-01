@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.Models;
+using System;
 
 namespace Core.Interfaces.Components.IoC
 {

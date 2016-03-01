@@ -12,6 +12,7 @@ using System.Xml.Linq;
 using System.Xml.Serialization;
 using Core.Interfaces.Components.IoC;
 using Core.Interfaces.Components.Base;
+using Core.Models;
 
 namespace Server.Components
 {

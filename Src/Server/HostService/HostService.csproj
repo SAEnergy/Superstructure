@@ -98,6 +98,10 @@
       <Project>{e4860231-c690-45df-b396-120a9e3bcdd4}</Project>
       <Name>Core.IoC.Container</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Core\Core.Models\Core.Models.csproj">
+      <Project>{803e539b-3687-4465-b272-e50816df453f}</Project>
+      <Name>Core.Models</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Core\Core.Settings\Core.Settings.csproj">
       <Project>{990d2026-6a74-4a32-8510-6b28142ba3f2}</Project>
       <Name>Core.Settings</Name>

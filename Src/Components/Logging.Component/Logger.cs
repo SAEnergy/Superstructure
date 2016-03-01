@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using Core.Interfaces.Components.IoC;
 using Core.Interfaces.Components.Base;
+using Core.Models;
 
 namespace Core.Logging
 {

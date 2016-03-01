@@ -13,6 +13,7 @@ using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using System.ServiceModel.Dispatcher;
+using Core.Models;
 
 namespace Server.Components
 {

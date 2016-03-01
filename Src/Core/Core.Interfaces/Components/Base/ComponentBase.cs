@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Core.Interfaces.Components.IoC;
+using Core.Models;
 
 namespace Core.Interfaces.Components.Base
 {

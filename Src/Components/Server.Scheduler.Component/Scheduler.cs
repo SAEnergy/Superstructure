@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Core.Models.Persistent;
 using Core.Interfaces.Components.IoC;
 using Core.Interfaces.Components.Base;
+using Core.Models;
 
 namespace Core.Scheduler
 {

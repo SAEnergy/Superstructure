@@ -6,6 +6,7 @@ using Core.Logging.LogDestinations;
 using Core.Logging.LogMessageFormats;
 using System;
 using System.Threading;
+using Core.Models;
 
 namespace HostService
 {
