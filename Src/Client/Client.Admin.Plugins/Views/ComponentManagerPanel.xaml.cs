@@ -22,7 +22,7 @@ namespace Client.Admin.Plugins
     /// <summary>
     /// Interaction logic for ComponentManagerPanel.xaml
     /// </summary>
-    [PanelMetadata(DisplayName = "Component Manager", IconPath = "images/puzzle-piece.png")]
+    [PanelMetadata(DisplayName = "Component Manager", IconPath = "images/cog.png")]
     public partial class ComponentManagerPanel : PanelBase
     {
         public ComponentManagerPanel()
