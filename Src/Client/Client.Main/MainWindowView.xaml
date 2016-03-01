@@ -15,9 +15,17 @@
             <ColumnDefinition Width="4"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="4"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <Border BorderThickness="0" Background="White" Opacity="1" Margin="0"/>
+        <Border Grid.Row="2" BorderThickness="0" Background="White" Opacity="1" Margin="0"/>
         <!--<Border BorderThickness="0" Background="White" Opacity="1" Margin="0" Grid.Column="2"/>-->
+        <TextBox Margin="4" Text="{Binding Path=ServerName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,Delay=500}"/>
         <ListBox 
+            Grid.Row="2"
             BorderThickness="0"
             ItemsSource="{Binding Path=Plugins}"
             SelectedItem="{Binding Path=SelectedPanel, Mode=TwoWay}"
@@ -34,6 +42,7 @@
         </ListBox>
         <ContentPresenter 
             Grid.Column="2"
+            Grid.RowSpan="99"
             Content="{Binding Path=Panel}"
             ScrollViewer.HorizontalScrollBarVisibility="Auto"
             ScrollViewer.VerticalScrollBarVisibility="Auto"

@@ -19,7 +19,7 @@ namespace Core.Logging.Remote
         public RemoteLogDestination(string servername = "localhost")
         {
             _servername = servername;
-            _conn = new Subscription<IRemoteLogging>(null);
+            _conn = new Subscription<IRemoteLogging>(ServerConnectionInformation.Instance,null);
             _conn.Connected += _conn_Connected;
             _conn.Disconnected += _conn_Disconnected;
             _conn.Start();

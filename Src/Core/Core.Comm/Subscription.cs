@@ -17,6 +17,7 @@ namespace Core.Comm
     {
         public event SubscriptionConnectedEvent Connected;
         public event SubscriptionDisconnectedEvent Disconnected;
+        protected ServerConnectionInformation _serverInfo;
         protected ChannelFactory<T> _factory;
         protected object _callback;
         protected Exception _lastException;
@@ -25,11 +26,15 @@ namespace Core.Comm
 
         private object _stateLock = new object();
         private ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private ManualResetEvent _reconnectEvent = new ManualResetEvent(false);
 
-        public Subscription(object callback)
+        public Subscription(ServerConnectionInformation serverConnectionInformation, object callback)
         {
+            _serverInfo = serverConnectionInformation;
+            _serverInfo.Reconnect += ReconnectRequested;
             _callback = callback;
         }
+
         public T Channel { get; protected set; }
 
         public void Start()
@@ -49,11 +54,12 @@ namespace Core.Comm
                 while (true)
                 {
                     _resetEvent.Reset();
+                    _reconnectEvent.Reset();
 
                     if (_factory == null)
                     {
-                        EndpointAddress endpoint = new EndpointAddress("net.tcp://localhost:9595/" + typeof(T).Name + "/");
-                        Binding binding = new NetTcpBinding(SecurityMode.None, false);
+                        EndpointAddress endpoint = EndpointInformation.BuildEndpoint(new EndpointInformation(), _serverInfo, typeof(T));
+                        Binding binding = BindingInformation.BuildBinding(new BindingInformation(), _serverInfo);
                         if (_callback != null)
                         {
                             _factory = new DuplexChannelFactory<T>(_callback, binding, endpoint);
@@ -104,7 +110,20 @@ namespace Core.Comm
                         }
                     }
 
-                    _resetEvent.WaitOne(15000);
+                    switch (WaitHandle.WaitAny(new WaitHandle[] { _resetEvent, _reconnectEvent },15000))
+                    {
+                        case WaitHandle.WaitTimeout:break;
+                        case 0: break;
+                        case 1:
+                            {
+                                Cleanup();
+                                lock(_stateLock)
+                                {
+                                    State = SubscriptionState.Connecting;
+                                }
+                            }
+                            break;
+                    }
                 }
             }
             finally
@@ -142,6 +161,12 @@ namespace Core.Comm
         private void Channel_Closed(object sender, EventArgs e)
         {
             OnDisconnect(new CommunicationException("Channel Closed."));
+            _resetEvent.Set();
+        }
+
+        private void ReconnectRequested()
+        {
+            _reconnectEvent.Set();
             _resetEvent.Set();
         }
 

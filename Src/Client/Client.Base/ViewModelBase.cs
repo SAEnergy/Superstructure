@@ -57,7 +57,7 @@ namespace Client.Base
 
         public ViewModelBase(ViewBase parent) : base(parent)
         {
-            _sub = new Subscription<T>(this);
+            _sub = new Subscription<T>(ServerConnectionInformation.Instance,this);
             _sub.Connected += OnConnect;
             _sub.Disconnected += OnDisconnect;
             _sub.Start();

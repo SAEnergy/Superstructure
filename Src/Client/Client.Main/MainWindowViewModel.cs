@@ -1,5 +1,6 @@
 ﻿using Client.Base;
 using Client.Resources;
+using Core.Comm;
 using Core.Util;
 using System;
 using System.Collections.ObjectModel;
@@ -34,9 +35,17 @@ namespace Client.Main
             set { SetValue(SelectedPanelProperty, value); }
         }
 
+        public static readonly DependencyProperty ServerNameProperty = DependencyProperty.Register("ServerName", typeof(string), typeof(MainWindowViewModel), new PropertyMetadata(OnServerNameChanged));
+        public string ServerName
+        {
+            get { return (string)GetValue(ServerNameProperty); }
+            set { SetValue(ServerNameProperty, value); }
+        }
+
         public MainWindowViewModel(ViewBase parent) : base(parent)
         {
             Plugins = new ObservableCollection<PluginInfo>();
+            ServerName = ServerConnectionInformation.Instance.ConnectionString;
             Task.Run(() => PluginInit());
         }
 
@@ -77,6 +86,12 @@ namespace Client.Main
             if (vm.SelectedPanel == null) { return; }
 
             vm.Panel = Activator.CreateInstance(vm.SelectedPanel.PluginType) as PanelBase;
+        }
+
+        private static void OnServerNameChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ServerConnectionInformation.Instance.ConnectionString = ((MainWindowViewModel)d).ServerName;
+            ServerConnectionInformation.Instance.FireReconnect();
         }
 
         public override void Dispose()

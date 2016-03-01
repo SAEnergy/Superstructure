@@ -169,8 +169,8 @@ namespace Server.Components
 
                 ContractDescription contract = ContractDescription.GetContract(interfaceType);
 
-                EndpointAddress endpoint = new EndpointAddress("net.tcp://localhost:9595/" + interfaceType.Name + "/");
-                Binding binding = new NetTcpBinding(SecurityMode.None, false);
+                EndpointAddress endpoint = EndpointInformation.BuildEndpoint(new EndpointInformation(), ServerConnectionInformation.Instance, interfaceType);
+                Binding binding = BindingInformation.BuildBinding(new BindingInformation(), ServerConnectionInformation.Instance);
                 ServiceEndpoint service = new ServiceEndpoint(contract, binding, endpoint);
                 info.Host.AddServiceEndpoint(service);
 

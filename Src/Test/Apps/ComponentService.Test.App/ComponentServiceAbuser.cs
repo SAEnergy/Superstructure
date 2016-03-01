@@ -1,13 +1,9 @@
 ﻿using Core.Comm;
 using Core.Interfaces.Components.Logging;
 using Core.Interfaces.ServiceContracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Core.Models.DataContracts;
+using System;
+using System.Threading;
 
 namespace ComponentService.Test.App
 {
@@ -22,7 +18,7 @@ namespace ComponentService.Test.App
         {
             _logger = logger;
 
-            _conn = new Subscription<IComponentService>(this);
+            _conn = new Subscription<IComponentService>(ServerConnectionInformation.Instance, this);
             _conn.Connected += _conn_Connected;
             _conn.Disconnected += _conn_Disconnected;
             _conn.Start();
@@ -40,7 +36,7 @@ namespace ComponentService.Test.App
 
         public void Start()
         {
-            if(!Run)
+            if (!Run)
             {
                 Run = true;
 
@@ -51,7 +47,7 @@ namespace ComponentService.Test.App
 
         public void Stop()
         {
-            if(Run)
+            if (Run)
             {
                 Run = false;
                 _worker.Join();
@@ -66,7 +62,7 @@ namespace ComponentService.Test.App
 
             while (Run)
             {
-                if(_conn.State == SubscriptionState.Connected)
+                if (_conn.State == SubscriptionState.Connected)
                 {
                     var channel = _conn.Channel;
 
@@ -74,7 +70,7 @@ namespace ComponentService.Test.App
                     {
                         foreach (var component in channel.GetComponents())
                         {
-                            if(component.FriendlyName == "Host Manager Component")
+                            if (component.FriendlyName == "Host Manager Component")
                             {
                                 //we are using this one...
                                 continue;
@@ -117,7 +113,7 @@ namespace ComponentService.Test.App
 
         public void ComponentUpdated(ComponentMetadata component)
         {
-            _logger.Log(string.Format("Component \"{0}\" status is now \"{1}\"",component.FriendlyName, component.Status));
+            _logger.Log(string.Format("Component \"{0}\" status is now \"{1}\"", component.FriendlyName, component.Status));
         }
     }
 }
