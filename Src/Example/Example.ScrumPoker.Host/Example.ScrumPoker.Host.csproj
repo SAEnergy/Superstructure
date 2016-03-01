@@ -56,6 +56,10 @@
       <Project>{bdb06c43-2402-444e-a9e0-72c88174fed7}</Project>
       <Name>Core.Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Core\Core.Models\Core.Models.csproj">
+      <Project>{803e539b-3687-4465-b272-e50816df453f}</Project>
+      <Name>Core.Models</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Example.ScrumPoker.Interfaces\Example.ScrumPoker.Interfaces.csproj">
       <Project>{67d54bdc-c2b9-4187-aea7-959b9d4c5512}</Project>
       <Name>Example.ScrumPoker.Interfaces</Name>
