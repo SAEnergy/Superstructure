@@ -66,9 +66,11 @@ namespace Server.Components
 
             foreach (var type in GetRunnableRegisteredTypes())
             {
-                _logger.Log(string.Format("Starting component of type {0}", type.Name));
+                _logger.Log(string.Format("Starting component of type {0}", type.Key.Name));
 
-                StartRunnable(GetIRunnable(type));
+                var metadata = GetMetadata(type);
+
+                StartRunnable(GetIRunnable(type.Key));
             }
         }
 
@@ -78,9 +80,13 @@ namespace Server.Components
 
             foreach (var type in GetRunnableRegisteredTypes())
             {
-                _logger.Log(string.Format("Stopping component of type {0}", type.Name));
+                _logger.Log(string.Format("Stopping component of type {0}", type.Key.Name));
 
-                StopRunnable(GetIRunnable(type));
+                var metadata = GetMetadata(type);
+
+                StopRunnable(GetIRunnable(type.Key));
+
+                metadata.Status = ComponentStatus.Stopped;
             }
         }
 
@@ -169,6 +175,8 @@ namespace Server.Components
                 if (!runnable.IsRunning)
                 {
                     runnable.Start();
+
+                    SetStatus(runnable.GetType(), ComponentStatus.Running);
                 }
                 else
                 {
@@ -184,10 +192,41 @@ namespace Server.Components
                 if (runnable.IsRunning)
                 {
                     runnable.Stop();
+
+                    SetStatus(runnable.GetType(), ComponentStatus.Stopped);
                 }
                 else
                 {
                     _logger.Log(string.Format("Cannot stop component \"{0}\" because it is not running.", runnable.GetType().Name), LogMessageSeverity.Warning);
+                }
+            }
+        }
+
+        private void SetStatus(Type type, ComponentStatus status)
+        {
+            if (type != null)
+            {
+                IEnumerable<KeyValuePair<Type, Type>> query;
+
+                if(type.IsInterface)
+                {
+                    query = _container.GetRegisteredTypes().Where(k => k.Key == type);
+                }
+                else
+                {
+                    query = _container.GetRegisteredTypes().Where(k => k.Value == type);
+                }
+
+                if(query.Any())
+                {
+                    var info = GetMetadata(query.First());
+                    info.Status = status;
+
+                    _logger.Log(string.Format("Set component \"{0}\" status to \"{1}\".", info.FriendlyName, info.Status));
+                }
+                else
+                {
+                    _logger.Log(string.Format("Unable to set status of component \"{0}\"", type.Name), LogMessageSeverity.Error);
                 }
             }
         }
@@ -197,9 +236,9 @@ namespace Server.Components
             return _container.Resolve(type) as IRunnable;
         }
 
-        private List<Type> GetRunnableRegisteredTypes()
+        private List<KeyValuePair<Type,Type>> GetRunnableRegisteredTypes()
         {
-            return _container.GetRegisteredTypes().Select(k => k.Key).Where(i => typeof(IRunnable).IsAssignableFrom(i) && i != typeof(ILogger)).ToList();
+            return _container.GetRegisteredTypes().Where(i => typeof(IRunnable).IsAssignableFrom(i.Key) && i.Key != typeof(ILogger)).ToList();
         }
 
         private List<ComponentMetadata> GetDependencies(Type type)

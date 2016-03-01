@@ -21,6 +21,8 @@ namespace Core.Models.DataContracts
 
         public ComponentUserActions UserActions { get; set; }
 
+        public ComponentStatus Status { get; set; }
+
         public int CompareTo(ComponentMetadata other)
         {
             throw new NotImplementedException();

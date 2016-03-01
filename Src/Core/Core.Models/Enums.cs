@@ -34,4 +34,12 @@ namespace Core.Models
         Manual = 16,
         All = 31
     }
+
+    public enum ComponentStatus
+    {
+        Unknown,
+        Running,
+        Stopped,
+        Disabled
+    }
 }

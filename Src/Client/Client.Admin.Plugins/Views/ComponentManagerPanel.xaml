@@ -41,6 +41,7 @@
                                 <TextBlock Text="{Binding Path=OriginalObject.Description}"/>
                                 <TextBlock Text="{Binding Path=OriginalObject.InterfaceTypeName}"/>
                                 <TextBlock Text="{Binding Path=OriginalObject.ConcreteTypeName}"/>
+                                <TextBlock Text="{Binding Path=OriginalObject.Status}"/>
                             </StackPanel>
                         </Expander>
                     </Grid>
