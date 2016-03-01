@@ -31,17 +31,17 @@ namespace Server.Hosts
 
         public void Start(int componentId)
         {
-            throw new NotImplementedException();
+            IoCContainer.Instance.Resolve<IComponentManager>().StartComponent(componentId);
         }
 
         public void Restart(int componentId)
         {
-            throw new NotImplementedException();
+            IoCContainer.Instance.Resolve<IComponentManager>().RestartComponent(componentId);
         }
 
         public void Stop(int componentId)
         {
-            throw new NotImplementedException();
+            IoCContainer.Instance.Resolve<IComponentManager>().StopComponent(componentId);
         }
     }
 }

@@ -14,8 +14,6 @@ namespace Client.Admin.Plugins
     {
         public ObservableCollection<ComponentMetadataModel> Components { get; private set; }
 
-
-
         public ImageSource StartIcon { get; private set; }
 
         public ImageSource StopIcon { get; private set; }
@@ -64,31 +62,31 @@ namespace Client.Admin.Plugins
 
         private void ExecuteStopCommand(object component)
         {
-            var realComponent = component as ComponentMetadata;
+            var realComponent = component as ComponentMetadataModel;
 
             if (realComponent != null)
             {
-                Execute(() => Channel.Stop(realComponent.ComponentId));
+                Execute(() => Channel.Stop(realComponent.OriginalObject.ComponentId));
             }
         }
 
         private void ExecuteStartCommand(object component)
         {
-            var realComponent = component as ComponentMetadata;
+            var realComponent = component as ComponentMetadataModel;
 
             if (realComponent != null)
             {
-                Execute(() => Channel.Start(realComponent.ComponentId));
+                Execute(() => Channel.Start(realComponent.OriginalObject.ComponentId));
             }
         }
 
         private void ExecuteRestartCommand(object component)
         {
-            var realComponent = component as ComponentMetadata;
+            var realComponent = component as ComponentMetadataModel;
 
             if (realComponent != null)
             {
-                Execute(() => Channel.Restart(realComponent.ComponentId));
+                Execute(() => Channel.Restart(realComponent.OriginalObject.ComponentId));
             }
         }
 

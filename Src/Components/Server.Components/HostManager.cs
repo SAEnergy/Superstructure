@@ -68,29 +68,36 @@ namespace Server.Components
 
         public void Start()
         {
-            _logger.Log("HostManager starting all hosts...");
-            IsRunning = true;
-
-            _infos = FindAllHosts();
-
-            foreach (var host in _infos.Values)
+            if (!IsRunning)
             {
-                _logger.Log(string.Format("HostManager starting host for interface \"{0}\".", host.InterfaceType.Name));
+                _logger.Log("HostManager starting all hosts...");
 
-                host.Host.Open();
+                IsRunning = true;
+
+                _infos = FindAllHosts();
+
+                foreach (var host in _infos.Values)
+                {
+                    _logger.Log(string.Format("HostManager starting host for interface \"{0}\".", host.InterfaceType.Name));
+
+                    host.Host.Open();
+                }
             }
         }
 
         public void Stop()
         {
-            _logger.Log("HostManager stopping all hosts...");
-            IsRunning = false;
-
-            foreach (var host in _infos.Values)
+            if (IsRunning)
             {
-                _logger.Log(string.Format("HostManager stopping host for interface \"{0}\".", host.InterfaceType.Name));
+                _logger.Log("HostManager stopping all hosts...");
+                IsRunning = false;
 
-                host.Host.Abort();
+                foreach (var host in _infos.Values)
+                {
+                    _logger.Log(string.Format("HostManager stopping host for interface \"{0}\".", host.InterfaceType.Name));
+
+                    host.Host.Abort();
+                }
             }
         }
 

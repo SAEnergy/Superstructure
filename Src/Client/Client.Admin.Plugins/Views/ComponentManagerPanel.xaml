@@ -16,20 +16,20 @@
                     <DataTemplate.Resources>
                         <mybase:EnumFlagsToBooleanConverter x:Key="EnumFlagsToBooleanConverter" />
                     </DataTemplate.Resources>
-                    <Grid Tag="{Binding }">
+                    <Grid>
                         <Grid.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Header="Start" Command="{Binding Path=StartCommand}" CommandParameter="{Binding .}" IsEnabled="{Binding Path=UserActions, Converter={StaticResource EnumFlagsToBooleanConverter}, ConverterParameter={x:Static models:ComponentUserActions.Start}}">
+                                <MenuItem Header="Start" Command="{Binding Path=StartCommand}" CommandParameter="{Binding .}" IsEnabled="{Binding Path=OriginalObject.UserActions, Converter={StaticResource EnumFlagsToBooleanConverter}, ConverterParameter={x:Static models:ComponentUserActions.Start}}">
                                     <MenuItem.Icon>
                                         <Image Source="{Binding Path=StartIcon}" />
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Header="Stop" Command="{Binding Path=StopCommand}" CommandParameter="{Binding .}" IsEnabled="{Binding Path=UserActions, Converter={StaticResource EnumFlagsToBooleanConverter}, ConverterParameter={x:Static models:ComponentUserActions.Stop}}">
+                                <MenuItem Header="Stop" Command="{Binding Path=StopCommand}" CommandParameter="{Binding .}" IsEnabled="{Binding Path=OriginalObject.UserActions, Converter={StaticResource EnumFlagsToBooleanConverter}, ConverterParameter={x:Static models:ComponentUserActions.Stop}}">
                                     <MenuItem.Icon>
                                         <Image Source="{Binding Path=StopIcon}" />
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Header="Restart" Command="{Binding Path=RestartCommand}" CommandParameter="{Binding .}" IsEnabled="{Binding Path=UserActions, Converter={StaticResource EnumFlagsToBooleanConverter}, ConverterParameter={x:Static models:ComponentUserActions.Restart}}" >
+                                <MenuItem Header="Restart" Command="{Binding Path=RestartCommand}" CommandParameter="{Binding .}" IsEnabled="{Binding Path=OriginalObject.UserActions, Converter={StaticResource EnumFlagsToBooleanConverter}, ConverterParameter={x:Static models:ComponentUserActions.Restart}}" >
                                     <MenuItem.Icon>
                                         <Image Source="{Binding Path=RestartIcon}" />
                                     </MenuItem.Icon>

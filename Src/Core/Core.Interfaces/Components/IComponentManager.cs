@@ -16,8 +16,10 @@ namespace Core.Interfaces.Components
 
         ComponentMetadata[] GetComponents();
 
-        void StopComponent(ComponentMetadata info);
+        void StopComponent(int componentId);
 
-        void StartComponent(ComponentMetadata info);
+        void StartComponent(int componentId);
+
+        void RestartComponent(int componentId);
     }
 }
