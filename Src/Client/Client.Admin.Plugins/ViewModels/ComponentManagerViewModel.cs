@@ -1,5 +1,4 @@
-﻿using Client.Admin.Plugins.Models;
-using Client.Base;
+﻿using Client.Base;
 using Client.Resources;
 using Core.Comm;
 using Core.Interfaces.ServiceContracts;
@@ -15,19 +14,9 @@ namespace Client.Admin.Plugins
     {
         public ObservableCollection<ComponentMetadataModel> Components { get; private set; }
 
-        public ImageSource StartIcon { get; private set; }
-
-        public ImageSource StopIcon { get; private set; }
-
-        public ImageSource RestartIcon { get; private set; }
-
         public ComponentManagerViewModel(ViewBase parent) : base(parent)
         {
             Components = new ObservableCollection<ComponentMetadataModel>();
-
-            StartIcon = WPFHelpers.GetImage("images/media-play.png");
-            StopIcon = WPFHelpers.GetImage("images/media-stop.png");
-            RestartIcon = WPFHelpers.GetImage("images/reload.png");
         }
 
         protected override void OnConnect(ISubscription source)
@@ -35,6 +24,12 @@ namespace Client.Admin.Plugins
             try
             {
                 var infos = Channel.GetComponents();
+
+
+                var startIcon = WPFHelpers.GetImage("images/media-play.png");
+                var stopIcon = WPFHelpers.GetImage("images/media-stop.png");
+                var restartIcon = WPFHelpers.GetImage("images/reload.png");
+                var disableIcon = WPFHelpers.GetImage("images/ban.png");
 
                 foreach (var info in infos)
                 {
@@ -46,6 +41,10 @@ namespace Client.Admin.Plugins
                         model.StartCommand.ParameterizedExecuteCallback += ExecuteStartCommand;
                         model.RestartCommand.ParameterizedExecuteCallback += ExecuteRestartCommand;
                         model.DisableCommand.ParameterizedExecuteCallback += ExecuteDisableCommand;
+                        model.StartIcon = startIcon;
+                        model.StopIcon = stopIcon;
+                        model.RestartIcon = restartIcon;
+                        model.DisableIcon = disableIcon;
                         Components.Add(model);
                     });
                 }
