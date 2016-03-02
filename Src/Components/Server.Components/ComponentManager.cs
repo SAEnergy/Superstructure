@@ -6,8 +6,6 @@ using Core.Interfaces.Components.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Core.Models.DataContracts;
 using Core.Util;
 using System.Reflection;
@@ -16,7 +14,7 @@ using Core.Models;
 namespace Server.Components
 {
     [ComponentRegistration(ComponentType.Server, typeof(IComponentManager))]
-    [ComponentMetadata(AllowedActions = ComponentUserActions.Restart, Description = "Controller for all components.", FriendlyName = "Component Manager")]
+    [ComponentMetadata(Description = "Controller for all components.", FriendlyName = "Component Manager")]
 
     public class ComponentManager : Singleton<IComponentManager>, IComponentManager
     {
@@ -291,7 +289,14 @@ namespace Server.Components
 
         private IRunnable GetIRunnable(Type type)
         {
-            return _container.Resolve(type) as IRunnable;
+            IRunnable runnable = _container.Resolve(type) as IRunnable;
+
+            if(runnable == null)
+            {
+                _logger.Log(string.Format("Unable to cast type \"{0}\" as IRunnable.  ComponentMetadata AllowedActions is misconfigred.", type.Name), LogMessageSeverity.Error);
+            }
+
+            return runnable;
         }
 
         private List<KeyValuePair<Type, Type>> GetRunnableRegisteredTypes()

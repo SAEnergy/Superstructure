@@ -55,6 +55,7 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="ComponentManager.cs" />
+    <Compile Include="ServerHeartbeat.cs" />
     <Compile Include="SQLDataComponent.cs" />
     <Compile Include="HostManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

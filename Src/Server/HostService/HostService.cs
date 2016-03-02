@@ -12,8 +12,6 @@ namespace HostService
     {
         #region Fields
 
-        private Heartbeat _heartBeat;
-
         private readonly ILogger _logger;
 
         #endregion
@@ -42,7 +40,6 @@ namespace HostService
             if(!IsRunning)
             {
                 IsRunning = true;
-                _heartBeat = new Heartbeat();
 
                 IoCContainer.Instance.Resolve<IComponentManager>().StartAll();
             }
@@ -53,7 +50,6 @@ namespace HostService
             if(IsRunning)
             {
                 IsRunning = false;
-                _heartBeat.Stop();
 
                 IoCContainer.Instance.Resolve<IComponentManager>().StopAll();
             }

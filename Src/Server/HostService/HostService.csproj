@@ -67,7 +67,6 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Configuration.cs" />
-    <Compile Include="HeartBeat.cs" />
     <Compile Include="HostService.cs" />
     <Compile Include="HostServiceBase.cs">
       <SubType>Component</SubType>

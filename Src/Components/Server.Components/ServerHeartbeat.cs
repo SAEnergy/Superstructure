@@ -1,12 +1,16 @@
-﻿using Core.Interfaces.Base;
+﻿using Core.Interfaces.Components;
+using Core.Interfaces.Components.Base;
+using Core.Interfaces.Components.IoC;
 using Core.Interfaces.Components.Logging;
-using Core.IoC.Container;
+using Core.Models;
 using System;
 using System.Threading;
 
 namespace HostService
 {
-    public class Heartbeat : IRunnable
+    [ComponentRegistration(ComponentType.Server, typeof(IServerHeartbeat))]
+    [ComponentMetadata(AllowedActions =ComponentUserActions.All, Description = "Server heartbeat component.", FriendlyName = "Server Heartbeat Component")]
+    public class ServerHeartbeat : Singleton<IServerHeartbeat>, IServerHeartbeat
     {
         #region Fields
 
@@ -17,7 +21,7 @@ namespace HostService
 
         #region Properties
 
-        public bool IsRunning { get; set; }
+        public bool IsRunning { get; private set; }
 
         #endregion
 
@@ -25,24 +29,29 @@ namespace HostService
 
         #region Constructor
 
-        public Heartbeat()
+        private ServerHeartbeat(ILogger logger)
         {
-            _logger = IoCContainer.Instance.Resolve<ILogger>();
+            _logger = logger;
 
             _logger.Log("Heartbeat created.");
             _heartBeatThread = new Thread(new ThreadStart(heartBeatWorker));
-
-            Start();
         }
 
         #endregion
 
         #region Public Methods
 
+        public static IServerHeartbeat CreateInstance(ILogger logger)
+        {
+            return Instance = new ServerHeartbeat(logger);
+        }
+
         public void Start()
         {
             if (!IsRunning)
             {
+                _logger.Log("Server heartbeat starting.");
+
                 _heartBeatThread = new Thread(new ThreadStart(heartBeatWorker));
                 _heartBeatThread.IsBackground = true;
                 _heartBeatThread.Start();
