@@ -1,15 +1,10 @@
-﻿using Core.Comm;
-using Core.Interfaces.Base;
-using Core.Interfaces.Components.Logging;
+﻿using Core.Interfaces.Components.Logging;
 using Core.Interfaces.ServiceContracts;
 using Core.IoC.Container;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
-using System.ServiceModel.Channels;
-using System.ServiceModel.Description;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Core.Comm.BaseClasses
@@ -30,7 +25,6 @@ namespace Core.Comm.BaseClasses
         {
             return typeof(CHANNEL);
         }
-
 
         public void Ping()
         {
@@ -86,7 +80,7 @@ namespace Core.Comm.BaseClasses
                 }
                 else
                 {
-                    callbacks.AddRange(_instances.OfType<ServiceHostBase<CHANNEL, CALLBACK>>().Where(i=>i!= this).Select(c => c._callback));
+                    callbacks.AddRange(_instances.OfType<ServiceHostBase<CHANNEL, CALLBACK>>().Where(i => i != this).Select(c => c._callback));
                 }
             }
             foreach (CALLBACK iter in callbacks)
@@ -99,6 +93,7 @@ namespace Core.Comm.BaseClasses
                 );
             }
         }
+
         // send a message to all hosts, including self
         protected void Broadcast(Action<CALLBACK> action)
         {
@@ -112,7 +107,7 @@ namespace Core.Comm.BaseClasses
             Broadcast(action, false);
         }
 
-        private void TryCallBack(Action<CALLBACK> action,CALLBACK callback)
+        private void TryCallBack(Action<CALLBACK> action, CALLBACK callback)
         {
             try
             {
@@ -124,13 +119,13 @@ namespace Core.Comm.BaseClasses
             }
         }
 
-
         // send a message only to single client
         protected void Send(Action<CALLBACK> action)
         {
             TryCallBack(action, _callback);
         }
-        // asynchronously a message only to single client
+
+        // asynchronously send a message only to single client
         protected void Post(Action<CALLBACK> action)
         {
             Task.Run(() =>
