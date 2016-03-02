@@ -40,17 +40,25 @@
                             </MenuItem>
                         </ContextMenu>
                     </StackPanel.ContextMenu>
-                    <TextBlock Text="{Binding Path=OriginalObject.FriendlyName}"/>
-                    <TextBlock Text="{Binding Path=OriginalObject.Description}"/>
-                    <TextBlock Text="{Binding Path=OriginalObject.Status}"/>
+                    <TextBlock Text="{Binding Path=OriginalObject.FriendlyName}">
+                        <TextBlock.ToolTip>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Path=OriginalObject.Description}"/>
+                                <TextBlock Text="{Binding Path=OriginalObject.Status}"/>
+                            </StackPanel>
+                        </TextBlock.ToolTip>
+                    </TextBlock>
                 </StackPanel>
             </HierarchicalDataTemplate>
 
             <DataTemplate DataType="{x:Type datacontracts:ComponentMetadata}">
                 <StackPanel  Orientation="Horizontal">
-                    <TextBlock Text="{Binding Path=FriendlyName}"/>
-                    <TextBlock Text="{Binding Path=Description}"/>
-                    <TextBlock Text="{Binding Path=Status}"/>
+                    <TextBlock>
+                        <TextBlock.Inlines>
+                            <Run FontWeight="Bold" Text="{Binding Path=FriendlyName}"/>
+                            <Run FontWeight="Normal" Text="{Binding Path=Description}" />
+                        </TextBlock.Inlines>
+                    </TextBlock>
                 </StackPanel>
             </DataTemplate>
         </Grid.Resources>
