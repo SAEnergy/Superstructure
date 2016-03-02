@@ -34,7 +34,6 @@ namespace HostService
             _logger = logger;
 
             _logger.Log("Heartbeat created.");
-            _heartBeatThread = new Thread(new ThreadStart(heartBeatWorker));
         }
 
         #endregion
@@ -52,6 +51,8 @@ namespace HostService
             {
                 _logger.Log("Server heartbeat starting.");
 
+                _shutDown.Reset();
+
                 _heartBeatThread = new Thread(new ThreadStart(heartBeatWorker));
                 _heartBeatThread.IsBackground = true;
                 _heartBeatThread.Start();
@@ -68,6 +69,7 @@ namespace HostService
                 _shutDown.Set();
 
                 _heartBeatThread.Join();
+                _heartBeatThread = null;
             }
         }
 
