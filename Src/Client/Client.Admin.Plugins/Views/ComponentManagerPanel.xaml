@@ -51,7 +51,7 @@
                 </StackPanel>
             </HierarchicalDataTemplate>
 
-            <DataTemplate DataType="{x:Type datacontracts:ComponentMetadata}">
+            <HierarchicalDataTemplate DataType="{x:Type datacontracts:ComponentMetadata}" ItemsSource="{Binding Path=Dependencies}" >
                 <StackPanel  Orientation="Horizontal">
                     <TextBlock>
                         <TextBlock.Inlines>
@@ -60,7 +60,7 @@
                         </TextBlock.Inlines>
                     </TextBlock>
                 </StackPanel>
-            </DataTemplate>
+            </HierarchicalDataTemplate>
         </Grid.Resources>
         <Border BorderThickness="1" Background="White" Opacity="1" Margin="0"/>
 
