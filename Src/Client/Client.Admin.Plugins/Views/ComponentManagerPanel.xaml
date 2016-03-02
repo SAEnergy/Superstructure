@@ -64,8 +64,12 @@
         </Grid.Resources>
         <Border BorderThickness="1" Background="White" Opacity="1" Margin="0"/>
 
-        <TreeView>
-            <TreeViewItem ItemsSource="{Binding Path=Components}" Header="Host Components"/>
+        <TreeView ItemsSource="{Binding Path=Components}">
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="TreeViewItem">
+                    <Setter Property="IsExpanded" Value="True"/>
+                </Style>
+            </TreeView.ItemContainerStyle>
         </TreeView>
     </Grid>
 </mybase:PanelBase>
