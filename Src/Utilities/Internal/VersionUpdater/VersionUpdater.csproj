@@ -7,8 +7,8 @@
     <ProjectGuid>{4F8F6BC1-70FF-4BE0-9E1B-C91EEAD9D15E}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VersionReader</RootNamespace>
-    <AssemblyName>VersionReader</AssemblyName>
+    <RootNamespace>VersionUpdater</RootNamespace>
+    <AssemblyName>VersionUpdater</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

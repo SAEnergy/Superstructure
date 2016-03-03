@@ -8,10 +8,13 @@ namespace VersionReader
         #region Properties
 
         [Argument]
-        public string FileToLookAt { get; set; }
+        public string AssemblyInfoFile { get; set; }
 
         [Argument(Optional= true, DefaultValue ="VersionNumber")]
         public string TeamCityParameterName { get; set; }
+
+        [Argument]
+        public int BuildNumber { get; set; }
 
         #endregion
 
