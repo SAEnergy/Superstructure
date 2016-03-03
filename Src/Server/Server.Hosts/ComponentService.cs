@@ -56,13 +56,7 @@ namespace Server.Hosts
         {
             if (data != null)
             {
-                lock (_instances)
-                {
-                    foreach (var host in GetInstances<ComponentService>())
-                    {
-                        host.Broadcast((IComponentServiceCallback c) => c.ComponentUpdated(data));
-                    }
-                }
+                Broadcast((IComponentServiceCallback c) => c.ComponentUpdated(data));
             }
         }
 
