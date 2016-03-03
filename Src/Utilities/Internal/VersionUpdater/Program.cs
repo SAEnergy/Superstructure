@@ -57,7 +57,7 @@ namespace VersionReader
 
                                         finalVersion = string.Format("{0}.{1}", realVersion, _settings.BuildNumber);
 
-                                        logger.Log(string.Format("##teamcity[setParameter name='{0}' value='{1}']", _settings.TeamCityBuildNumberName, finalVersion));
+                                        logger.Log(string.Format("##teamcity[buildNumber '{0}']",  finalVersion));
 
                                         logger.Log(string.Format("Setting version to \"{0}\".", finalVersion));
 
