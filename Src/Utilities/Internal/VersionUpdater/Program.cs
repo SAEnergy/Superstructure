@@ -23,14 +23,14 @@ namespace VersionReader
 
             _settings = new Settings(logger);
 
-            if(File.Exists(_settings.AssemblyInfoFile))
+            if (File.Exists(_settings.AssemblyInfoFile))
             {
                 var lines = File.ReadAllLines(_settings.AssemblyInfoFile);
 
                 string oldVersion = string.Empty;
                 string finalVersion = string.Empty;
 
-                for(int i = 0; i < lines.Count(); i++)
+                for (int i = 0; i < lines.Count(); i++)
                 {
                     var line = lines[i];
 
@@ -38,9 +38,8 @@ namespace VersionReader
                     {
                         if (line.Contains("Version"))
                         {
-                            if (oldVersion == string.Empty)
+                            if (string.IsNullOrEmpty(oldVersion))
                             {
-
                                 var reg = new Regex(@"\d+(?:\.\d+)+");
                                 var mc = reg.Match(line);
 
@@ -67,21 +66,23 @@ namespace VersionReader
                                     }
                                 }
                             }
-                        }
-
-                        if(finalVersion != string.Empty)
-                        {
-                            lines[i] = line.Replace(oldVersion, finalVersion);
-                        }
-                        else
-                        {
-                            logger.Log("Final Version number was not found!", LogMessageSeverity.Error);
-                            Environment.ExitCode--;
+                            else
+                            {
+                                if (!string.IsNullOrEmpty(finalVersion))
+                                {
+                                    lines[i] = line.Replace(oldVersion, finalVersion);
+                                }
+                                else
+                                {
+                                    logger.Log("Final Version number was not found!", LogMessageSeverity.Error);
+                                    Environment.ExitCode--;
+                                }
+                            }
                         }
                     }
                 }
 
-                if (finalVersion != string.Empty)
+                if (!string.IsNullOrEmpty(finalVersion))
                 {
                     logger.Log(string.Format("Saving to file \"{0}\".", _settings.AssemblyInfoFile));
                     File.WriteAllLines(_settings.AssemblyInfoFile, lines);
