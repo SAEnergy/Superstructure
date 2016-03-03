@@ -58,6 +58,8 @@ namespace VersionReader
                                         finalVersion = string.Format("{0}.{1}", realVersion, _settings.BuildNumber);
 
                                         logger.Log(string.Format("Setting version to \"{0}\".", finalVersion));
+
+                                        lines[i] = line.Replace(oldVersion, finalVersion);
                                     }
                                     else
                                     {
@@ -71,11 +73,6 @@ namespace VersionReader
                                 if (!string.IsNullOrEmpty(finalVersion))
                                 {
                                     lines[i] = line.Replace(oldVersion, finalVersion);
-                                }
-                                else
-                                {
-                                    logger.Log("Final Version number was not found!", LogMessageSeverity.Error);
-                                    Environment.ExitCode--;
                                 }
                             }
                         }
