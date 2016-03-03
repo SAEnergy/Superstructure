@@ -13,6 +13,9 @@ namespace VersionReader
         [Argument(Optional= true, DefaultValue ="VersionNumber")]
         public string TeamCityParameterName { get; set; }
 
+        [Argument(Optional = true, DefaultValue = "BuildNumber")]
+        public string TeamCityBuildNumberName { get; set; }
+
         [Argument]
         public int BuildNumber { get; set; }
 
