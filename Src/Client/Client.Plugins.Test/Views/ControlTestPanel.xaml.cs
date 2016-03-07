@@ -6,11 +6,11 @@ namespace Client.Plugins.Test
     /// <summary>
     /// Interaction logic for UserControl1.xaml
     /// </summary>
-    public partial class TestModalDialogs : PanelBase
+    public partial class ControlTestPanel : PanelBase
     {
-        public TestModalDialogs()
+        public ControlTestPanel()
         {
-            ViewModel = new TestModalDialogViewModel(this);
+            ViewModel = new ControlTestViewModel(this);
             InitializeComponent();
         }
     }

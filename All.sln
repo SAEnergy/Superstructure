@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HostService", "Src\Server\HostService\HostService.csproj", "{392799A9-DA4A-4552-8F44-FAD887BA9D34}"
 EndProject
@@ -96,6 +96,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComponentService.Test.App", "Src\Test\Apps\ComponentService.Test.App\ComponentService.Test.App.csproj", "{C10023B5-3AC0-4BD0-B00C-1254CEFDE0D8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VersionUpdater", "Src\Utilities\Internal\VersionUpdater\VersionUpdater.csproj", "{4F8F6BC1-70FF-4BE0-9E1B-C91EEAD9D15E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client.Controls", "src\client\Client.Controls\Client.Controls.csproj", "{CCBA905E-CEDF-488F-BD79-5B2D1FE5E525}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -247,6 +249,10 @@ Global
 		{4F8F6BC1-70FF-4BE0-9E1B-C91EEAD9D15E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F8F6BC1-70FF-4BE0-9E1B-C91EEAD9D15E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F8F6BC1-70FF-4BE0-9E1B-C91EEAD9D15E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCBA905E-CEDF-488F-BD79-5B2D1FE5E525}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCBA905E-CEDF-488F-BD79-5B2D1FE5E525}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCBA905E-CEDF-488F-BD79-5B2D1FE5E525}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCBA905E-CEDF-488F-BD79-5B2D1FE5E525}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -292,5 +298,6 @@ Global
 		{83A72E91-82A0-4B29-8144-5D22F2D07013} = {01FE5141-A7A2-47E0-960D-716D2DC83EAC}
 		{C10023B5-3AC0-4BD0-B00C-1254CEFDE0D8} = {AF299007-67ED-4CA8-9A86-17B503743E72}
 		{4F8F6BC1-70FF-4BE0-9E1B-C91EEAD9D15E} = {D908E740-31A3-482A-B0EB-AC4FD165B97B}
+		{CCBA905E-CEDF-488F-BD79-5B2D1FE5E525} = {4A268B4F-6F2F-4225-ABCD-CDED70CF33D0}
 	EndGlobalSection
 EndGlobal

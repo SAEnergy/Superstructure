@@ -1,21 +1,29 @@
 ﻿using Client.Base;
 using System;
+using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
 namespace Client.Plugins.Test
 {
-    class TestModalDialogViewModel : ViewModelBase
+    class ControlTestViewModel : ViewModelBase
     {
         private WaitDialog _dialog;
         private CancellationTokenSource _cancel;
 
+        public ObservableCollection<TestData> Data { get; private set; }
+
         public SimpleCommand ModalBackgroundTaskCommand { get; private set; }
         public SimpleCommand CancellableBackgroundTaskCommand { get; private set; }
 
-        public TestModalDialogViewModel(ViewBase parent) : base(parent)
+        public ControlTestViewModel(ViewBase parent) : base(parent)
         {
+            Data = new ObservableCollection<TestData>();
+            Data.Add(new TestData());
+            Data.Add(new TestData());
+            Data.Add(new TestData());
+
             ModalBackgroundTaskCommand = new SimpleCommand(ExecuteModalBackgroundTask);
             CancellableBackgroundTaskCommand = new SimpleCommand(ExecuteCancellableBackgroundTask);
         }
@@ -62,5 +70,23 @@ namespace Client.Plugins.Test
         {
             _cancel.Cancel();
         }
+    }
+
+
+    public class TestData
+    {
+        public Guid ReadOnlyID { get; private set; }
+        public string Name { get; set; }
+        public int Number { get; set; }
+        public bool IsTrue { get; set; }
+
+        public TestData()
+        {
+            ReadOnlyID = Guid.NewGuid();
+            Name = "George";
+            Number = 42;
+            IsTrue = true;
+        }
+
     }
 }
