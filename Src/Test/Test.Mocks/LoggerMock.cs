@@ -51,6 +51,14 @@ namespace Test.Mocks
             }
         }
 
+        public IReadOnlyList<ILogDestination> LogDestinations
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         public void AddLogDestination(ILogDestination logDestination)
         {
             //ignore
@@ -111,6 +119,11 @@ namespace Test.Mocks
 
         public void Resume()
         {
+        }
+
+        public void RemoveLogDestination(Guid id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

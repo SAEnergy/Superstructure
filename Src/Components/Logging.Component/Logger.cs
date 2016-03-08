@@ -90,10 +90,12 @@ namespace Core.Logging
 
                 lock (_destinations)
                 {
-                    Log(string.Format("LogDestination of type \"{0}\" added with an id of \"{1}\".", logDestination.GetType().Name, logDestination.Id));
-
                     _destinations.Add(logDestination);
                 }
+            }
+            else
+            {
+                Log("Cannot add Null LogDestination...", LogMessageSeverity.Error);
             }
         }
 
@@ -113,8 +115,6 @@ namespace Core.Logging
                     if (index > -1)
                     {
                         _destinations.RemoveAt(index);
-
-                        Log(string.Format("LogDestination of type \"{0}\" removed with an id of \"{1}\".", logDestination.GetType().Name, logDestination.Id));
                     }
                     else
                     {
@@ -139,7 +139,6 @@ namespace Core.Logging
             else
             {
                 Log(string.Format("Unable to remove LogDestination, cannot find destination with an id of \"{0}\".", id), LogMessageSeverity.Warning);
-
             }
         }
 
