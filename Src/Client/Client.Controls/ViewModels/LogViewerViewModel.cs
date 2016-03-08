@@ -12,7 +12,7 @@ using System.Windows;
 
 namespace Client.Controls
 {
-    public class LogViewModel : ViewModelBase<IRemoteLogViewer>, IRemoteLogViewerCallback
+    public class LogViewerViewModel : ViewModelBase<IRemoteLogViewer>, IRemoteLogViewerCallback
     {
         public bool ViewDetail { get; set; }
 
@@ -26,13 +26,18 @@ namespace Client.Controls
 
         public int MaxMessages { get; set; }
 
-        //public SimpleCommand TogglePause { get; set; }
+        public int MessageCount { get; set; }
 
         public ObservableCollection<LogMessage> LogMessages { get; private set; }
 
-        public LogViewModel(ViewBase parent) : base(parent)
+        //public SimpleCommand TogglePause { get; set; }
+
+
+
+        public LogViewerViewModel(ViewBase parent) : base(parent)
         {
             LogMessages = new ObservableCollection<LogMessage>();
+            MaxMessages = 5000;
 
             LogMessages.Add(new LogMessage() { Severity = LogMessageSeverity.Information, Message = "Connecting to server..." });
         }
@@ -43,6 +48,7 @@ namespace Client.Controls
             {
                 this.BeginInvoke(() =>
                 {
+                    MessageCount++;
                     LogMessages.Add(new LogMessage() { Severity = LogMessageSeverity.Information, Message = "Connected." });
                 });
 
@@ -59,6 +65,7 @@ namespace Client.Controls
         {
             this.BeginInvoke(() =>
             {
+                MessageCount++;
                 LogMessages.Add(new LogMessage() { Severity = LogMessageSeverity.Information, Message = "Connection terminated." });
             });
 
@@ -84,7 +91,14 @@ namespace Client.Controls
             {
                 foreach(var message in messages)
                 {
+                    while (LogMessages.Count > MaxMessages - 1)
+                    {
+                        LogMessages.RemoveAt(0);
+                    }
+
                     LogMessages.Add(message);
+
+                    MessageCount++;
                 }
             });
         }

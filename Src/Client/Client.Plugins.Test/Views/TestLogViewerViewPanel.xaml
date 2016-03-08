@@ -1,5 +1,5 @@
 ﻿<mybase:PanelBase 
-    x:Class="Client.Plugins.Test.TestLogViewPanel"
+    x:Class="Client.Plugins.Test.TestLogViewerViewPanel"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -9,5 +9,5 @@
     xmlns:controls="clr-namespace:Client.Controls;assembly=Client.Controls"
     mc:Ignorable="d" 
     >
-    <controls:LogView Name="logView" />
+    <controls:LogViewerView Name="logViewerView" />
 </mybase:PanelBase>

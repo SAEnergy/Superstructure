@@ -55,7 +55,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\TestLogViewPanel.xaml">
+    <Page Include="Views\TestLogViewerViewPanel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -68,8 +68,8 @@
     </Compile>
     <Compile Include="ViewModels\ControlTestViewModel.cs" />
     <Compile Include="ViewModels\TestSubscriptionViewModel.cs" />
-    <Compile Include="Views\TestLogViewPanel.xaml.cs">
-      <DependentUpon>TestLogViewPanel.xaml</DependentUpon>
+    <Compile Include="Views\TestLogViewerViewPanel.xaml.cs">
+      <DependentUpon>TestLogViewerViewPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TestSubscriptionPanel.xaml.cs">
       <DependentUpon>TestSubscriptionPanel.xaml</DependentUpon>

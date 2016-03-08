@@ -1,4 +1,4 @@
-﻿<base:ViewBase x:Class="Client.Controls.LogView"
+﻿<base:ViewBase x:Class="Client.Controls.LogViewerView"
              xmlns:logger="clr-namespace:Core.Interfaces.Components.Logging;assembly=Core.Interfaces"
              xmlns:base="clr-namespace:Client.Base;assembly=Client.Base"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -13,8 +13,17 @@
     </base:ViewBase.Resources>
 
     <DockPanel LastChildFill="True" HorizontalAlignment="Stretch">
-        <StackPanel Height="Auto" DockPanel.Dock="Top" >
-            <CheckBox x:Name="viewDetail" IsChecked="{Binding Path=ViewDetail}" Content="View Details"/>
+        <StackPanel Height="Auto" DockPanel.Dock="Top" Orientation="Horizontal" >
+            <CheckBox x:Name="viewDetail" IsChecked="{Binding Path=ViewDetail}" Content="View Details" Margin="5"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Max Messages" Margin="5"/>
+                <TextBox Text="{Binding Path=MaxMessages}" Margin="5"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="5">
+                <TextBlock Text="{Binding Path=LogMessages.Count}"/>
+                <TextBlock Text="\"/>
+                <TextBlock Text="{Binding Path=MessageCount}"/>
+            </StackPanel>
         </StackPanel>
         <DataGrid Name="logDataGrid" ItemsSource="{Binding Path=LogMessages}" VirtualizingStackPanel.VirtualizationMode="Recycling" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" AutoGenerateColumns="False" ScrollViewer.ScrollChanged="datagrid_ScrollChanged">
             <DataGrid.Columns>

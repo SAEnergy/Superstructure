@@ -5,11 +5,11 @@ namespace Client.Controls
     /// <summary>
     /// Interaction logic for LogView.xaml
     /// </summary>
-    public partial class LogView : Client.Base.ViewBase
+    public partial class LogViewerView : Client.Base.ViewBase
     {
-        public LogView()
+        public LogViewerView()
         {
-            ViewModel = new LogViewModel(this);
+            ViewModel = new LogViewerViewModel(this);
             InitializeComponent();
         }
 

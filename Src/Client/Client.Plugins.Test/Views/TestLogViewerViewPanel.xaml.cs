@@ -6,17 +6,17 @@ namespace Client.Plugins.Test
     /// <summary>
     /// Interaction logic for TestLogViewPanel.xaml
     /// </summary>
-    [PanelMetadata(DisplayName = "Log View Test", IconPath = "images/warning.png")]
-    public partial class TestLogViewPanel : PanelBase
+    [PanelMetadata(DisplayName = "Log Viewer Test", IconPath = "images/warning.png")]
+    public partial class TestLogViewerViewPanel : PanelBase
     {
-        public TestLogViewPanel()
+        public TestLogViewerViewPanel()
         {
             InitializeComponent();
         }
 
         public override void Dispose()
         {
-            logView.Dispose();
+            logViewerView.Dispose();
 
             base.Dispose();
         }
