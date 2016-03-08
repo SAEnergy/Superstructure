@@ -159,8 +159,6 @@ namespace Server.Components
 
                 Type interfaceType = (Type)type.GetMethod("GetInterfaceType", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Invoke(null, null);
 
-                _logger.Log(string.Format("HostManager creating host for interface \"{0}\".", interfaceType.Name));
-
                 info.InterfaceType = interfaceType;
                 info.Logger = _logger;
                 info.Host = new ServiceHost(type);

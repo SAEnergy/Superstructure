@@ -9,5 +9,5 @@
     xmlns:controls="clr-namespace:Client.Controls;assembly=Client.Controls"
     mc:Ignorable="d" 
     >
-    <controls:LogView Name="logView"/>
+    <controls:LogView Name="logView" />
 </mybase:PanelBase>

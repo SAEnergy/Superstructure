@@ -12,32 +12,23 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </base:ViewBase.Resources>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-        </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Height="Auto">
+    <DockPanel LastChildFill="True" HorizontalAlignment="Stretch">
+        <StackPanel Height="Auto" DockPanel.Dock="Top" >
             <CheckBox x:Name="viewDetail" IsChecked="{Binding Path=ViewDetail}" Content="View Details"/>
         </StackPanel>
-        <VirtualizingStackPanel Grid.Row="1">
-            <VirtualizingStackPanel.Resources>
-
-            </VirtualizingStackPanel.Resources>
-            <DataGrid Name="logDataGrid" ItemsSource="{Binding Path=LogMessages}" HorizontalAlignment="Left" HorizontalScrollBarVisibility="Auto" AutoGenerateColumns="False" ScrollViewer.ScrollChanged="datagrid_ScrollChanged">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Severity}" Header="Severity" IsReadOnly="True" Width="Auto"/>
-                    <DataGridTextColumn Binding="{Binding Category}" Header="Category" IsReadOnly="True" Width="Auto" Visibility="{Binding Source={x:Reference Name=viewDetail}, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                    <DataGridTextColumn Binding="{Binding TimeStamp}" Header="Time Stamp" IsReadOnly="True" Width="Auto"/>
-                    <DataGridTextColumn Binding="{Binding Message}" Header="Message" IsReadOnly="True" Width="500" />
-                    <DataGridTextColumn Binding="{Binding MachineName}" Header="Machine Name" IsReadOnly="True" Width="Auto" Visibility="{Binding Source={x:Reference Name=viewDetail}, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                    <DataGridTextColumn Binding="{Binding ProcessId}" Header="Process Id"  IsReadOnly="True" Width="Auto" Visibility="{Binding Source={x:Reference Name=viewDetail}, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                    <DataGridTextColumn Binding="{Binding ProcessName}" Header="Process Name"  IsReadOnly="True" Width="Auto" Visibility="{Binding Source={x:Reference Name=viewDetail}, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                    <DataGridTextColumn Binding="{Binding FilePath}" Header="File Path"  IsReadOnly="True" Width="150" Visibility="{Binding Source={x:Reference Name=viewDetail}, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                    <DataGridTextColumn Binding="{Binding CallerName}" Header="Caller Name"  IsReadOnly="True" Width="Auto" Visibility="{Binding Source={x:Reference Name=viewDetail}, Path=IsChecked,Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                    <DataGridTextColumn Binding="{Binding LineNumber}" Header="Line Number"  IsReadOnly="True" Width="Auto" Visibility="{Binding Source={x:Reference Name=viewDetail}, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                </DataGrid.Columns>
-            </DataGrid>
-        </VirtualizingStackPanel>
-    </Grid>
+        <DataGrid Name="logDataGrid" ItemsSource="{Binding Path=LogMessages}" VirtualizingStackPanel.VirtualizationMode="Recycling" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" AutoGenerateColumns="False" ScrollViewer.ScrollChanged="datagrid_ScrollChanged">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Severity}" Header="Severity" IsReadOnly="True" Width="Auto"/>
+                <DataGridTextColumn Binding="{Binding Category}" Header="Category" IsReadOnly="True" Width="Auto" Visibility="{Binding Source={x:Reference Name=viewDetail}, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <DataGridTextColumn Binding="{Binding TimeStamp}" Header="Time Stamp" IsReadOnly="True" Width="Auto"/>
+                <DataGridTextColumn Binding="{Binding Message}" Header="Message" IsReadOnly="True" Width="500" />
+                <DataGridTextColumn Binding="{Binding MachineName}" Header="Machine Name" IsReadOnly="True" Width="Auto" Visibility="{Binding Source={x:Reference Name=viewDetail}, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <DataGridTextColumn Binding="{Binding ProcessId}" Header="Process Id"  IsReadOnly="True" Width="Auto" Visibility="{Binding Source={x:Reference Name=viewDetail}, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <DataGridTextColumn Binding="{Binding ProcessName}" Header="Process Name"  IsReadOnly="True" Width="Auto" Visibility="{Binding Source={x:Reference Name=viewDetail}, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <DataGridTextColumn Binding="{Binding FilePath}" Header="File Path"  IsReadOnly="True" Width="150" Visibility="{Binding Source={x:Reference Name=viewDetail}, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <DataGridTextColumn Binding="{Binding CallerName}" Header="Caller Name"  IsReadOnly="True" Width="Auto" Visibility="{Binding Source={x:Reference Name=viewDetail}, Path=IsChecked,Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <DataGridTextColumn Binding="{Binding LineNumber}" Header="Line Number"  IsReadOnly="True" Width="Auto" Visibility="{Binding Source={x:Reference Name=viewDetail}, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
 </base:ViewBase>
