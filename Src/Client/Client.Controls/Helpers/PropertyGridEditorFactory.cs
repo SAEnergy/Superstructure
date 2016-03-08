@@ -8,24 +8,26 @@ namespace Client.Controls
 {
     public static class PropertyGridEditorFactory
     {
-        private static Dictionary<Type, Type> RegisteredEditors = new Dictionary<Type, Type>();
+        //private static Dictionary<Type, Type> RegisteredEditors = new Dictionary<Type, Type>();
 
         public static PropertyGridEditor GetEditor(Type type)
         {
-            lock (RegisteredEditors)
-            {
+            //lock (RegisteredEditors)
+            //{
+            //}
 
-            }
+            if (type == typeof(bool)) { return new PropertyGridBoolEditor(); }
+            if (type.IsEnum) { return new PropertyGridEnumEditor(type); }
+
             return new PropertyGridTextEditor();
-            //return null;
         }
 
-        public static void Register (Type target, Type editor)
-        {
-            lock (RegisteredEditors)
-            {
-                RegisteredEditors.Add(target, editor);
-            }
-        }
+        //public static void Register (Type target, Type editor)
+        //{
+        //    lock (RegisteredEditors)
+        //    {
+        //        RegisteredEditors.Add(target, editor);
+        //    }
+        //}
     }
 }

@@ -1,10 +1,14 @@
-﻿using System;
+﻿using Core.Util;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Collections.Specialized;
 
 namespace Client.Controls
 {
@@ -19,7 +23,7 @@ namespace Client.Controls
             set { SetValue(PropertiesProperty, value); }
         }
 
-        public object Instance { get; protected set; }
+        private Dictionary<string, PropertyGridMetadata> _properties;
 
         static PropertyGrid()
         {
@@ -29,51 +33,94 @@ namespace Client.Controls
         public PropertyGrid()
         {
             Properties = new ObservableCollection<PropertyGridMetadata>();
+            _properties = new Dictionary<string, PropertyGridMetadata>();
             DataContextChanged += PropertyGrid_DataContextChanged;
+        }
+
+        private void Clear()
+        {
+            Properties.Clear();
+            _properties.Clear();
         }
 
         private void PropertyGrid_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            Properties.Clear();
-            Instance = null;
+            Clear();
+
             if (DataContext == null) { return; }
-            Instance = DataContext;
-            ParseProperties(Instance.GetType());
+
+            ParseProperties(new object[] { DataContext });
         }
 
         protected override void OnItemsSourceChanged(IEnumerable oldValue, IEnumerable newValue)
         {
             base.OnItemsSourceChanged(oldValue, newValue);
-            Properties.Clear();
-            Instance = null;
+
+            Clear();
 
             if (this.Items == null || Items.Count == 0) { return; }
 
-            Type type = Items[0].GetType();
-            Instance = Items[0];
-            //Instance = Activator.CreateInstance(type);
-
-            foreach (object obj in Items) { if (obj.GetType() != type) { throw new InvalidOperationException("All objects must be of the same type!"); } }
-
-            ParseProperties(type);
+            ParseProperties(Items.OfType<object>().ToArray());
         }
 
-        private void ParseProperties(Type type)
+        protected override void OnItemsChanged(NotifyCollectionChangedEventArgs e)
         {
-            foreach (PropertyInfo prop in Instance.GetType().GetProperties())
-            {
-                PropertyGridMetadata meta = new PropertyGridMetadata();
-                meta.Property = prop;
-                meta.IsReadOnly = prop.SetMethod == null || !prop.SetMethod.IsPublic;
-                Binding b = new Binding();
-                if (!meta.IsReadOnly) { b.Mode = BindingMode.TwoWay; }
-                b.Source = Instance;
-                b.Path = new PropertyPath(prop.Name);
+            base.OnItemsChanged(e);
 
-                BindingOperations.SetBinding(meta, PropertyGridMetadata.DataProperty, b);
-                //meta.Data = prop.GetValue(Instance, null);
-                meta.Editor = PropertyGridEditorFactory.GetEditor(prop.PropertyType);
-                Properties.Add(meta);
+            Clear();
+
+            if (this.Items == null || Items.Count == 0) { return; }
+
+            ParseProperties(Items.OfType<object>().ToArray());
+        }
+
+        private void ParseProperties(IEnumerable<object> items)
+        {
+            Clear();
+            foreach (object obj in items)
+            {
+                foreach (PropertyInfo prop in obj.GetType().GetProperties())
+                {
+                    PropertyGridMetadata meta = null;
+                    _properties.TryGetValue(prop.Name, out meta);
+
+                    if (meta == null)
+                    {
+                        meta = new PropertyGridMetadata();
+                        meta.Name = prop.Name;
+                        meta.DisplayName = PascalCaseSplitter.Split(prop.Name);
+                        meta.IsReadOnly = prop.SetMethod == null || !prop.SetMethod.IsPublic;
+                        meta.Editor = PropertyGridEditorFactory.GetEditor(prop.PropertyType);
+                        meta.Data = prop.GetValue(obj, null);
+                        meta.Modified += Meta_Modified;
+
+                        _properties.Add(prop.Name, meta);
+                        Properties.Add(meta);
+
+                        continue;
+                    }
+
+
+                }
+            }
+        }
+
+        private void Meta_Modified(object sender, EventArgs e)
+        {
+            PropertyGridMetadata meta = sender as PropertyGridMetadata;
+            if (meta == null) { return; }
+
+            List<object> items = new List<object>();
+            if (Items != null && Items.Count > 0) { items.AddRange(Items.OfType<object>()); }
+            else if (DataContext != null) { items.Add(DataContext); }
+
+            if (items.Count == 0) { return; }
+
+            foreach (object obj in items)
+            {
+                PropertyInfo prop = obj.GetType().GetProperty(meta.Name);
+                if (prop == null) { continue; }
+                prop.SetValue(obj, meta.Data);
             }
         }
     }

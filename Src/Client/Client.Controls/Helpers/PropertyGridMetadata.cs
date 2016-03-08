@@ -10,7 +10,9 @@ namespace Client.Controls
 {
     public class PropertyGridMetadata : DependencyObject
     {
-        public PropertyInfo Property { get; set; }
+        public string Name { get; set; }
+
+        public string DisplayName { get; set; }
 
         public PropertyGridEditor Editor { get; set; }
 
@@ -18,11 +20,23 @@ namespace Client.Controls
 
         public bool IsReadOnly { get; set; }
 
-        public static readonly DependencyProperty DataProperty = DependencyProperty.Register("Data", typeof(object), typeof(PropertyGridMetadata));
+        public bool IsDirty { get; set; }
+
+        public event EventHandler Modified;
+
+        public static readonly DependencyProperty DataProperty = DependencyProperty.Register("Data", typeof(object), typeof(PropertyGridMetadata), new PropertyMetadata(OnDataChanged));
         public object Data
         {
             get { return GetValue(DataProperty); }
             set { SetValue(DataProperty, value); }
+        }
+
+        private static void OnDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            PropertyGridMetadata meta = ((PropertyGridMetadata)d);
+            meta.IsDirty = true;
+            meta.IsIndeterminite = false;
+            if (meta.Modified != null) { meta.Modified(meta, null); }
         }
     }
 }

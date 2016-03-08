@@ -1,4 +1,5 @@
 ﻿using Client.Base;
+using Client.Controls;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading;
@@ -12,17 +13,19 @@ namespace Client.Plugins.Test
         private WaitDialog _dialog;
         private CancellationTokenSource _cancel;
 
-        public ObservableCollection<TestData> Data { get; private set; }
+        private ObservableCollection<TestData> _data;
+        public MultiSelectCollectionView<TestData> Data { get; private set; }
 
         public SimpleCommand ModalBackgroundTaskCommand { get; private set; }
         public SimpleCommand CancellableBackgroundTaskCommand { get; private set; }
 
         public ControlTestViewModel(ViewBase parent) : base(parent)
         {
-            Data = new ObservableCollection<TestData>();
-            Data.Add(new TestData());
-            Data.Add(new TestData());
-            Data.Add(new TestData());
+            _data = new ObservableCollection<TestData>();
+            Data = new MultiSelectCollectionView<TestData>(_data);
+            _data.Add(new TestData());
+            _data.Add(new TestData());
+            _data.Add(new TestData());
 
             ModalBackgroundTaskCommand = new SimpleCommand(ExecuteModalBackgroundTask);
             CancellableBackgroundTaskCommand = new SimpleCommand(ExecuteCancellableBackgroundTask);
@@ -72,6 +75,7 @@ namespace Client.Plugins.Test
         }
     }
 
+    public enum Stuff { Things, Stuff, Gizmos }
 
     public class TestData
     {
@@ -79,6 +83,7 @@ namespace Client.Plugins.Test
         public string Name { get; set; }
         public int Number { get; set; }
         public bool IsTrue { get; set; }
+        public Stuff Stuff { get; set; }
 
         public TestData()
         {

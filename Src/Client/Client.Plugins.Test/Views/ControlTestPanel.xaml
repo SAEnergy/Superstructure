@@ -25,8 +25,8 @@
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <ListBox ItemsSource="{Binding Data}" SelectionMode="Single" x:Name="ItemBox"/>
-                <controls:PropertyGrid Grid.Column="1" DataContext="{Binding ElementName=ItemBox,Path=SelectedItem}"/>
+                <ListBox ItemsSource="{Binding Data}" SelectionMode="Extended" x:Name="ItemBox" controls:MultiSelect.IsEnabled="True"/>
+                <controls:PropertyGrid Grid.Column="1" ItemsSource="{Binding Data.SelectedItems}"/>
             </Grid>
         </ScrollViewer>
     </Grid>

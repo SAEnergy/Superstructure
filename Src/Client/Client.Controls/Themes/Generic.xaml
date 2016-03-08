@@ -33,8 +33,42 @@
                             <ColumnDefinition Width="auto" SharedSizeGroup="A"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Label Content="{Binding Path=Property.Name}"/>
-                        <TextBox Grid.Column="1" Text="{Binding Data,Mode=TwoWay}" IsReadOnly="{Binding IsReadOnly}"/>
+                        <Label Content="{Binding Path=Name}" VerticalAlignment="Center"/>
+                        <TextBox Grid.Column="1" Text="{Binding Data,Mode=TwoWay}" IsReadOnly="{Binding IsReadOnly}" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type local:PropertyGridEnumEditor}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:PropertyGridEnumEditor}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" SharedSizeGroup="A"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="{Binding Path=Name}" VerticalAlignment="Center"/>
+                        <ComboBox Grid.Column="1" IsReadOnly="True" SelectedValue="{Binding Data,Mode=TwoWay}" ItemsSource="{Binding Editor.AvailableValues}" VerticalAlignment="Center"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type local:PropertyGridBoolEditor}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:PropertyGridBoolEditor}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" SharedSizeGroup="A"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="{Binding Path=Name}" VerticalAlignment="Center"/>
+                        <CheckBox Grid.Column="1" IsChecked="{Binding Data,Mode=TwoWay}" IsThreeState="{Binding IsIndeterminite}" VerticalAlignment="Center"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
