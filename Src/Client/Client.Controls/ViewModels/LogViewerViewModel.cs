@@ -16,14 +16,6 @@ namespace Client.Controls
     {
         public bool ViewDetail { get; set; }
 
-        public Visibility IsVisible
-        {
-            get
-            {
-                return ViewDetail ? Visibility.Visible : Visibility.Collapsed;
-            }
-        }
-
         public int MaxMessages { get; set; }
 
         public int MessageCount { get; set; }
@@ -31,8 +23,6 @@ namespace Client.Controls
         public ObservableCollection<LogMessage> LogMessages { get; private set; }
 
         //public SimpleCommand TogglePause { get; set; }
-
-
 
         public LogViewerViewModel(ViewBase parent) : base(parent)
         {
