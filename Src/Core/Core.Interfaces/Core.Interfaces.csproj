@@ -69,6 +69,7 @@
     <Compile Include="ServiceContracts\IDuplexTest.cs" />
     <Compile Include="ServiceContracts\ILogSubscription.cs" />
     <Compile Include="ServiceContracts\IRemoteLogging.cs" />
+    <Compile Include="ServiceContracts\IRemoteLogViewer.cs" />
     <Compile Include="ServiceContracts\ITestService.cs" />
     <Compile Include="Components\IAlarmManager.cs" />
     <Compile Include="Components\IDataComponent.cs" />

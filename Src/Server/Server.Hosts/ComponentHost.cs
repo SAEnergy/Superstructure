@@ -1,23 +1,16 @@
 ﻿using Core.Comm.BaseClasses;
 using Core.Interfaces.Components;
-using Core.Interfaces.Components.IoC;
 using Core.Interfaces.ServiceContracts;
 using Core.IoC.Container;
 using Core.Models.DataContracts;
-using Core.Util;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Server.Hosts
 {
     [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, InstanceContextMode = InstanceContextMode.PerSession)]
-    public class ComponentService : ServiceHostBase<IComponentService, IComponentServiceCallback>, IComponentService
+    public class ComponentHost : ServiceHostBase<IComponentService, IComponentServiceCallback>, IComponentService
     {
-        public ComponentService()
+        public ComponentHost()
         {
         }
 
