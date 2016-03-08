@@ -7,6 +7,8 @@ namespace Core.Interfaces.Components.Logging
 {
     public interface ILogDestination : IRunnable
     {
+        Guid Id { get; }
+
         void Flush();
 
         void ProcessMessages(List<LogMessage> messages);

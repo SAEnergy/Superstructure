@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Linq;
 using Core.Interfaces.Components.IoC;
 using Core.Interfaces.Components.Base;
 using Core.Models;
@@ -80,16 +81,65 @@ namespace Core.Logging
 
         public void AddLogDestination(ILogDestination logDestination)
         {
-            if (IsRunning)
+            if (logDestination != null)
             {
-                logDestination.Start();
+                if (IsRunning)
+                {
+                    logDestination.Start();
+                }
+
+                lock (_destinations)
+                {
+                    Log(string.Format("LogDestination of type \"{0}\" added with an id of \"{1}\".", logDestination.GetType().Name, logDestination.Id));
+
+                    _destinations.Add(logDestination);
+                }
             }
+        }
 
-            lock (_destinations)
+        public void RemoveLogDestination(ILogDestination logDestination)
+        {
+            if(logDestination != null)
             {
-                Log(string.Format("LogDestination of type \"{0}\" added.", logDestination.GetType().Name));
+                if (logDestination.IsRunning)
+                {
+                    logDestination.Stop();
+                }
 
-                _destinations.Add(logDestination);
+                lock(_destinations)
+                {
+                    var index = _destinations.FindIndex(d => d.Id == logDestination.Id);
+
+                    if (index > -1)
+                    {
+                        _destinations.RemoveAt(index);
+
+                        Log(string.Format("LogDestination of type \"{0}\" removed with an id of \"{1}\".", logDestination.GetType().Name, logDestination.Id));
+                    }
+                    else
+                    {
+                        Log(string.Format("Unable to remove LogDestination, cannot find destination with an id of \"{0}\".", logDestination.Id), LogMessageSeverity.Warning);
+                    }
+                }
+            }
+            else
+            {
+                Log("Cannot remove Null LogDestination...", LogMessageSeverity.Error);
+            }
+        }
+
+        public void RemoveLogDestination(Guid id)
+        {
+            var destination = _destinations.Where(d => d.Id == id).FirstOrDefault();
+
+            if(destination != null)
+            {
+                RemoveLogDestination(destination);
+            }
+            else
+            {
+                Log(string.Format("Unable to remove LogDestination, cannot find destination with an id of \"{0}\".", id), LogMessageSeverity.Warning);
+
             }
         }
 
@@ -156,11 +206,6 @@ namespace Core.Logging
             logMessage.ProcessName = _processName;
 
             return logMessage;
-        }
-
-        public void RemoveLogDestination(ILogDestination logDestination)
-        {
-            throw new NotImplementedException();
         }
 
         public void Start()

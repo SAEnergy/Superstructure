@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Runtime.CompilerServices;
 
 namespace Core.Logging.LogDestinations
 {
@@ -23,12 +22,15 @@ namespace Core.Logging.LogDestinations
 
         public bool IsRunning { get; protected set; }
 
+        public Guid Id { get; private set; }
+
         #endregion
 
         #region Constructor
 
         protected LogDestinationBase()
         {
+            Id = Guid.NewGuid();
             _destinationQueue = new LogMessageQueue() { IsBlocking = true }; //default all log destinations to block
             _destinationQueue.MessagesDropped += MessagesDropped;
             _destinationQueue.MessagesBlocked += MessagesBlocked;
@@ -62,8 +64,6 @@ namespace Core.Logging.LogDestinations
                 if (Logger.Instance != null)
                 {
                     _logger = Logger.Instance;
-
-                    //_logger.Log(string.Format("LogDestination of type \"{0}\" starting.", this.GetType().Name));
 
                     if (!IsRunning)
                     {
@@ -117,7 +117,14 @@ namespace Core.Logging.LogDestinations
 
                 if (messages.Count > 0)
                 {
-                    ReportMessages(messages);
+                    try
+                    {
+                        ReportMessages(messages);
+                    }
+                    catch
+                    {
+                        //the log destination children should protect against and report errors themselves, but just in case...
+                    }
                 }
 
                 if (_destinationQueue.IsQueueEmpty) { _queueEmpty.Set(); }
