@@ -41,6 +41,14 @@ namespace Core.Interfaces.Base
 
         public override bool Equals(object obj)
         {
+            if (obj is string)
+            {
+                return ((string)obj) == this.Name;
+            }
+            if (obj is int)
+            {
+                return ((int)obj) == this.Code;
+            }
             return base.Equals(obj);
         }
 

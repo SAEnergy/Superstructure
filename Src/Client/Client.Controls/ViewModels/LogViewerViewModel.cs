@@ -14,11 +14,19 @@ namespace Client.Controls
 {
     public class LogViewerViewModel : ViewModelBase<IRemoteLogViewer>, IRemoteLogViewerCallback
     {
-        public bool ViewDetail { get; set; }
+        public static readonly DependencyProperty ViewDetailProperty = DependencyProperty.Register("ViewDetail", typeof(bool), typeof(LogViewerViewModel));
+        public bool ViewDetail
+        {
+            get { return (bool)GetValue(ViewDetailProperty); }
+            set { SetValue(ViewDetailProperty, value); }
+        }
 
-        public int MaxMessages { get; set; }
-
-        public int MessageCount { get; set; }
+        public static readonly DependencyProperty MaxMessagesProperty = DependencyProperty.Register("MaxMessages", typeof(int), typeof(LogViewerViewModel));
+        public int MaxMessages
+        {
+            get { return (int)GetValue(MaxMessagesProperty); }
+            set { SetValue(MaxMessagesProperty, value); }
+        }
 
         public ObservableCollection<LogMessage> LogMessages { get; private set; }
 
@@ -38,7 +46,6 @@ namespace Client.Controls
             {
                 this.BeginInvoke(() =>
                 {
-                    MessageCount++;
                     LogMessages.Add(new LogMessage() { Severity = LogMessageSeverity.Information, Message = "Connected." });
                 });
 
@@ -55,7 +62,6 @@ namespace Client.Controls
         {
             this.BeginInvoke(() =>
             {
-                MessageCount++;
                 LogMessages.Add(new LogMessage() { Severity = LogMessageSeverity.Information, Message = "Connection terminated." });
             });
 
@@ -87,8 +93,6 @@ namespace Client.Controls
                     }
 
                     LogMessages.Add(message);
-
-                    MessageCount++;
                 }
             });
         }
