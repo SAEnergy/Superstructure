@@ -6,14 +6,13 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using Core.Interfaces.Components.IoC;
-using Core.Interfaces.Components.Base;
 using Core.Models;
 
 namespace Server.Components
 {
     [ComponentRegistration(ComponentType.Server, typeof(IDataComponent), DoNotRegister = true)]
     [ComponentMetadata(Description = "Data access layer for SQL.", FriendlyName = "SQL Data Component")]
-    public sealed class SQLDataComponent : ComponentBase, IDataComponent
+    public sealed class SQLDataComponent : IDataComponent
     {
         #region Fields
 

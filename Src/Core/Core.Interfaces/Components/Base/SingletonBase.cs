@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace Core.Interfaces.Components.Base
 {
-    public abstract class SingletonBase : ComponentBase
+    public abstract class SingletonBase : IComponent
     {
         #region Fields
 

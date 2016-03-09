@@ -1,13 +1,9 @@
 ﻿using Core.Interfaces.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Core.Interfaces.Components.Base;
 
 namespace Core.Interfaces.Components
 {
-    public interface IServerHeartbeat : IRunnable
+    public interface IServerHeartbeat : IRunnable, IComponent
     {
     }
 }

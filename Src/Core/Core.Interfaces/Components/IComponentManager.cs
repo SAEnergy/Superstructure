@@ -3,7 +3,7 @@ using Core.Models.DataContracts;
 
 namespace Core.Interfaces.Components
 {
-    public interface IComponentManager : IComponentBase
+    public interface IComponentManager : IComponent
     {
         void StartAll();
 

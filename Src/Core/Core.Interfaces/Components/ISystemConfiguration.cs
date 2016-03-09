@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Core.Interfaces.Components
 {
-    public interface ISystemConfiguration : IComponentBase
+    public interface ISystemConfiguration : IComponent
     {
         T GetConfig<T>(string sectionName, string configName);
     }

@@ -9,7 +9,7 @@ namespace Core.IoC.Container
     {
         public static void Register(ComponentType types = ComponentType.All)
         {
-            var components = TypeLocator.FindTypes("*Component*.dll", typeof(ComponentBase));
+            var components = TypeLocator.FindTypes("*Component*.dll", typeof(IComponent));
 
             foreach(var component in components)
             {

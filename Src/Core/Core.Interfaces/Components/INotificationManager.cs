@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Core.Interfaces.Components
 {
-    public interface INotificationManager : IComponentBase
+    public interface INotificationManager : IComponent
     {
     }
 }

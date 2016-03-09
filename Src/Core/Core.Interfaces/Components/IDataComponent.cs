@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Core.Interfaces.Components
 {
-    public interface IDataComponent : IComponentBase
+    public interface IDataComponent : IComponent
     {
         bool Delete<T>(int key) where T : class;
 
