@@ -45,8 +45,15 @@
     </Compile>
     <Compile Include="AttributeHelper.cs" />
     <Compile Include="PascalCaseSplitter.cs" />
+    <Compile Include="ProxyFactory.cs" />
     <Compile Include="TypeLocator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core.Interfaces\Core.Interfaces.csproj">
+      <Project>{bdb06c43-2402-444e-a9e0-72c88174fed7}</Project>
+      <Name>Core.Interfaces</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

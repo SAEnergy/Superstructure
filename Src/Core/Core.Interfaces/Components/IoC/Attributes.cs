@@ -19,6 +19,7 @@ namespace Core.Interfaces.Components.IoC
         }
     }
 
+    [AttributeUsage(AttributeTargets.Class)]
     public class ComponentMetadataAttribute : Attribute
     {
         public string Description { get; set; }
@@ -33,14 +34,14 @@ namespace Core.Interfaces.Components.IoC
         }
     }
 
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-    public class ProxyAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Class)]
+    public class ProxyDecoratorAttribute : Attribute
     {
-        public Type ProxyType { get; set; }
+        public Type[] ProxyTypes { get; set; }
 
-        public ProxyAttribute(Type type)
+        public ProxyDecoratorAttribute(params Type[] types)
         {
-            ProxyType = type;
+            ProxyTypes = types;
         }
     }
 }

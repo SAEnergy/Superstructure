@@ -10,11 +10,13 @@ using Core.Models.DataContracts;
 using Core.Util;
 using System.Reflection;
 using Core.Models;
+using Core.Proxies;
 
 namespace Server.Components
 {
     [ComponentRegistration(ComponentType.Server, typeof(IComponentManager))]
     [ComponentMetadata(Description = "Controller for all components.", FriendlyName = "Component Manager")]
+    [ProxyDecorator(typeof(MethodTimerProxy<>))]
 
     public class ComponentManager : Singleton<IComponentManager>, IComponentManager
     {

@@ -7,7 +7,5 @@ namespace Core.Interfaces.Components.Base
     public interface IComponentBase
     {
         ComponentType ComponentType { get; }
-
-        List<Type> Proxies { get; }
     }
 }

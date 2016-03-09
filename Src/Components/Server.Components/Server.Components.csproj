@@ -79,6 +79,10 @@
       <Project>{803e539b-3687-4465-b272-e50816df453f}</Project>
       <Name>Core.Models</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Core\Core.Proxies\Core.Proxies.csproj">
+      <Project>{58bdf1aa-6816-438b-920e-16b10bae3da8}</Project>
+      <Name>Core.Proxies</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Core\Core.Util\Core.Util.csproj">
       <Project>{74311b36-42b8-45d6-b0b7-7651db281d48}</Project>
       <Name>Core.Util</Name>

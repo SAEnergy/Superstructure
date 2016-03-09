@@ -9,18 +9,18 @@ namespace Core.Interfaces.Components.Base
     public abstract class ComponentBase : IComponentBase
     {
         private ComponentRegistrationAttribute _componentRegistrationAttribute;
-        private List<ProxyAttribute> _proxyAttributes;
+        private List<ProxyDecoratorAttribute> _proxyAttributes;
 
         protected ComponentBase()
         {
             //do not use util dll here to avoid requiring util reference across the application
             _componentRegistrationAttribute = GetType().GetCustomAttributes(typeof(ComponentRegistrationAttribute), true).FirstOrDefault() as ComponentRegistrationAttribute;
 
-            _proxyAttributes = new List<ProxyAttribute>();
+            _proxyAttributes = new List<ProxyDecoratorAttribute>();
 
-            foreach (var atty in GetType().GetCustomAttributes(typeof(ProxyAttribute), true))
+            foreach (var atty in GetType().GetCustomAttributes(typeof(ProxyDecoratorAttribute), true))
             {
-                var proxy = atty as ProxyAttribute;
+                var proxy = atty as ProxyDecoratorAttribute;
                 if(proxy != null)
                 {
                     _proxyAttributes.Add(proxy);
@@ -33,18 +33,6 @@ namespace Core.Interfaces.Components.Base
             get
             {
                 return _componentRegistrationAttribute != null ? _componentRegistrationAttribute.Type : ComponentType.NotConfigured;
-            }
-        }
-
-        public List<Type> Proxies
-        {
-            get
-            {
-                List<Type> proxies = new List<Type>();
-
-                _proxyAttributes.ForEach(p => proxies.Add(p.ProxyType));
-
-                return proxies;
             }
         }
     }
