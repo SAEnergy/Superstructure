@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -9,7 +10,40 @@ namespace Client.Base
 {
     public class WindowPositionSettings : ClientSettingsBase
     {
-        public Dictionary<string, string> WindowPositions = new Dictionary<string, string>();
+        public Dictionary<string, string> WindowPositions { get; protected set; }
+
+        public WindowPositionSettings()
+        {
+            WindowPositions = new Dictionary<string, string>();
+        }
+
+
+        protected override object SerializeOneProperty(PropertyInfo prop)
+        {
+            if (prop.Name == "WindowPositions")
+            {
+                List<string> vals = new List<string>();
+                foreach (var pair in WindowPositions)
+                {
+                    vals.Add(pair.Key + "=" + pair.Value);
+                }
+                return vals.ToArray();
+            }
+            return base.SerializeOneProperty(prop);
+        }
+
+    protected override void UnserializeOneProperty(PropertyInfo prop, object value)
+    {
+        if (prop.Name=="WindowPositions")
+            {
+                foreach (string s in (string[])value)
+                {
+                    WindowPositions.Add(s.Substring(0, s.IndexOf("=")),s.Substring(s.IndexOf("=")+1));
+                }
+                return;
+            }
+            base.UnserializeOneProperty(prop, value);
+        }
 
         public void Serialize(DialogBase sourceDialog)
         {
@@ -26,7 +60,7 @@ namespace Client.Base
             {
                 string[] values = windowPos.Split(',');
 
-                targetDialog.WindowState = (WindowState) Enum.Parse(typeof(WindowState), values[0]);
+                targetDialog.WindowState = (WindowState)Enum.Parse(typeof(WindowState), values[0]);
                 targetDialog.WindowStartupLocation = WindowStartupLocation.Manual;
                 targetDialog.Top = double.Parse(values[1]);
                 targetDialog.Left = double.Parse(values[2]);

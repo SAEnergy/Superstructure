@@ -18,9 +18,9 @@ namespace Client.Base
             {
                 Icon = owner.Icon;
             }
-            PersistWindowPosition = true;
+            this.PersistWindowPosition = true;
             this.Owner = owner;
-            this.Loaded += DialogBase_Loaded;
+            this.Initialized += DialogBase_Initialized;
         }
 
         public DialogBase()
@@ -28,12 +28,10 @@ namespace Client.Base
             throw new InvalidOperationException("This constructor only exists to remove design time warnings, don't use it.");
         }
 
-        private void DialogBase_Loaded(object sender, RoutedEventArgs e)
+        private void DialogBase_Initialized(object sender, EventArgs e)
         {
-            if (PersistWindowPosition)
-            {
-                ClientSettingsEngine.GetInstance<WindowPositionSettings>().Unserialize(this);
-            }
+            // this only works after InitializeComponent
+            ClientSettingsEngine.GetInstance<WindowPositionSettings>().Unserialize(this);
         }
 
         protected override void OnClosed(EventArgs e)

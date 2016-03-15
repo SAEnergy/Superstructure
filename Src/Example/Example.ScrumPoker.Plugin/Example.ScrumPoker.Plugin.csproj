@@ -52,6 +52,7 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="ScrumPokerPlayerModel.cs" />
+    <Compile Include="ScrumPokerSettings.cs" />
     <Compile Include="ScrumPokerStoryModel.cs" />
     <Compile Include="ScrumPokerViewModel.cs" />
     <Page Include="ScrumPokerPanel.xaml">
