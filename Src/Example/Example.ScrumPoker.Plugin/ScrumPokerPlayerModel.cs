@@ -22,6 +22,10 @@ namespace Example.ScrumPoker.Plugin
             }
         }
 
+        public byte Red { get { return OriginalObject.CardColor.Item1; } set { ModifiedObject.CardColor = new Tuple<byte, byte, byte>(value, ModifiedObject.CardColor.Item2, ModifiedObject.CardColor.Item3); SetDirty(); } }
+        public byte Green { get { return OriginalObject.CardColor.Item2; } set { ModifiedObject.CardColor = new Tuple<byte, byte, byte>(ModifiedObject.CardColor.Item1, value, ModifiedObject.CardColor.Item3); SetDirty(); } }
+        public byte Blue { get { return OriginalObject.CardColor.Item3; } set { ModifiedObject.CardColor = new Tuple<byte, byte, byte>(ModifiedObject.CardColor.Item1, ModifiedObject.CardColor.Item2, value); SetDirty(); } }
+
         public Brush BackgroundBrush
         {
             get { return new SolidColorBrush(Color.FromRgb(OriginalObject.CardColor.Item1, OriginalObject.CardColor.Item2, OriginalObject.CardColor.Item3)); }
@@ -42,11 +46,14 @@ namespace Example.ScrumPoker.Plugin
 
         public ScrumPokerPlayerModel()
         {
+            ScrumPokerSettings settings = ClientSettingsEngine.GetInstance<ScrumPokerSettings>();
+
             ScrumPokerPlayer player = new ScrumPokerPlayer();
-            player.Name = "Player Name";
+            player.Name = settings.PlayerName;
             player.ID = Guid.NewGuid();
+            player.CardColor = new Tuple<byte, byte, byte>(settings.ColorRed, settings.ColorGreen, settings.ColorBlue);
             // leave blank to let server auto assign
-            // player.CardColor = new Tuple<byte, byte, byte>((byte)(_randy.Next(127) + 128), (byte)(_randy.Next(127) + 128), (byte)(_randy.Next(127) + 128));
+            //((byte)(_randy.Next(127) + 128), (byte)(_randy.Next(127) + 128), (byte)(_randy.Next(127) + 128));
             UpdateFrom(player);
         }
 

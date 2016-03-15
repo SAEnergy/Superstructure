@@ -52,16 +52,16 @@
                                     <Style TargetType="{x:Type Image}">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding Severity}" Value="Information">
-                                                <Setter Property="Source" Value="pack://application:,,,/Client.Resources;Component/images/info.png"/>
+                                                <Setter Property="Source" Value="/Client.Resources;Component/images/info.png"/>
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding Severity}" Value="Warning">
-                                                <Setter Property="Source" Value="pack://application:,,,/Client.Resources;Component/images/warning.png"/>
+                                                <Setter Property="Source" Value="/Client.Resources;Component/images/warning.png"/>
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding Severity}" Value="Error">
-                                                <Setter Property="Source" Value="pack://application:,,,/Client.Resources;Component/images/circle-x.png"/>
+                                                <Setter Property="Source" Value="/Client.Resources;Component/images/circle-x.png"/>
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding Severity}" Value="Critical">
-                                                <Setter Property="Source" Value="pack://application:,,,/Client.Resources;Component/images/x.png"/>
+                                                <Setter Property="Source" Value="/Client.Resources;Component/images/x.png"/>
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>

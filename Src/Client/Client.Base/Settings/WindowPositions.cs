@@ -8,6 +8,7 @@ using System.Windows;
 
 namespace Client.Base
 {
+    [ClientSettingsMetadata(Hidden = true)]
     public class WindowPositionSettings : ClientSettingsBase
     {
         public Dictionary<string, string> WindowPositions { get; protected set; }
@@ -32,13 +33,13 @@ namespace Client.Base
             return base.SerializeOneProperty(prop);
         }
 
-    protected override void UnserializeOneProperty(PropertyInfo prop, object value)
-    {
-        if (prop.Name=="WindowPositions")
+        protected override void UnserializeOneProperty(PropertyInfo prop, object value)
+        {
+            if (prop.Name == "WindowPositions")
             {
                 foreach (string s in (string[])value)
                 {
-                    WindowPositions.Add(s.Substring(0, s.IndexOf("=")),s.Substring(s.IndexOf("=")+1));
+                    WindowPositions.Add(s.Substring(0, s.IndexOf("=")), s.Substring(s.IndexOf("=") + 1));
                 }
                 return;
             }

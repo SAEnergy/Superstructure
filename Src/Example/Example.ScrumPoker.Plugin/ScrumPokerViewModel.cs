@@ -17,8 +17,12 @@ namespace Example.ScrumPoker.Plugin
         public SimpleCommand FlipCardsCommand { get; private set; }
         public SimpleCommand ResetGameCommand { get; private set; }
 
+        private ScrumPokerSettings _settings;
+
         public ScrumPokerViewModel(ViewBase parent) : base(parent)
         {
+            _settings = ClientSettingsEngine.GetInstance<ScrumPokerSettings>();
+
             FlipCardsCommand = new SimpleCommand(ExecuteFlipCardsCommand);
             ResetGameCommand = new SimpleCommand(ExecuteResetGameCommand);
 
@@ -120,6 +124,15 @@ namespace Example.ScrumPoker.Plugin
         private void ExecuteFlipCardsCommand()
         {
             Execute(() => Channel.Flip());
+        }
+
+        public override void Dispose()
+        {
+            _settings.PlayerName = Me.Name;
+            _settings.ColorRed = Me.Red;
+            _settings.ColorGreen = Me.Green;
+            _settings.ColorBlue = Me.Blue;
+            base.Dispose();
         }
     }
 }

@@ -36,6 +36,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="4"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="4"/>
@@ -47,19 +48,25 @@
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Border BorderThickness="0" Background="White" Opacity="1" Margin="0" Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="99"/>
-        <Border BorderThickness="0" Background="White" Opacity="1" Margin="0" Grid.Row="3" Grid.ColumnSpan="99"/>
-        <Border BorderThickness="0" Background="White" Opacity="1" Margin="0" Grid.Row="5" Grid.ColumnSpan="99"/>
-        <Border BorderThickness="0" Background="White" Opacity="1" Margin="0" Grid.Row="7" Grid.ColumnSpan="99"/>
+        <Border BorderThickness="0" Background="White" Opacity="1" Margin="0" Grid.Row="0" Grid.RowSpan="3" Grid.ColumnSpan="99"/>
+        <Border BorderThickness="0" Background="White" Opacity="1" Margin="0" Grid.Row="4" Grid.ColumnSpan="99"/>
+        <Border BorderThickness="0" Background="White" Opacity="1" Margin="0" Grid.Row="6" Grid.ColumnSpan="99"/>
+        <Border BorderThickness="0" Background="White" Opacity="1" Margin="0" Grid.Row="8" Grid.ColumnSpan="99"/>
         <Label Grid.Row="0">Story Name:</Label>
         <Label Grid.Row="1">Player Name:</Label>
+        <Label Grid.Row="2">Card Color:</Label>
         <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=Story.Name, UpdateSourceTrigger=PropertyChanged, Delay=1000,Mode=TwoWay}"/>
         <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=Me.Name, UpdateSourceTrigger=PropertyChanged, Delay=1000,Mode=TwoWay}"/>
-        <StackPanel Grid.Row="3" Grid.ColumnSpan="99" Orientation="Horizontal" HorizontalAlignment="Center">
+        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+            <TextBox Text="{Binding Path=Me.Red, UpdateSourceTrigger=PropertyChanged, Delay=500,Mode=TwoWay}"/>
+            <TextBox Text="{Binding Path=Me.Green, UpdateSourceTrigger=PropertyChanged, Delay=500,Mode=TwoWay}"/>
+            <TextBox Text="{Binding Path=Me.Blue, UpdateSourceTrigger=PropertyChanged, Delay=500,Mode=TwoWay}"/>
+        </StackPanel>
+        <StackPanel Grid.Row="4" Grid.ColumnSpan="99" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button Command="{Binding Path=ResetGameCommand}">Reset Game</Button>
             <Button Command="{Binding Path=FlipCardsCommand}">Flip Cards</Button>
         </StackPanel>
-        <ScrollViewer Grid.Row="5"  Grid.ColumnSpan="99">
+        <ScrollViewer Grid.Row="6"  Grid.ColumnSpan="99">
             <ItemsControl ItemsSource="{Binding Players}" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
@@ -143,7 +150,7 @@
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
         </ScrollViewer>
-        <ListBox Grid.Row="7" Grid.ColumnSpan="99" BorderThickness="0" ItemsSource="{Binding Path=AvailableCards}" SelectedValue="{Binding Path=Me.SelectedCard,Mode=TwoWay}" IsSynchronizedWithCurrentItem="True">
+        <ListBox Grid.Row="8" Grid.ColumnSpan="99" BorderThickness="0" ItemsSource="{Binding Path=AvailableCards}" SelectedValue="{Binding Path=Me.SelectedCard,Mode=TwoWay}" IsSynchronizedWithCurrentItem="True">
             <ListBox.ItemContainerStyle>
                 <Style TargetType="ListBoxItem">
                     <Setter Property="Margin" Value="0"/>
