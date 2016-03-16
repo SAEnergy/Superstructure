@@ -31,7 +31,7 @@ namespace Client.Base
         private void DialogBase_Initialized(object sender, EventArgs e)
         {
             // this only works after InitializeComponent
-            ClientSettingsEngine.GetInstance<WindowPositionSettings>().Unserialize(this);
+            ClientSettingsEngine.Instance.GetInstance<WindowPositionSettings>().Unserialize(this);
         }
 
         protected override void OnClosed(EventArgs e)
@@ -39,7 +39,7 @@ namespace Client.Base
             base.OnClosed(e);
             if (PersistWindowPosition)
             {
-                ClientSettingsEngine.GetInstance<WindowPositionSettings>().Serialize(this);
+                ClientSettingsEngine.Instance.GetInstance<WindowPositionSettings>().Serialize(this);
             }
         }
 

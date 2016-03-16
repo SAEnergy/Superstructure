@@ -33,7 +33,7 @@
                             <ColumnDefinition Width="auto" SharedSizeGroup="A"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Label Content="{Binding Path=Name}" VerticalAlignment="Center"/>
+                        <Label Content="{Binding Path=DisplayName}" VerticalAlignment="Center"/>
                         <TextBox Grid.Column="1" Text="{Binding Data,Mode=TwoWay}" IsReadOnly="{Binding IsReadOnly}" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
                     </Grid>
                 </ControlTemplate>
@@ -50,7 +50,7 @@
                             <ColumnDefinition Width="auto" SharedSizeGroup="A"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Label Content="{Binding Path=Name}" VerticalAlignment="Center"/>
+                        <Label Content="{Binding Path=DisplayName}" VerticalAlignment="Center"/>
                         <ComboBox Grid.Column="1" IsReadOnly="True" SelectedValue="{Binding Data,Mode=TwoWay}" ItemsSource="{Binding Editor.AvailableValues}" VerticalAlignment="Center"/>
                     </Grid>
                 </ControlTemplate>
@@ -67,7 +67,7 @@
                             <ColumnDefinition Width="auto" SharedSizeGroup="A"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Label Content="{Binding Path=Name}" VerticalAlignment="Center"/>
+                        <Label Content="{Binding Path=DisplayName}" VerticalAlignment="Center"/>
                         <CheckBox Grid.Column="1" IsChecked="{Binding Data,Mode=TwoWay}" IsThreeState="{Binding IsIndeterminite}" VerticalAlignment="Center"/>
                     </Grid>
                 </ControlTemplate>

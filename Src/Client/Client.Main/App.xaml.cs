@@ -16,12 +16,12 @@ namespace Client.Main
     {
         public App()
         {
-            ClientSettingsEngine.Load();
+            ClientSettingsEngine.Instance.Load();
         }
 
         protected override void OnExit(ExitEventArgs e)
         {
-            ClientSettingsEngine.Save();
+            ClientSettingsEngine.Instance.Save();
         }
 
     }

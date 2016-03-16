@@ -21,7 +21,7 @@ namespace Example.ScrumPoker.Plugin
 
         public ScrumPokerViewModel(ViewBase parent) : base(parent)
         {
-            _settings = ClientSettingsEngine.GetInstance<ScrumPokerSettings>();
+            _settings = ClientSettingsEngine.Instance.GetInstance<ScrumPokerSettings>();
 
             FlipCardsCommand = new SimpleCommand(ExecuteFlipCardsCommand);
             ResetGameCommand = new SimpleCommand(ExecuteResetGameCommand);

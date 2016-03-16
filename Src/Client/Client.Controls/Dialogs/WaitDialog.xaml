@@ -1,11 +1,11 @@
-﻿<my:DialogBase 
-    x:Class="Client.Base.WaitDialog"
-    xmlns:my="clr-namespace:Client.Base"
+﻿<base:DialogBase 
+    x:Class="Client.Controls.WaitDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-    xmlns:local="clr-namespace:Client.Base"
+    xmlns:local="clr-namespace:Client.Controls"
+    xmlns:base="clr-namespace:Client.Base;assembly=Client.Base"
     mc:Ignorable="d" 
     WindowStartupLocation="CenterOwner"
     SizeToContent="Height"
@@ -34,4 +34,4 @@
             </Grid>
         </Grid>
     </Grid>
-</my:DialogBase>
+</base:DialogBase>

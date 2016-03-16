@@ -10,19 +10,24 @@ using System.Windows.Threading;
 
 namespace Client.Base
 {
-    public static class ClientSettingsEngine
+    public class ClientSettingsEngine
     {
-        private const string _keyname = "SimpleClient";
-        private static List<ClientSettingsBase> Instances = new List<ClientSettingsBase>();
+        private static ClientSettingsEngine _instance;
+        public static ClientSettingsEngine Instance { get { return _instance; } }
 
-        public static void Load()
+        static ClientSettingsEngine() { _instance = new ClientSettingsEngine(); }
+
+        private const string _keyname = "SimpleClient";
+        private List<ClientSettingsBase> Instances = new List<ClientSettingsBase>();
+
+        public void Load()
         {
             lock (Instances)
             {
                 RegistryKey key = Registry.CurrentUser.OpenSubKey("Software", true);
                 key = key.CreateSubKey(_keyname);
                 List<KeyValuePair<string, object>> values = new List<KeyValuePair<string, object>>();
-                foreach(string name in key.GetValueNames())
+                foreach (string name in key.GetValueNames())
                 {
                     values.Add(new KeyValuePair<string, object>(name, key.GetValue(name)));
                 }
@@ -40,7 +45,7 @@ namespace Client.Base
             }
         }
 
-        public static void Save()
+        public void Save()
         {
             lock (Instances)
             {
@@ -57,14 +62,32 @@ namespace Client.Base
             }
         }
 
+        public IEnumerable<ClientSettingsBase> GetInstances()
+        {
+            lock (Instances)
+            {
+                return Instances.ToArray();
+            }
+        }
 
-
-        public static T GetInstance<T>() where T : ClientSettingsBase
+        public T GetInstance<T>() where T : ClientSettingsBase
         {
             lock (Instances)
             {
                 return (T)Instances.FirstOrDefault(t => t.GetType() == typeof(T));
             }
         }
+
+        public ClientSettingsBase this[string name]
+        {
+            get
+            {
+                lock (Instances)
+                {
+                    return Instances.FirstOrDefault(t => string.Equals(name, t.GetType().Name,StringComparison.CurrentCultureIgnoreCase));
+                }
+            }
+        }
+
     }
 }

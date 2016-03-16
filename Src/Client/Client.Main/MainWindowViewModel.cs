@@ -1,4 +1,5 @@
 ﻿using Client.Base;
+using Client.Controls;
 using Client.Resources;
 using Core.Comm;
 using Core.Util;
@@ -20,6 +21,8 @@ namespace Client.Main
     public class MainWindowViewModel : ViewModelBase
     {
         public ObservableCollection<PluginInfo> Plugins { get; set; }
+        public SimpleCommand SettingsCommand { get; set; }
+        private SettingsDialog _settings;
 
         public static readonly DependencyProperty PanelProperty = DependencyProperty.Register("Panel", typeof(PanelBase), typeof(MainWindowViewModel));
         public PanelBase Panel
@@ -46,6 +49,7 @@ namespace Client.Main
         {
             Plugins = new ObservableCollection<PluginInfo>();
             ServerName = ServerConnectionInformation.Instance.ConnectionString;
+            SettingsCommand = new SimpleCommand(ExecuteSettingsCommand);
             Task.Run(() => PluginInit());
         }
 
@@ -92,6 +96,21 @@ namespace Client.Main
         {
             ServerConnectionInformation.Instance.ConnectionString = ((MainWindowViewModel)d).ServerName;
             ServerConnectionInformation.Instance.FireReconnect();
+        }
+
+        private void ExecuteSettingsCommand()
+        {
+            if (_settings == null)
+            {
+                _settings = new SettingsDialog(Window.GetWindow(_parent));
+                _settings.Closed += SettingsClosed;
+                _settings.Show();
+            }
+        }
+
+        private void SettingsClosed(object sender, EventArgs e)
+        {
+            _settings = null;
         }
 
         public override void Dispose()

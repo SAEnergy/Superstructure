@@ -42,7 +42,7 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Button Grid.Row="4" Margin="4" Padding="2" HorizontalContentAlignment="Left">
+        <Button Grid.Row="4" Margin="4" Padding="2" HorizontalContentAlignment="Left" Command="{Binding SettingsCommand}">
             <StackPanel Margin="2" Orientation="Horizontal">
                 <Image Source="/Client.Resources;Component/images/cog.png" Margin="2" Width="16" Height="16"/>
                 <TextBlock Margin="2" Padding="0">Settings</TextBlock>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -9,6 +10,9 @@ namespace Client.Base
 {
     public class ClientSettingsBase : DependencyObject
     {
+        [PropertyEditorMetadata(Hidden = true)]
+        public virtual string Name { get { return PascalCaseSplitter.Split(this.GetType().Name); } }
+
         public virtual IEnumerable<KeyValuePair<string, object>> Serialize()
         {
             List<KeyValuePair<string, object>> values = new List<KeyValuePair<string, object>>();
@@ -17,9 +21,9 @@ namespace Client.Base
             {
                 if (prop.DeclaringType == typeof(DependencyObject)) { continue; }
                 if (prop.DeclaringType == typeof(DispatcherObject)) { continue; }
-                values.Add(new KeyValuePair<string,object>(GetKeyName(prop),SerializeOneProperty(prop)));
+                if (prop.SetMethod == null || !prop.SetMethod.IsPublic) { continue; }
+                values.Add(new KeyValuePair<string, object>(GetKeyName(prop), SerializeOneProperty(prop)));
             }
-
             return values;
         }
 
@@ -62,6 +66,7 @@ namespace Client.Base
 
         protected virtual void UnserializeOneProperty(PropertyInfo prop, object value)
         {
+            if (prop.SetMethod == null || !prop.SetMethod.IsPublic) { return; }
             //if (typeof(ICollection).IsAssignableFrom(prop.PropertyType))
             //{
             ////ICollection col = (ICollection) prop.GetValue(this, null);

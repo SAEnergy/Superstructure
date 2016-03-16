@@ -1,0 +1,18 @@
+﻿<base:DialogBase 
+    x:Class="Client.Controls.SettingsDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:base="clr-namespace:Client.Base;assembly=Client.Base"
+    xmlns:local="clr-namespace:Client.Controls"
+    mc:Ignorable="d" 
+    WindowStartupLocation="CenterOwner"
+    Width="333"
+    Height="444"
+    >
+    <Grid>
+        <Border BorderThickness="0" Background="White" Opacity="0.75" Margin="1" Grid.RowSpan="99"/>
+        <local:SettingsView x:Name="view" Margin="4"/>
+    </Grid>
+</base:DialogBase>

@@ -46,7 +46,7 @@ namespace Example.ScrumPoker.Plugin
 
         public ScrumPokerPlayerModel()
         {
-            ScrumPokerSettings settings = ClientSettingsEngine.GetInstance<ScrumPokerSettings>();
+            ScrumPokerSettings settings = ClientSettingsEngine.Instance.GetInstance<ScrumPokerSettings>();
 
             ScrumPokerPlayer player = new ScrumPokerPlayer();
             player.Name = settings.PlayerName;

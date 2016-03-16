@@ -9,6 +9,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Collections.Specialized;
+using System.Windows.Threading;
+using Client.Base;
 
 namespace Client.Controls
 {
@@ -81,6 +83,12 @@ namespace Client.Controls
             {
                 foreach (PropertyInfo prop in obj.GetType().GetProperties())
                 {
+                    if (prop.DeclaringType == typeof(DependencyObject)) { continue; }
+                    if (prop.DeclaringType == typeof(DispatcherObject)) { continue; }
+
+                    PropertyEditorMetadataAttribute atty = prop.GetCustomAttribute<PropertyEditorMetadataAttribute>();
+                    if (atty!=null && atty.Hidden) { continue; }
+
                     PropertyGridMetadata meta = null;
                     _properties.TryGetValue(prop.Name, out meta);
 
@@ -120,7 +128,7 @@ namespace Client.Controls
             {
                 PropertyInfo prop = obj.GetType().GetProperty(meta.Name);
                 if (prop == null) { continue; }
-                prop.SetValue(obj, meta.Data);
+                prop.SetValue(obj, Convert.ChangeType(meta.Data,prop.PropertyType));
             }
         }
     }
