@@ -22,10 +22,6 @@ namespace Example.ScrumPoker.Plugin
             }
         }
 
-        public byte Red { get { return OriginalObject.CardColor.Item1; } set { ModifiedObject.CardColor = new Tuple<byte, byte, byte>(value, ModifiedObject.CardColor.Item2, ModifiedObject.CardColor.Item3); SetDirty(); } }
-        public byte Green { get { return OriginalObject.CardColor.Item2; } set { ModifiedObject.CardColor = new Tuple<byte, byte, byte>(ModifiedObject.CardColor.Item1, value, ModifiedObject.CardColor.Item3); SetDirty(); } }
-        public byte Blue { get { return OriginalObject.CardColor.Item3; } set { ModifiedObject.CardColor = new Tuple<byte, byte, byte>(ModifiedObject.CardColor.Item1, ModifiedObject.CardColor.Item2, value); SetDirty(); } }
-
         public Brush BackgroundBrush
         {
             get { return new SolidColorBrush(Color.FromRgb(OriginalObject.CardColor.Item1, OriginalObject.CardColor.Item2, OriginalObject.CardColor.Item3)); }

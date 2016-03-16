@@ -56,11 +56,11 @@
         <Label Grid.Row="1">Player Name:</Label>
         <Label Grid.Row="2">Card Color:</Label>
         <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=Story.Name, UpdateSourceTrigger=PropertyChanged, Delay=1000,Mode=TwoWay}"/>
-        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=Me.Name, UpdateSourceTrigger=PropertyChanged, Delay=1000,Mode=TwoWay}"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Source={x:Static base:ClientSettingsEngine.Instance}, Path=.[ScrumPokerSettings].PlayerName, UpdateSourceTrigger=PropertyChanged, Delay=1000,Mode=TwoWay}"/>
         <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
-            <TextBox Text="{Binding Path=Me.Red, UpdateSourceTrigger=PropertyChanged, Delay=500,Mode=TwoWay}"/>
-            <TextBox Text="{Binding Path=Me.Green, UpdateSourceTrigger=PropertyChanged, Delay=500,Mode=TwoWay}"/>
-            <TextBox Text="{Binding Path=Me.Blue, UpdateSourceTrigger=PropertyChanged, Delay=500,Mode=TwoWay}"/>
+            <TextBox Text="{Binding Source={x:Static base:ClientSettingsEngine.Instance}, Path=.[ScrumPokerSettings].ColorRed, UpdateSourceTrigger=PropertyChanged, Delay=500,Mode=TwoWay}"/>
+            <TextBox Text="{Binding Source={x:Static base:ClientSettingsEngine.Instance}, Path=.[ScrumPokerSettings].ColorGreen, UpdateSourceTrigger=PropertyChanged, Delay=500,Mode=TwoWay}"/>
+            <TextBox Text="{Binding Source={x:Static base:ClientSettingsEngine.Instance}, Path=.[ScrumPokerSettings].ColorBlue, UpdateSourceTrigger=PropertyChanged, Delay=500,Mode=TwoWay}"/>
         </StackPanel>
         <StackPanel Grid.Row="4" Grid.ColumnSpan="99" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button Command="{Binding Path=ResetGameCommand}">Reset Game</Button>

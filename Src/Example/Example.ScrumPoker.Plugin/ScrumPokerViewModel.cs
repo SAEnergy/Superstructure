@@ -18,10 +18,22 @@ namespace Example.ScrumPoker.Plugin
         public SimpleCommand ResetGameCommand { get; private set; }
 
         private ScrumPokerSettings _settings;
+        private PropertyChangeNotifier _notifyName;
+        private PropertyChangeNotifier _notifyRed;
+        private PropertyChangeNotifier _notifyGreen;
+        private PropertyChangeNotifier _notifyBlue;
 
         public ScrumPokerViewModel(ViewBase parent) : base(parent)
         {
             _settings = ClientSettingsEngine.Instance.GetInstance<ScrumPokerSettings>();
+            _notifyName = new PropertyChangeNotifier(_settings, ScrumPokerSettings.PlayerNameProperty);
+            _notifyRed = new PropertyChangeNotifier(_settings, ScrumPokerSettings.ColorRedProperty);
+            _notifyGreen = new PropertyChangeNotifier(_settings, ScrumPokerSettings.ColorGreenProperty);
+            _notifyBlue = new PropertyChangeNotifier(_settings, ScrumPokerSettings.ColorBlueProperty);
+            _notifyName.ValueChanged += SettingsValueChanged;
+            _notifyRed.ValueChanged += SettingsValueChanged;
+            _notifyGreen.ValueChanged += SettingsValueChanged;
+            _notifyBlue.ValueChanged += SettingsValueChanged;
 
             FlipCardsCommand = new SimpleCommand(ExecuteFlipCardsCommand);
             ResetGameCommand = new SimpleCommand(ExecuteResetGameCommand);
@@ -34,6 +46,12 @@ namespace Example.ScrumPoker.Plugin
 
             Me = new ScrumPokerPlayerModel();
             Me.Modified += Me_Modified;
+        }
+
+        private void SettingsValueChanged(object sender, EventArgs e)
+        {
+            Me.ModifiedObject.CardColor = new Tuple<byte, byte, byte>(_settings.ColorRed, _settings.ColorGreen, _settings.ColorBlue);
+            Me.Name = _settings.PlayerName;
         }
 
         private void Me_Modified()
@@ -128,10 +146,10 @@ namespace Example.ScrumPoker.Plugin
 
         public override void Dispose()
         {
-            _settings.PlayerName = Me.Name;
-            _settings.ColorRed = Me.Red;
-            _settings.ColorGreen = Me.Green;
-            _settings.ColorBlue = Me.Blue;
+            _notifyName.Dispose();
+            _notifyRed.Dispose();
+            _notifyGreen.Dispose();
+            _notifyBlue.Dispose();
             base.Dispose();
         }
     }

@@ -53,6 +53,7 @@
     <Compile Include="Converters\EnumFlagsToBooleanConverter.cs" />
     <Compile Include="Converters\EnumToBooleanConverter.cs" />
     <Compile Include="ModelBase.cs" />
+    <Compile Include="PropertyChangeNotifier.cs" />
     <Compile Include="Settings\ClientSettingsBase.cs" />
     <Compile Include="Settings\ClientSettingsEngine.cs" />
     <Compile Include="DialogBase.cs" />
