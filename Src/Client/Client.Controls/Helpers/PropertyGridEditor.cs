@@ -11,6 +11,10 @@ namespace Client.Controls
 {
     public abstract class PropertyGridEditor : Control
     {
+        public PropertyGridEditor()
+        {
+            IsTabStop = false;
+        }
     }
 
     public class PropertyGridTextEditor : PropertyGridEditor

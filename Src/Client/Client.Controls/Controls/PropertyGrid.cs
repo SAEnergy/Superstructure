@@ -34,6 +34,7 @@ namespace Client.Controls
 
         public PropertyGrid()
         {
+            IsTabStop = false;
             Properties = new ObservableCollection<PropertyGridMetadata>();
             _properties = new Dictionary<string, PropertyGridMetadata>();
             DataContextChanged += PropertyGrid_DataContextChanged;

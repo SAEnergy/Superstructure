@@ -21,7 +21,10 @@ namespace Client.Base
             {
                 if (prop.DeclaringType == typeof(DependencyObject)) { continue; }
                 if (prop.DeclaringType == typeof(DispatcherObject)) { continue; }
-                if (prop.SetMethod == null || !prop.SetMethod.IsPublic) { continue; }
+
+                PropertyEditorMetadataAttribute atty = prop.GetCustomAttribute<PropertyEditorMetadataAttribute>();
+                if (atty!=null && atty.Hidden) { continue; }
+
                 values.Add(new KeyValuePair<string, object>(GetKeyName(prop), SerializeOneProperty(prop)));
             }
             return values;
