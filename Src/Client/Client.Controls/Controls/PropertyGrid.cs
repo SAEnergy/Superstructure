@@ -17,15 +17,15 @@ namespace Client.Controls
     public class PropertyGrid : ItemsControl
     {
 
-        public static readonly DependencyProperty PropertiesProperty = DependencyProperty.Register("Properties", typeof(ObservableCollection<PropertyGridMetadata>), typeof(PropertyGrid));
+        public static readonly DependencyProperty PropertiesProperty = DependencyProperty.Register("Properties", typeof(ObservableCollection<PropertyGridEditor>), typeof(PropertyGrid));
 
-        public ObservableCollection<PropertyGridMetadata> Properties
+        public ObservableCollection<PropertyGridEditor> Properties
         {
-            get { return (ObservableCollection<PropertyGridMetadata>)GetValue(PropertiesProperty); }
+            get { return (ObservableCollection<PropertyGridEditor>)GetValue(PropertiesProperty); }
             set { SetValue(PropertiesProperty, value); }
         }
 
-        private Dictionary<string, PropertyGridMetadata> _properties;
+        private Dictionary<string, PropertyGridEditor> _properties;
 
         static PropertyGrid()
         {
@@ -35,8 +35,8 @@ namespace Client.Controls
         public PropertyGrid()
         {
             IsTabStop = false;
-            Properties = new ObservableCollection<PropertyGridMetadata>();
-            _properties = new Dictionary<string, PropertyGridMetadata>();
+            Properties = new ObservableCollection<PropertyGridEditor>();
+            _properties = new Dictionary<string, PropertyGridEditor>();
             DataContextChanged += PropertyGrid_DataContextChanged;
         }
 
@@ -90,34 +90,34 @@ namespace Client.Controls
                     PropertyEditorMetadataAttribute atty = prop.GetCustomAttribute<PropertyEditorMetadataAttribute>();
                     if (atty!=null && atty.Hidden) { continue; }
 
-                    PropertyGridMetadata meta = null;
-                    _properties.TryGetValue(prop.Name, out meta);
+                    PropertyGridEditor editor = null;
+                    _properties.TryGetValue(prop.Name, out editor);
 
-                    if (meta == null)
+                    if (editor == null)
                     {
-                        meta = new PropertyGridMetadata();
-                        meta.Name = prop.Name;
-                        meta.DisplayName = PascalCaseSplitter.Split(prop.Name);
-                        meta.IsReadOnly = prop.SetMethod == null || !prop.SetMethod.IsPublic;
-                        meta.Editor = PropertyGridEditorFactory.GetEditor(prop.PropertyType);
-                        meta.Data = prop.GetValue(obj, null);
-                        meta.Modified += Meta_Modified;
+                        editor = PropertyGridEditorFactory.GetEditor(prop.PropertyType);
+                        editor.PropertyType = prop.PropertyType;
+                        editor.Name = prop.Name;
+                        editor.DisplayName = PascalCaseSplitter.Split(prop.Name);
+                        editor.IsReadOnly = prop.SetMethod == null || !prop.SetMethod.IsPublic;
+                        editor.Data = prop.GetValue(obj, null);
+                        editor.Modified += Meta_Modified;
 
-                        _properties.Add(prop.Name, meta);
-                        Properties.Add(meta);
+                        _properties.Add(prop.Name, editor);
+                        Properties.Add(editor);
 
                         continue;
                     }
 
-
+                    //multi val here
                 }
             }
         }
 
         private void Meta_Modified(object sender, EventArgs e)
         {
-            PropertyGridMetadata meta = sender as PropertyGridMetadata;
-            if (meta == null) { return; }
+            PropertyGridEditor editor = sender as PropertyGridEditor;
+            if (editor == null) { return; }
 
             List<object> items = new List<object>();
             if (Items != null && Items.Count > 0) { items.AddRange(Items.OfType<object>()); }
@@ -127,9 +127,9 @@ namespace Client.Controls
 
             foreach (object obj in items)
             {
-                PropertyInfo prop = obj.GetType().GetProperty(meta.Name);
+                PropertyInfo prop = obj.GetType().GetProperty(editor.Name);
                 if (prop == null) { continue; }
-                prop.SetValue(obj, Convert.ChangeType(meta.Data,prop.PropertyType));
+                prop.SetValue(obj, Convert.ChangeType(editor.Data,prop.PropertyType));
             }
         }
     }

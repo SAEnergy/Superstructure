@@ -72,7 +72,6 @@
   <ItemGroup>
     <Compile Include="Helpers\PropertyGridEditor.cs" />
     <Compile Include="Helpers\PropertyGridEditorFactory.cs" />
-    <Compile Include="Helpers\PropertyGridMetadata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -89,6 +88,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
