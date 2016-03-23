@@ -20,13 +20,19 @@
             <Button HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5" Margin="5" Command="{Binding CancellableBackgroundTaskCommand}">Cancellable Background Task</Button>
         </StackPanel>
         <ScrollViewer Grid.Row="1">
-            <Grid >
+            <Grid Margin="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <ListBox ItemsSource="{Binding Data}" SelectionMode="Extended" x:Name="ItemBox" controls:MultiSelect.IsEnabled="True"/>
-                <controls:PropertyGrid Grid.Column="1" ItemsSource="{Binding Data.SelectedItems}"/>
+                <ListBox ItemsSource="{Binding Data}" SelectionMode="Extended" x:Name="ItemBox" controls:MultiSelect.IsEnabled="True" Margin="2">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <controls:PropertyGrid Grid.Column="1" ItemsSource="{Binding Data.SelectedItems}" Margin="2"/>
             </Grid>
         </ScrollViewer>
     </Grid>

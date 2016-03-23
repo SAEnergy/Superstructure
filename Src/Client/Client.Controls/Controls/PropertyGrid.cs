@@ -11,6 +11,7 @@ using System.Windows.Data;
 using System.Collections.Specialized;
 using System.Windows.Threading;
 using Client.Base;
+using System.ComponentModel;
 
 namespace Client.Controls
 {
@@ -36,6 +37,10 @@ namespace Client.Controls
         {
             IsTabStop = false;
             Properties = new ObservableCollection<PropertyGridEditor>();
+            ICollectionView view = CollectionViewSource.GetDefaultView(Properties);
+            view.SortDescriptions.Add(new SortDescription("SortOrder", ListSortDirection.Ascending));
+            view.SortDescriptions.Add(new SortDescription("DisplayName", ListSortDirection.Ascending));
+
             _properties = new Dictionary<string, PropertyGridEditor>();
             DataContextChanged += PropertyGrid_DataContextChanged;
         }
@@ -100,16 +105,13 @@ namespace Client.Controls
                         editor.Name = prop.Name;
                         editor.DisplayName = PascalCaseSplitter.Split(prop.Name);
                         editor.IsReadOnly = prop.SetMethod == null || !prop.SetMethod.IsPublic;
-                        editor.Data = prop.GetValue(obj, null);
                         editor.Modified += Meta_Modified;
 
                         _properties.Add(prop.Name, editor);
                         Properties.Add(editor);
-
-                        continue;
                     }
 
-                    //multi val here
+                    editor.Values.Add(prop.GetValue(obj, null));
                 }
             }
         }
@@ -129,7 +131,7 @@ namespace Client.Controls
             {
                 PropertyInfo prop = obj.GetType().GetProperty(editor.Name);
                 if (prop == null) { continue; }
-                prop.SetValue(obj, Convert.ChangeType(editor.Data,prop.PropertyType));
+                prop.SetValue(obj, editor.Data);
             }
         }
     }

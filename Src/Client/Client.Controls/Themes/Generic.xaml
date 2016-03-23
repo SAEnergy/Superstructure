@@ -11,13 +11,15 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <ItemsControl ItemsSource="{TemplateBinding Properties}" Grid.IsSharedSizeScope="True">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <ContentPresenter Content="{Binding}"/>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                            <ItemsControl ItemsSource="{TemplateBinding Properties}" Grid.IsSharedSizeScope="True">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <ContentPresenter Content="{Binding}"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
@@ -36,7 +38,7 @@
                         <Label Content="{TemplateBinding DisplayName}" VerticalAlignment="Center"/>
                         <TextBox 
                             Grid.Column="1" 
-                            Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay, Path=Data, UpdateSourceTrigger=PropertyChanged,Delay=500}" 
+                            Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay, Path=Data, UpdateSourceTrigger=PropertyChanged, Delay=500, ValidatesOnExceptions=True}" 
                             IsReadOnly="{TemplateBinding IsReadOnly}" 
                             VerticalAlignment="Center" 
                             />
@@ -58,9 +60,10 @@
                         <Label Content="{TemplateBinding DisplayName}" VerticalAlignment="Center"/>
                         <ComboBox 
                             Grid.Column="1" 
-                            IsReadOnly="True" 
-                            ItemsSource="{TemplateBinding AvailableValues}" 
-                            SelectedValue="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Data, Mode=TwoWay}" 
+                            IsReadOnly="True"
+                            Text="{TemplateBinding Data}"
+                            SelectedItem="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Data, Mode=TwoWay}" 
+                            ItemsSource="{TemplateBinding AvailableValues}"
                             VerticalAlignment="Center"
                             VerticalContentAlignment="Center"
                             />
@@ -85,6 +88,7 @@
                             IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Data, Mode=TwoWay}" 
                             IsThreeState="{TemplateBinding IsMultipleValues}" 
                             VerticalAlignment="Center"
+                            HorizontalAlignment="Left"
                             />
                     </Grid>
                 </ControlTemplate>

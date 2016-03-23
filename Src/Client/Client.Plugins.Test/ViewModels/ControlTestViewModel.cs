@@ -2,6 +2,7 @@
 using Client.Controls;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -77,10 +78,14 @@ namespace Client.Plugins.Test
 
     public enum Stuff { Things, Stuff, Gizmos }
 
-    public class TestData
+    public class TestData : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private string _name;
+        public string Name { get { return _name; } set { _name = value; if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs("Name")); } } }
+
         public Guid ReadOnlyID { get; private set; }
-        public string Name { get; set; }
         public int Number { get; set; }
         public bool IsTrue { get; set; }
         public Stuff Stuff { get; set; }
@@ -92,6 +97,5 @@ namespace Client.Plugins.Test
             Number = 42;
             IsTrue = true;
         }
-
     }
 }
