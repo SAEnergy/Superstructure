@@ -12,8 +12,6 @@ namespace Core.Models.Persistent
         [StringLength(255)]
         public string Name { get; set; }
 
-        public DateTime Created { get; set; }
-
         [StringLength(255)]
         public string ActionType { get; set; }
 
@@ -60,12 +58,6 @@ namespace Core.Models.Persistent
             RepeatEvery = new TimeSpanBool();
         }
     }
-
-    //public enum JobActionType
-    //{
-    //    NotConfigured,
-    //    RunProgram
-    //}
 
     public enum JobRunState
     {

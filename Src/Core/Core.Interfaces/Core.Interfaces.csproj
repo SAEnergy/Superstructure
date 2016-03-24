@@ -61,6 +61,7 @@
     <Compile Include="Components\Logging\ILogger.cs" />
     <Compile Include="Components\Logging\ILogMessageFormatter.cs" />
     <Compile Include="Components\Logging\LogMessage.cs" />
+    <Compile Include="Components\IPermissionsManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Components\Scheduler\Enums.cs" />
     <Compile Include="Components\Scheduler\IJob.cs" />

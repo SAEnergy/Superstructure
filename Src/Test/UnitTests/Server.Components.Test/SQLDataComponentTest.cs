@@ -24,10 +24,10 @@ namespace Core.Components.Test
         {
             var component = new SQLDataComponent(new LoggerMock());
 
-            var newUser = new User();
-            newUser.UserName = "Bobby";
+            var newJob = new JobConfiguration();
+            newJob.Name = "Test Job";
 
-            Assert.IsTrue(component.Insert<User>(newUser));
+            Assert.IsTrue(component.Insert(newJob));
         }
 
         [TestMethod]
@@ -37,22 +37,22 @@ namespace Core.Components.Test
 
             InsertIfNeeded(component);
 
-            var result = component.Find<User>(u => u.UserName == "Bobby");
+            var result = component.Find<JobConfiguration>(u => u.Name == "Test Job");
             Assert.IsNotNull(result);
 
-            var user = result.FirstOrDefault();
-            Assert.IsNotNull(user);
-            string oldName = user.UserName;
-            user.UserName = "Weeee" + Guid.NewGuid(); //Allows unit test to run over and over again without failing
+            var job = result.FirstOrDefault();
+            Assert.IsNotNull(job);
+            string oldName = job.Name;
+            job.Name = "Weeee" + Guid.NewGuid(); //Allows unit test to run over and over again without failing
 
-            Assert.IsTrue(component.Update(user));
+            Assert.IsTrue(component.Update(job));
 
-            var newUser = component.Find<User>(u => u.UserName == user.UserName).FirstOrDefault();
-            Assert.IsNotNull(newUser);
-            Assert.AreEqual(user.UserId, newUser.UserId);
-            Assert.AreEqual(user.UserName, newUser.UserName);
+            var newJob = component.Find<JobConfiguration>(u => u.Name == job.Name).FirstOrDefault();
+            Assert.IsNotNull(newJob);
+            Assert.AreEqual(job.JobConfigurationId, newJob.JobConfigurationId);
+            Assert.AreEqual(job.Name, newJob.Name);
 
-            var notFound = component.Find<User>(u => u.UserName == oldName);
+            var notFound = component.Find<JobConfiguration>(u => u.Name == oldName);
             Assert.IsNull(notFound);
         }
 
@@ -63,17 +63,17 @@ namespace Core.Components.Test
 
             InsertIfNeeded(component);
 
-            var result = component.Find<User>(u => u.UserName == "Bobby");
+            var result = component.Find<JobConfiguration>(u => u.Name == "Test Job");
             Assert.IsNotNull(result);
 
-            var user = result.FirstOrDefault();
-            Assert.IsNotNull(user);
+            var job = result.FirstOrDefault();
+            Assert.IsNotNull(job);
 
-            var user1 = component.Find<User>(user.UserId);
+            var job1 = component.Find<JobConfiguration>(job.JobConfigurationId);
 
-            Assert.IsNotNull(user1);
-            Assert.AreEqual(user.UserId, user1.UserId);
-            Assert.AreEqual(user.UserName, user1.UserName);
+            Assert.IsNotNull(job1);
+            Assert.AreEqual(job.JobConfigurationId, job1.JobConfigurationId);
+            Assert.AreEqual(job.Name, job1.Name);
         }
 
         [TestMethod]
@@ -83,17 +83,17 @@ namespace Core.Components.Test
 
             InsertIfNeeded(component);
 
-            var user = component.Find<User>(u => u.UserName == "Bobby");
+            var job = component.Find<JobConfiguration>(u => u.Name == "Test Job");
 
-            Assert.IsNotNull(user);
-            Assert.AreEqual(1, user.Count);
+            Assert.IsNotNull(job);
+            Assert.AreEqual(1, job.Count);
 
-            var realUser = user.FirstOrDefault();
-            Assert.IsNotNull(realUser);
-            Assert.AreEqual("Bobby", realUser.UserName);
+            var realJob = job.FirstOrDefault();
+            Assert.IsNotNull(realJob);
+            Assert.AreEqual("Test Job", realJob.Name);
 
-            var userToo = component.Find<User>(u => u.UserId == -1);
-            Assert.IsNull(userToo);
+            var jobToo = component.Find<JobConfiguration>(u => u.JobConfigurationId == -1);
+            Assert.IsNull(jobToo);
         }
 
         [TestMethod]
@@ -103,16 +103,16 @@ namespace Core.Components.Test
 
             InsertIfNeeded(component);
 
-            var user = component.Find<User>(u => u.UserName == "Bobby");
+            var job = component.Find<JobConfiguration>(u => u.Name == "Test Job");
 
-            Assert.IsNotNull(user);
-            Assert.AreEqual(1, user.Count);
+            Assert.IsNotNull(job);
+            Assert.AreEqual(1, job.Count);
 
-            var bobby = user.FirstOrDefault();
-            Assert.AreEqual("Bobby", bobby.UserName);
+            var job1 = job.FirstOrDefault();
+            Assert.AreEqual("Test Job", job1.Name);
 
-            Assert.IsTrue(component.Delete<User>(bobby.UserId));
-            var find = component.Find<User>(bobby.UserId);
+            Assert.IsTrue(component.Delete<JobConfiguration>(job1.JobConfigurationId));
+            var find = component.Find<JobConfiguration>(job1.JobConfigurationId);
 
             Assert.IsNull(find);
         }
@@ -124,21 +124,21 @@ namespace Core.Components.Test
 
             InsertIfNeeded(component);
 
-            Assert.IsTrue(component.Delete<User>(u => u.UserName == "Bobby"));
+            Assert.IsTrue(component.Delete<JobConfiguration>(u => u.Name == "Test Job"));
 
-            Assert.IsNull(component.Find<User>(u => u.UserName == "Bobby"));
+            Assert.IsNull(component.Find<JobConfiguration>(u => u.Name == "Test Job"));
         }
 
         #region Private Methods
 
         private void InsertIfNeeded(IDataComponent component)
         {
-            if (component.Find<User>(u => u.UserName == "Bobby") == null)
+            if (component.Find<JobConfiguration>(u => u.Name == "Test Job") == null)
             {
-                var newUser = new User();
-                newUser.UserName = "Bobby";
+                var newJob = new JobConfiguration();
+                newJob.Name = "Test Job";
 
-                Assert.IsTrue(component.Insert<User>(newUser));
+                Assert.IsTrue(component.Insert<JobConfiguration>(newJob));
             }
         }
 

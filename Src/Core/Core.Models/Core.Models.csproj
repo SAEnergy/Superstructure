@@ -50,9 +50,11 @@
     <Compile Include="DataContracts\ComponentMetadata.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="ICloneable.cs" />
+    <Compile Include="Persistent\ActiveDirectoryEntry.cs" />
     <Compile Include="Persistent\JobConfiguration.cs" />
+    <Compile Include="Persistent\Permission.cs" />
+    <Compile Include="Persistent\Role.cs" />
     <Compile Include="Persistent\SystemConfiguration.cs" />
-    <Compile Include="Persistent\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -6,6 +6,7 @@ using Test.Helpers;
 using Test.Plugins.Mocks;
 using System.Threading;
 using System.Linq;
+using Server.Components;
 
 namespace Core.Scheduler.Test
 {
@@ -28,7 +29,9 @@ namespace Core.Scheduler.Test
         [Ignore]
         public void SchedulerTest_AddCustomJob()
         {
-            var scheduler = Scheduler.CreateInstance(new LoggerMock(), new DataComponentMock());
+            XMLDataComponent.Folder = Environment.CurrentDirectory;
+            XMLDataComponent.FileName = "SchedulerTestData.xml";
+            var scheduler = Scheduler.CreateInstance(new LoggerMock(), new XMLDataComponent(new LoggerMock()));
 
             scheduler.Start();
 

@@ -29,14 +29,14 @@ namespace Core.Components.Test
         {
             var component = new XMLDataComponent(new LoggerMock());
 
-            var newUser = new User();
-            newUser.UserName = "Bobby";
+            var newJob = new JobConfiguration();
+            newJob.Name = "Test Job";
 
-            Assert.IsTrue(component.Insert(newUser));
+            Assert.IsTrue(component.Insert(newJob));
 
-            var realNewUser = component.Find<User>(1000);
-            Assert.IsNotNull(realNewUser);
-            Assert.AreEqual("Bobby", realNewUser.UserName);
+            var realNewJob = component.Find<JobConfiguration>(1000);
+            Assert.IsNotNull(realNewJob);
+            Assert.AreEqual("Test Job", realNewJob.Name);
         }
 
         [TestMethod]
@@ -44,13 +44,13 @@ namespace Core.Components.Test
         {
             var component = new XMLDataComponent(new LoggerMock());
 
-            var newUser = new User();
-            newUser.UserId = 1;
-            newUser.UserName = "Bobby";
+            var newJob = new JobConfiguration();
+            newJob.JobConfigurationId = 1;
+            newJob.Name = "Test Job";
 
-            Assert.IsTrue(component.Delete(newUser));
-            var realNewUser = component.Find<User>(1);
-            Assert.IsNull(realNewUser);
+            Assert.IsTrue(component.Delete(newJob));
+            var realNewJob = component.Find<JobConfiguration>(1);
+            Assert.IsNull(realNewJob);
         }
 
         [TestMethod]
@@ -58,10 +58,10 @@ namespace Core.Components.Test
         {
             var component = new XMLDataComponent(new LoggerMock());
 
-            Assert.IsTrue(component.Delete<User>(x => x.UserName == "BobbyDeleteWhere"));
+            Assert.IsTrue(component.Delete<JobConfiguration>(x => x.Name == "BobbyDeleteWhere"));
 
-            var realUser = component.Find<User>(3);
-            Assert.IsNull(realUser);
+            var realJob = component.Find<JobConfiguration>(3);
+            Assert.IsNull(realJob);
         }
 
         [TestMethod]
@@ -69,10 +69,10 @@ namespace Core.Components.Test
         {
             var component = new XMLDataComponent(new LoggerMock());
 
-            Assert.IsTrue(component.Delete<User>(2));
+            Assert.IsTrue(component.Delete<JobConfiguration>(2));
 
-            var realUser = component.Find<User>(2);
-            Assert.IsNull(realUser);
+            var realJob = component.Find<JobConfiguration>(2);
+            Assert.IsNull(realJob);
         }
 
         [TestMethod]
@@ -80,11 +80,11 @@ namespace Core.Components.Test
         {
             var component = new XMLDataComponent(new LoggerMock());
 
-            var user = component.Find<User>(999);
+            var user = component.Find<JobConfiguration>(999);
 
             Assert.IsNotNull(user);
-            Assert.AreEqual(999, user.UserId);
-            Assert.AreEqual("BobbyInsertAfter", user.UserName);
+            Assert.AreEqual(999, user.JobConfigurationId);
+            Assert.AreEqual("BobbyInsertAfter", user.Name);
         }
 
         [TestMethod]
@@ -92,16 +92,16 @@ namespace Core.Components.Test
         {
             var component = new XMLDataComponent(new LoggerMock());
 
-            var list = component.Find<User>(u => u.UserName == "BobbyInsertAfter");
+            var list = component.Find<JobConfiguration>(u => u.Name == "BobbyInsertAfter");
 
             Assert.IsNotNull(list);
             Assert.AreEqual(1, list.Count);
 
-            var realuser = list.FirstOrDefault();
+            var realJob = list.FirstOrDefault();
 
-            Assert.IsNotNull(realuser);
-            Assert.AreEqual(999, realuser.UserId);
-            Assert.AreEqual("BobbyInsertAfter", realuser.UserName);
+            Assert.IsNotNull(realJob);
+            Assert.AreEqual(999, realJob.JobConfigurationId);
+            Assert.AreEqual("BobbyInsertAfter", realJob.Name);
         }
 
     }

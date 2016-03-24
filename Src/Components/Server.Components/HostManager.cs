@@ -164,6 +164,7 @@ namespace Server.Components
                 info.Host = new ServiceHost(type);
 
                 info.Host.Description.Behaviors.Add(new HostErrorHandlerBehavior(info));
+                info.Host.Authorization.ServiceAuthorizationManager = new RoleBasedAuthorizationManager();
 
                 ContractDescription contract = ContractDescription.GetContract(interfaceType);
 

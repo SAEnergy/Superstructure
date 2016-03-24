@@ -14,7 +14,10 @@ namespace Core.Comm
 
         public static Binding BuildBinding(BindingInformation info, ServerConnectionInformation server)
         {
-            return new NetTcpBinding(SecurityMode.None, false);
+            var binding = new NetTcpBinding(SecurityMode.Transport, false);
+            binding.Security.Transport.ClientCredentialType = TcpClientCredentialType.Windows;
+
+            return binding;
         }
     }
 }
