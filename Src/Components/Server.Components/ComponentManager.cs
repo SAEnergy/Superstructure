@@ -30,6 +30,12 @@ namespace Server.Components
 
         #endregion
 
+        #region Properties
+
+        public bool HasInitializedComponents { get; private set; }
+
+        #endregion
+
         #region Constructor
 
         private ComponentManager(ILogger logger, IIoCContainer container, ISystemConfiguration config)
@@ -66,6 +72,13 @@ namespace Server.Components
         {
             _logger.Log("Starting all runnable components");
 
+            if(!HasInitializedComponents)
+            {
+                _logger.Log("Component Manager has not yet initialized components.");
+
+                InitializeComponents();
+            }
+
             foreach (var type in GetRunnableRegisteredTypes())
             {
                 _logger.Log(string.Format("Starting component of type {0}", type.Key.Name));
@@ -83,6 +96,37 @@ namespace Server.Components
                 _logger.Log(string.Format("Stopping component of type {0}", type.Key.Name));
 
                 StopRunnable(GetIRunnable(type.Key));
+            }
+        }
+
+        public void InitializeComponents()
+        {
+            if (!HasInitializedComponents)
+            {
+                HasInitializedComponents = true;
+
+                _logger.Log("Initializing all components...");
+
+                var componentTypes = GetInitalizableRegisteredTypes();
+
+                foreach (var componentType in componentTypes)
+                {
+                    var component = GetIInitalizable(componentType.Key);
+
+                    if (component != null)
+                    {
+                        if (!component.IsInitialized)
+                        {
+                            _logger.Log(string.Format("Initializing component of type {0}", componentType.Key.Name));
+
+                            component.Initialize();
+                        }
+                        else
+                        {
+                            _logger.Log(string.Format("Component of type {0} has already been initialized", componentType.Key.Name), LogMessageSeverity.Warning);
+                        }
+                    }
+                }
             }
         }
 
@@ -301,9 +345,26 @@ namespace Server.Components
             return runnable;
         }
 
+        private IInitializable GetIInitalizable(Type type)
+        {
+            IInitializable initializable = _container.Resolve(type) as IInitializable;
+
+            if (initializable == null)
+            {
+                _logger.Log(string.Format("Unable to cast type \"{0}\" as IInitializable.", type.Name), LogMessageSeverity.Error);
+            }
+
+            return initializable;
+        }
+
         private List<KeyValuePair<Type, Type>> GetRunnableRegisteredTypes()
         {
-            return _container.GetRegisteredTypes().Where(i => typeof(IRunnable).IsAssignableFrom(i.Key) && i.Key != typeof(ILogger)).ToList();
+            return _container.GetRegisteredTypes().Where(i => typeof(IRunnable).IsAssignableFrom(i.Key) && i.Key != typeof(ILogger) && typeof(IComponent).IsAssignableFrom(i.Key)).ToList();
+        }
+
+        private List<KeyValuePair<Type, Type>> GetInitalizableRegisteredTypes()
+        {
+            return _container.GetRegisteredTypes().Where(i => typeof(IInitializable).IsAssignableFrom(i.Key) && i.Key != typeof(IComponentManager) && typeof(IComponent).IsAssignableFrom(i.Key)).ToList();
         }
 
         private List<ComponentMetadata> GetDependencies(Type type)

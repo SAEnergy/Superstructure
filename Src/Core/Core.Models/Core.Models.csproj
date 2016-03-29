@@ -50,7 +50,7 @@
     <Compile Include="DataContracts\ComponentMetadata.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="ICloneable.cs" />
-    <Compile Include="Persistent\ActiveDirectoryEntry.cs" />
+    <Compile Include="Persistent\DirectoryItem.cs" />
     <Compile Include="Persistent\JobConfiguration.cs" />
     <Compile Include="Persistent\Permission.cs" />
     <Compile Include="Persistent\Role.cs" />

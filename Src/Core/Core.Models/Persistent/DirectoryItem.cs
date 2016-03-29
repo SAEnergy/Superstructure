@@ -7,13 +7,15 @@ using System.Threading.Tasks;
 
 namespace Core.Models.Persistent
 {
-    public class ActiveDirectoryEntry
+    public class DirectoryItem
     {
         [Key]
-        public int ActiveDirectoryEntryId { get; set; }
+        public int DirectoryEntryId { get; set; }
 
         public string Domain { get; set; }
 
         public string Name { get; set; }
+
+        public bool IsGroup { get; set; }
     }
 }

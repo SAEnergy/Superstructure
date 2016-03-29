@@ -6,6 +6,8 @@ using Core.Models;
 using Core.Models.Persistent;
 using System;
 using System.Collections.Generic;
+using System.DirectoryServices;
+using System.DirectoryServices.AccountManagement;
 using System.Linq;
 using System.Reflection;
 using System.Security.Principal;
@@ -23,6 +25,12 @@ namespace Server.Components
         private readonly ILogger _logger;
         private readonly IDataComponent _dataComponent;
         private readonly ISystemConfiguration _systemConfig;
+
+        #endregion
+
+        #region Properties
+
+        public bool IsInitialized { get; private set; }
 
         #endregion
 
@@ -50,6 +58,9 @@ namespace Server.Components
 
             if(identity != null && serviceType != null && operationMethodInfo != null)
             {
+                
+
+
 
                 retVal = true;
             }
@@ -63,6 +74,53 @@ namespace Server.Components
 
         public void ClearPermissionsCache()
         {
+        }
+
+        public void Initialize()
+        {
+            if (IsInitialized != true)
+            {
+                IsInitialized = true;
+
+                _logger.Log("Initializing Permissions Manager...");
+
+                GetLocalGroups();
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private string[] GetRoles(IIdentity identity)
+        {
+            
+
+            return null;
+        }
+
+        private void GetLocalGroups()
+        {
+            try {
+                using (DirectoryEntry machine = new DirectoryEntry(string.Concat("WinNT://", Environment.MachineName)))
+                {
+                    foreach(var obj in machine.Children)
+                    {
+                        var dir = obj as DirectoryEntry;
+
+                        if(dir != null)
+                        {
+                            _logger.Log("Name = " + dir.Name +" Class = " + dir.SchemaClassName);
+                        }
+
+                        dir.Dispose();
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                _logger.Log(ex.Message, LogMessageSeverity.Error);
+            }
         }
 
         #endregion

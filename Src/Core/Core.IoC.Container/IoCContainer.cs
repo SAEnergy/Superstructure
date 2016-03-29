@@ -1,4 +1,5 @@
-﻿using Core.Interfaces.Components.IoC;
+﻿using Core.Interfaces.Base;
+using Core.Interfaces.Components.IoC;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,19 +79,41 @@ namespace Core.IoC.Container
 
         public object Resolve(Type interfaceType)
         {
+            object retVal = null;
+
             RegisteredObject obj = null;
 
             if (!_registeredObjects.TryGetValue(interfaceType, out obj))
             {
-                if(interfaceType == typeof(IIoCContainer))
+                if (interfaceType == typeof(IIoCContainer))
                 {
-                    return _instance;
+                    retVal = _instance;
                 }
+                else
+                {
+                    throw new KeyNotFoundException(string.Format("The type \"{0}\" has not been registered.", interfaceType.Name));
+                }
+            }
+            else
+            {
+                retVal = obj.GetInstance();
 
-                throw new KeyNotFoundException(string.Format("The type \"{0}\" has not been registered.", interfaceType.Name));
+                //initialize transient objects here
+                if(obj.ObjectLifeCycle == LifeCycle.Transient)
+                {
+                    if(typeof(IInitializable).IsAssignableFrom(interfaceType))
+                    {
+                        var initializable = retVal as IInitializable;
+
+                        if(initializable != null && !initializable.IsInitialized)
+                        {
+                            initializable.Initialize();
+                        }
+                    }
+                }
             }
 
-            return obj.GetInstance();
+            return retVal;
         }
 
         public TInterfaceType Resolve<TInterfaceType>()

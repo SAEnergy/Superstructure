@@ -18,7 +18,7 @@ namespace Core.Models.Persistent
 
         public ICollection<Permission> Permissions { get; set; }
 
-        public ICollection<ActiveDirectoryEntry> ActiveDirectoryEntries { get; set; }
+        public ICollection<DirectoryItem> ActiveDirectoryEntries { get; set; }
 
         public AuditInfo AuditInfo { get; set; }
     }

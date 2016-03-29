@@ -25,7 +25,7 @@ namespace Core.Database
 
         public DbSet<Role> Roles { get; set; }
 
-        public DbSet<ActiveDirectoryEntry> ActiveDirectoryEntries { get; set; }
+        public DbSet<DirectoryItem> ActiveDirectoryEntries { get; set; }
 
         #endregion
 

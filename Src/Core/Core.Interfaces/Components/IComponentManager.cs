@@ -9,6 +9,10 @@ namespace Core.Interfaces.Components
 
         void StopAll();
 
+        void InitializeComponents();
+
+        bool HasInitializedComponents { get; }
+
         ComponentMetadata[] GetComponents();
 
         ComponentMetadata StopComponent(int componentId);
