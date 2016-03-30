@@ -58,8 +58,10 @@
     <Compile Include="Components\IServerHeartBeat.cs" />
     <Compile Include="Components\IWebHost.cs" />
     <Compile Include="Components\Logging\Enums.cs" />
+    <Compile Include="Components\Logging\IFilter.cs" />
     <Compile Include="Components\Logging\ILogDestination.cs" />
     <Compile Include="Components\Logging\ILogger.cs" />
+    <Compile Include="Components\Logging\ILogMessageFilter.cs" />
     <Compile Include="Components\Logging\ILogMessageFormatter.cs" />
     <Compile Include="Components\Logging\LogMessage.cs" />
     <Compile Include="Components\IPermissionsManager.cs" />

@@ -52,6 +52,10 @@
     <Compile Include="LogDestinations\FileLogDestination.cs" />
     <Compile Include="LogDestinations\TCPLogDestination.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="LogMessageFilters\Filter.cs" />
+    <Compile Include="LogMessageFilters\FilterBase.cs" />
+    <Compile Include="LogMessageFilters\LogMessageFilter.cs" />
+    <Compile Include="LogMessageFilters\LogMessageFilterBase.cs" />
     <Compile Include="LogMessageFormatters\CSVLogMessageFormatter.cs" />
     <Compile Include="LogMessageQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
