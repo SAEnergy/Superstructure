@@ -19,7 +19,7 @@ namespace Core.Scheduler.Jobs
 
         public DateTime StartTime { get; set; }
 
-        public TimeSpan RunDurration { get; set; }
+        public TimeSpan RunDuration { get; set; }
 
         public bool CompletedSuccessfully { get; set; }
 
@@ -333,7 +333,7 @@ namespace Core.Scheduler.Jobs
                 watch.Stop();
 
                 info.CompletedSuccessfully = rc;
-                info.RunDurration = watch.Elapsed;
+                info.RunDuration = watch.Elapsed;
                 info.IsRunning = false;
 
                 Status = rc ? JobStatus.Success : JobStatus.Error;
