@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>SAE.Core.Logging</id>
+    <version>$version$</version>
+    <title>Core Logging</title>
+    <description>Lightweight and fast logging system with extensible destinations.</description>
+    <authors>$author$</authors>
+    <owners>$owner$</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <copyright>$nugetcopyright$</copyright>
+    <projectUrl>$GitHubUrl$</projectUrl>
+    <licenseUrl>$LicenseUrl$</licenseUrl>
+    <iconUrl>$NugetIconUrl$</iconUrl>
+    <dependencies />
+  </metadata>
+  <files>
+    <file src="..\$RunOut$\SAE.Core.Logging.dll" target="lib\net452" />
+  </files>
+</package>

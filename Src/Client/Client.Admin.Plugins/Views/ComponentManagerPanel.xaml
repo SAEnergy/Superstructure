@@ -1,0 +1,75 @@
+﻿<mybase:PanelBase 
+    x:Class="Client.Admin.Plugins.ComponentManagerPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:Client.Admin.Plugins"
+    xmlns:mybase="clr-namespace:Client.Base;assembly=Client.Base"
+    xmlns:models="clr-namespace:Core.Models;assembly=Core.Models"
+    xmlns:datacontracts="clr-namespace:Core.Models.DataContracts;assembly=Core.Models"
+    mc:Ignorable="d" >
+    <Grid>
+        <Grid.Resources>
+            <HierarchicalDataTemplate DataType="{x:Type local:ComponentMetadataModel}" ItemsSource="{Binding Path=OriginalObject.Dependencies}">
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel.Resources>
+                        <mybase:EnumFlagsToBooleanConverter x:Key="EnumFlagsToBooleanConverter" />
+                    </StackPanel.Resources>
+                    <StackPanel.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Start" Command="{Binding Path=StartCommand}" CommandParameter="{Binding .}" IsEnabled="{Binding Path=OriginalObject.UserActions, Converter={StaticResource EnumFlagsToBooleanConverter}, ConverterParameter={x:Static models:ComponentUserActions.Start}}">
+                                <MenuItem.Icon>
+                                    <Image Source="{Binding Path=StartIcon}"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Stop" Command="{Binding Path=StopCommand}" CommandParameter="{Binding .}" IsEnabled="{Binding Path=OriginalObject.UserActions, Converter={StaticResource EnumFlagsToBooleanConverter}, ConverterParameter={x:Static models:ComponentUserActions.Stop}}">
+                                <MenuItem.Icon>
+                                    <Image Source="{Binding Path=StopIcon}"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Restart" Command="{Binding Path=RestartCommand}" CommandParameter="{Binding .}" IsEnabled="{Binding Path=OriginalObject.UserActions, Converter={StaticResource EnumFlagsToBooleanConverter}, ConverterParameter={x:Static models:ComponentUserActions.Restart}}" >
+                                <MenuItem.Icon>
+                                    <Image Source="{Binding Path=RestartIcon}"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Disable" Command="{Binding Path=DisableCommand}" CommandParameter="{Binding .}" IsEnabled="{Binding Path=OriginalObject.UserActions, Converter={StaticResource EnumFlagsToBooleanConverter}, ConverterParameter={x:Static models:ComponentUserActions.Disable}}" >
+                                <MenuItem.Icon>
+                                    <Image Source="{Binding Path=DisableIcon}"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </ContextMenu>
+                    </StackPanel.ContextMenu>
+                    <TextBlock Text="{Binding Path=OriginalObject.FriendlyName}">
+                        <TextBlock.ToolTip>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Path=OriginalObject.Description}"/>
+                                <TextBlock Text="{Binding Path=OriginalObject.Status}"/>
+                            </StackPanel>
+                        </TextBlock.ToolTip>
+                    </TextBlock>
+                </StackPanel>
+            </HierarchicalDataTemplate>
+
+            <HierarchicalDataTemplate DataType="{x:Type datacontracts:ComponentMetadata}" ItemsSource="{Binding Path=Dependencies}" >
+                <StackPanel  Orientation="Horizontal">
+                    <TextBlock>
+                        <TextBlock.Inlines>
+                            <Run FontWeight="Bold" Text="{Binding Path=FriendlyName}"/>
+                            <Run FontWeight="Normal" Text="{Binding Path=Description}" />
+                        </TextBlock.Inlines>
+                    </TextBlock>
+                </StackPanel>
+            </HierarchicalDataTemplate>
+        </Grid.Resources>
+        <Border BorderThickness="1" Background="White" Opacity="1" Margin="0"/>
+
+        <TreeView ItemsSource="{Binding Path=Components}">
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="TreeViewItem">
+                    <Setter Property="IsExpanded" Value="True"/>
+                </Style>
+            </TreeView.ItemContainerStyle>
+        </TreeView>
+    </Grid>
+</mybase:PanelBase>
