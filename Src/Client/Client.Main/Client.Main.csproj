@@ -41,19 +41,35 @@
     </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Client.Base">
-      <HintPath>..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.1.0\lib\net452\Client.Base.dll</HintPath>
+    <Reference Include="Client.Admin.Plugins, Version=0.2.1.173, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.1.0\lib\net452\Client.Admin.Plugins.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Client.Controls">
+    <Reference Include="Client.Base, Version=0.2.1.173, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.1.0\lib\net452\Client.Base.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Client.Controls, Version=0.2.1.173, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.1.0\lib\net452\Client.Controls.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Client.Plugins.Test, Version=0.2.1.173, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.1.0\lib\net452\Client.Plugins.Test.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Client.Resources">
       <HintPath>..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.1.0\lib\net452\Client.Resources.dll</HintPath>
     </Reference>
-    <Reference Include="Core.Comm">
+    <Reference Include="Core.Comm, Version=0.2.1.173, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.1.0\lib\net452\Core.Comm.dll</HintPath>
     </Reference>
-    <Reference Include="Core.Util">
+    <Reference Include="Core.Util, Version=0.2.1.173, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.1.0\lib\net452\Core.Util.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -62,8 +78,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
@@ -120,6 +134,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    if not exist "$(TargetDir)x86" md "$(TargetDir)x86"
+    xcopy /s /y "$(SolutionDir).nuget\..\Libs\NugetPackages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\x86\*.*" "$(TargetDir)x86"
+    if not exist "$(TargetDir)amd64" md "$(TargetDir)amd64"
+    xcopy /s /y "$(SolutionDir).nuget\..\Libs\NugetPackages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\amd64\*.*" "$(TargetDir)amd64"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
