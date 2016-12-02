@@ -60,7 +60,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Example.ScrumPoker.Interfaces\Example.ScrumPoker.Interfaces.csproj">
+    <ProjectReference Include="..\..\..\Common\Example.ScrumPoker.Interfaces\Example.ScrumPoker.Interfaces.csproj">
       <Project>{67d54bdc-c2b9-4187-aea7-959b9d4c5512}</Project>
       <Name>Example.ScrumPoker.Interfaces</Name>
     </ProjectReference>
