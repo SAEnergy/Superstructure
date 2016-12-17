@@ -1,8 +1,8 @@
-﻿using Core.Database;
-using Core.Interfaces.Components.Logging;
+﻿using Core.Interfaces.Components.Logging;
 using Core.IoC.Container;
 using Core.Settings;
 using Core.Settings.BaseClasses;
+using Server.Database;
 using System.Configuration;
 
 namespace HostService

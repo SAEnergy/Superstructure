@@ -2,6 +2,9 @@
 using Client.Controls;
 using Client.Resources;
 using Core.Comm;
+using Core.Interfaces.Components.Logging;
+using Core.IoC.Container;
+using Core.Logging;
 using Core.Util;
 using System;
 using System.Collections.ObjectModel;
@@ -11,16 +14,29 @@ using System.Windows.Media;
 
 namespace Client.Main
 {
-    public class PluginInfo
+    public class PluginInfoModel
     {
         public Type PluginType { get; set; }
         public string Name { get; set; }
         public ImageSource Icon { get; set; }
+        public SimpleCommand DetachCommand { get; private set; }
+
+        public PluginInfoModel()
+        {
+            DetachCommand = new SimpleCommand(OnDetachCommand);
+        }
+
+        private void OnDetachCommand()
+        {
+            PanelBase panel = Activator.CreateInstance(PluginType) as PanelBase;
+            DetachedWindow window = new DetachedWindow(panel, MainWindow.Instance);
+            window.Show();
+        }
     }
 
     public class MainWindowViewModel : ViewModelBase
     {
-        public ObservableCollection<PluginInfo> Plugins { get; set; }
+        public ObservableCollection<PluginInfoModel> Plugins { get; set; }
         public SimpleCommand SettingsCommand { get; set; }
         private SettingsDialog _settings;
 
@@ -31,10 +47,10 @@ namespace Client.Main
             set { SetValue(PanelProperty, value); }
         }
 
-        public static readonly DependencyProperty SelectedPanelProperty = DependencyProperty.Register("SelectedPanel", typeof(PluginInfo), typeof(MainWindowViewModel), new PropertyMetadata(OnSelectedPanelChanged));
-        public PluginInfo SelectedPanel
+        public static readonly DependencyProperty SelectedPanelProperty = DependencyProperty.Register("SelectedPanel", typeof(PluginInfoModel), typeof(MainWindowViewModel), new PropertyMetadata(OnSelectedPanelChanged));
+        public PluginInfoModel SelectedPanel
         {
-            get { return (PluginInfo)GetValue(SelectedPanelProperty); }
+            get { return (PluginInfoModel)GetValue(SelectedPanelProperty); }
             set { SetValue(SelectedPanelProperty, value); }
         }
 
@@ -47,7 +63,7 @@ namespace Client.Main
 
         public MainWindowViewModel(ViewBase parent) : base(parent)
         {
-            Plugins = new ObservableCollection<PluginInfo>();
+            Plugins = new ObservableCollection<PluginInfoModel>();
             ServerName = ServerConnectionInformation.Instance.ConnectionString;
             SettingsCommand = new SimpleCommand(ExecuteSettingsCommand);
             Task.Run(() => PluginInit());
@@ -58,7 +74,7 @@ namespace Client.Main
             var types = TypeLocator.FindTypes("*plugin*.dll", typeof(PanelBase));
             foreach (Type type in types)
             {
-                PluginInfo info = new PluginInfo();
+                PluginInfoModel info = new PluginInfoModel();
                 PanelMetadataAttribute atty = type.GetAttribute<PanelMetadataAttribute>();
                 info.PluginType = type;
                 if (atty != null && !string.IsNullOrWhiteSpace(atty.DisplayName))

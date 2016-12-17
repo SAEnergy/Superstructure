@@ -30,20 +30,120 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Core.Comm, Version=0.2.1.173, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Client.Admin.Plugins, Version=0.2.35.219, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.1.0\lib\net452\Core.Comm.dll</HintPath>
+      <HintPath>..\..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.35.0\lib\net452\Client.Admin.Plugins.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Core.Interfaces, Version=0.2.1.173, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Client.Base, Version=0.2.35.219, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.1.0\lib\net452\Core.Interfaces.dll</HintPath>
+      <HintPath>..\..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.35.0\lib\net452\Client.Base.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Core.Models, Version=0.2.1.173, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Client.Controls, Version=0.2.35.219, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.1.0\lib\net452\Core.Models.dll</HintPath>
+      <HintPath>..\..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.35.0\lib\net452\Client.Controls.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Core.Comm, Version=0.2.35.219, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.35.0\lib\net452\Core.Comm.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Core.Interfaces, Version=0.2.35.219, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.35.0\lib\net452\Core.Interfaces.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Core.IoC.Container, Version=0.2.35.219, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.35.0\lib\net452\Core.IoC.Container.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Core.Models, Version=0.2.35.219, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.35.0\lib\net452\Core.Models.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Core.Proxies, Version=0.2.35.219, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.35.0\lib\net452\Core.Proxies.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Core.Settings, Version=0.2.35.219, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.35.0\lib\net452\Core.Settings.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Core.Util, Version=0.2.35.219, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.35.0\lib\net452\Core.Util.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\..\..\..\Libs\NugetPackages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\..\..\..\Libs\NugetPackages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServerCompact">
+      <HintPath>..\..\..\..\Libs\NugetPackages\EntityFramework.SqlServerCompact.6.1.3\lib\net45\EntityFramework.SqlServerCompact.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Logging.Component, Version=0.2.35.219, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.35.0\lib\net452\Logging.Component.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Logging.Log4Net, Version=0.2.35.219, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.35.0\lib\net452\Logging.Log4Net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Logging.Remote, Version=0.2.35.219, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.35.0\lib\net452\Logging.Remote.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Scheduler.Component, Version=0.2.35.219, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.35.0\lib\net452\Scheduler.Component.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Scheduler.Interfaces, Version=0.2.35.219, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.35.0\lib\net452\Scheduler.Interfaces.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Scheduler.Plugin, Version=0.2.35.219, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.35.0\lib\net452\Scheduler.Plugin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Server.Components, Version=0.2.35.219, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.35.0\lib\net452\Server.Components.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Server.Hosts, Version=0.2.35.219, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.35.0\lib\net452\Server.Hosts.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Server.WebHost.Component, Version=0.2.35.219, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Libs\NugetPackages\SAE.Core.Infrastructure.0.2.35.0\lib\net452\Server.WebHost.Component.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\Libs\NugetPackages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -65,7 +165,18 @@
       <Name>Example.ScrumPoker.Interfaces</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    if not exist "$(TargetDir)x86" md "$(TargetDir)x86"
+    xcopy /s /y "$(SolutionDir).nuget\..\Libs\NugetPackages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\x86\*.*" "$(TargetDir)x86"
+    if not exist "$(TargetDir)amd64" md "$(TargetDir)amd64"
+    xcopy /s /y "$(SolutionDir).nuget\..\Libs\NugetPackages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\amd64\*.*" "$(TargetDir)amd64"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

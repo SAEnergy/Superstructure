@@ -5,8 +5,9 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <Style TargetType="DataGrid" BasedOn="{StaticResource {x:Type DataGrid}}">
-            <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
-            <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}"/>
+            <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"/>
+            <Setter Property="GridLinesVisibility" Value="Horizontal"/>
         </Style>
         <Style TargetType="ScrollViewer">
             <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>

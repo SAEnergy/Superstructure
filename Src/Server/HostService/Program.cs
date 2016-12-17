@@ -7,6 +7,8 @@ using Core.Logging.LogMessageFormats;
 using System;
 using System.Threading;
 using Core.Models;
+using Server.Database;
+using System.Configuration;
 
 namespace HostService
 {
@@ -25,7 +27,7 @@ namespace HostService
 
         public static void Main(string[] args)
         {
-            if(Environment.UserInteractive)
+            if (Environment.UserInteractive)
             {
                 StartService(args);
             }
@@ -51,9 +53,11 @@ namespace HostService
 
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            _logger.Log("Unhandled exception in HostService", LogMessageSeverity.Critical);
-            _logger.Log(e.ExceptionObject.ToString(), LogMessageSeverity.Critical);
-            StopService();
+            _logger.Log("Unhandled exception in HostService.", (Exception)e.ExceptionObject, severity: LogMessageSeverity.Critical);
+
+            //shut down logger cleanly, then program will exit
+            _logger.Stop();
+            Environment.Exit(-0xdedbeef);
         }
 
         private static FileLogDestinationConfig GetLogConfiguration()
@@ -85,7 +89,7 @@ namespace HostService
 
         private static void StartService(string[] args)
         {
-            ComponentRegister.Register(ComponentType.Server);
+            ComponentRegister.Register();
 
             _logger = IoCContainer.Instance.Resolve<ILogger>();
 
@@ -109,6 +113,12 @@ namespace HostService
             }
 
             _logger.Start();
+
+            _logger.Log("Initializing database...");
+
+            ServerContextFactory.ConnectionString = ConfigurationManager.ConnectionStrings["ServerConnectionString"].ConnectionString;
+            DatabaseSettings.Instance.ConnectionString = ConfigurationManager.ConnectionStrings["ServerConnectionString"].ConnectionString; ;
+            IoCContainer.Instance.Register(typeof(ServerContextFactory));
 
             _logger.Log("Starting up HostService");
 
@@ -137,7 +147,7 @@ namespace HostService
             _stopService.Set();
             _logger.Log("Waiting for service to exit.");
 
-            if(!_serviceStopped.WaitOne(TimeSpan.FromMinutes(5)))
+            if (!_serviceStopped.WaitOne(TimeSpan.FromMinutes(5)))
             {
                 Environment.Exit(-1); //timeout on shutdown!
             }

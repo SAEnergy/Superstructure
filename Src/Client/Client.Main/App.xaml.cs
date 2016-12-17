@@ -1,4 +1,7 @@
 ﻿using Client.Base;
+using Core.Interfaces.Components.Logging;
+using Core.IoC.Container;
+using Core.Logging;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -16,6 +19,8 @@ namespace Client.Main
     {
         public App()
         {
+            IoCContainer.Instance.Register(typeof(Logger));
+            IoCContainer.Instance.Resolve<ILogger>().Start();
             ClientSettingsEngine.Instance.Load();
         }
 
