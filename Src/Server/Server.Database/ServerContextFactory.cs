@@ -15,7 +15,12 @@ namespace Server.Database
     {
         public static string ConnectionString { get; set; }
 
-        public static ServerContextFactory Instance { get; private set; } = new ServerContextFactory();
+        public static ServerContextFactory Instance { get; private set; }
+
+        static ServerContextFactory()
+        {
+            Instance = new ServerContextFactory();
+        }
 
         public ServerContext Create()
         {
