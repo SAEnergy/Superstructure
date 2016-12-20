@@ -9,6 +9,7 @@ using System.Threading;
 using Core.Models;
 using Server.Database;
 using System.Configuration;
+using Core.Comm;
 
 namespace HostService
 {
@@ -113,6 +114,8 @@ namespace HostService
             }
 
             _logger.Start();
+
+            ServerConnectionInformation.Instance.ConnectionString = "localhost:" + Configuration.Instance.PortNumber;
 
             _logger.Log("Initializing database...");
 

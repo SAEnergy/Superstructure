@@ -34,11 +34,28 @@ namespace Client.Main
         }
     }
 
+    public class MainWindowSettings : ClientSettingsBase
+    {
+        public static readonly DependencyProperty ServerNameProperty = DependencyProperty.Register("ServerName", typeof(string), typeof(MainWindowSettings));
+        public string ServerName
+        {
+            get { return (string)GetValue(ServerNameProperty); }
+            set { SetValue(ServerNameProperty, value); }
+        }
+
+        public MainWindowSettings()
+        {
+            ServerName = "localhost";
+        }
+    }
+
     public class MainWindowViewModel : ViewModelBase
     {
         public ObservableCollection<PluginInfoModel> Plugins { get; set; }
         public SimpleCommand SettingsCommand { get; set; }
-        private SettingsDialog _settings;
+        private SettingsDialog _settingsDialog;
+        private MainWindowSettings _settings;
+        private PropertyChangeNotifier _notifyServer;
 
         public static readonly DependencyProperty PanelProperty = DependencyProperty.Register("Panel", typeof(PanelBase), typeof(MainWindowViewModel));
         public PanelBase Panel
@@ -54,19 +71,20 @@ namespace Client.Main
             set { SetValue(SelectedPanelProperty, value); }
         }
 
-        public static readonly DependencyProperty ServerNameProperty = DependencyProperty.Register("ServerName", typeof(string), typeof(MainWindowViewModel), new PropertyMetadata(OnServerNameChanged));
-        public string ServerName
-        {
-            get { return (string)GetValue(ServerNameProperty); }
-            set { SetValue(ServerNameProperty, value); }
-        }
-
         public MainWindowViewModel(ViewBase parent) : base(parent)
         {
+            _settings = ClientSettingsEngine.Instance.GetInstance<MainWindowSettings>();
+            _notifyServer = new PropertyChangeNotifier(_settings, MainWindowSettings.ServerNameProperty);
+            _notifyServer.ValueChanged += ServerValueChanged;
             Plugins = new ObservableCollection<PluginInfoModel>();
-            ServerName = ServerConnectionInformation.Instance.ConnectionString;
             SettingsCommand = new SimpleCommand(ExecuteSettingsCommand);
             Task.Run(() => PluginInit());
+        }
+
+        private void ServerValueChanged(object sender, EventArgs e)
+        {
+            ServerConnectionInformation.Instance.ConnectionString = _settings.ServerName;
+            ServerConnectionInformation.Instance.FireReconnect();
         }
 
         private void PluginInit()
@@ -108,30 +126,26 @@ namespace Client.Main
             vm.Panel = Activator.CreateInstance(vm.SelectedPanel.PluginType) as PanelBase;
         }
 
-        private static void OnServerNameChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ServerConnectionInformation.Instance.ConnectionString = ((MainWindowViewModel)d).ServerName;
-            ServerConnectionInformation.Instance.FireReconnect();
-        }
-
         private void ExecuteSettingsCommand()
         {
-            if (_settings == null)
+            if (_settingsDialog == null)
             {
-                _settings = new SettingsDialog(Window.GetWindow(_parent));
-                _settings.Closed += SettingsClosed;
-                _settings.Show();
+                _settingsDialog = new SettingsDialog(Window.GetWindow(_parent));
+                _settingsDialog.Closed += SettingsClosed;
+                _settingsDialog.Show();
             }
         }
 
         private void SettingsClosed(object sender, EventArgs e)
         {
-            _settings = null;
+            _settingsDialog = null;
         }
 
         public override void Dispose()
         {
             if (Panel != null) { Panel.Dispose(); }
+            _notifyServer.Dispose();
+            _settings = null;
             base.Dispose();
         }
     }

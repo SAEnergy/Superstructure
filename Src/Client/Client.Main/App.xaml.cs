@@ -27,7 +27,7 @@ namespace Client.Main
         protected override void OnExit(ExitEventArgs e)
         {
             ClientSettingsEngine.Instance.Save();
+            IoCContainer.Instance.Resolve<ILogger>().Stop();
         }
-
     }
 }
