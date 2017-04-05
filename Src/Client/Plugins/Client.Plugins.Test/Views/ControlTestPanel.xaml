@@ -18,6 +18,7 @@
         <StackPanel Orientation="Horizontal">
             <Button HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5" Margin="5" Command="{Binding ModalBackgroundTaskCommand}">Modal Background Task</Button>
             <Button HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5" Margin="5" Command="{Binding CancellableBackgroundTaskCommand}">Cancellable Background Task</Button>
+            <Button HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5" Margin="5" Command="{Binding PromptCommand}">Prompt for Input</Button>
         </StackPanel>
         <ScrollViewer Grid.Row="1">
             <Grid Margin="2">
@@ -32,7 +33,11 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <controls:PropertyGrid Grid.Column="1" ItemsSource="{Binding Data.SelectedItems}" Margin="2"/>
+                <StackPanel Grid.Column="1">
+                    <CheckBox IsChecked="{Binding ElementName=MahGrid, Path=LiveEdit}">Live Edit</CheckBox>
+                    <controls:PropertyGrid x:Name="MahGrid" Grid.Column="1" ItemsSource="{Binding Data.SelectedItems}" Margin="2"/>
+                    <Button Command="{Binding ElementName=MahGrid,Path=CommitCommand}">Commit</Button>
+                </StackPanel>
             </Grid>
         </ScrollViewer>
     </Grid>

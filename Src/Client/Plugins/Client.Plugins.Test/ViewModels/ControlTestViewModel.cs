@@ -1,5 +1,6 @@
 ﻿using Client.Base;
 using Client.Controls;
+using Client.Controls.Dialogs;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -19,17 +20,31 @@ namespace Client.Plugins.Test
 
         public SimpleCommand ModalBackgroundTaskCommand { get; private set; }
         public SimpleCommand CancellableBackgroundTaskCommand { get; private set; }
+        public SimpleCommand PromptCommand { get; private set; }
 
         public ControlTestViewModel(ViewBase parent) : base(parent)
         {
             _data = new ObservableCollection<TestData>();
             Data = new MultiSelectCollectionView<TestData>(_data);
             _data.Add(new TestData());
-            _data.Add(new TestData());
+            _data.Add(new TestData() { Stuff = Stuff.Gizmos });
             _data.Add(new TestData());
 
             ModalBackgroundTaskCommand = new SimpleCommand(ExecuteModalBackgroundTask);
             CancellableBackgroundTaskCommand = new SimpleCommand(ExecuteCancellableBackgroundTask);
+            PromptCommand = new SimpleCommand(ExecutePromptCommand);
+        }
+
+        private void ExecutePromptCommand()
+        {
+            PromptForInputDialog dlg = new PromptForInputDialog(Window.GetWindow(_parent));
+            dlg.InputPrompt = "Would you like to play a game?";
+            dlg.Title = "Hello";
+            dlg.ShowDialog();
+            if (dlg.DialogResult==true)
+            {
+                MessageBox.Show("You entered: \"" + dlg.Data + "\".");
+            }
         }
 
         private async Task Worker(CancellationToken tok)

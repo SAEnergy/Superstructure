@@ -12,23 +12,21 @@ namespace Example.Jobs
 {
     public class ExampleJob : JobBase<ExampleJobConfiguration>
     {
-
+        private static Random _randy = new Random();
         public ExampleJob(ILogger logger, ExampleJobConfiguration config) : base(logger, config) { }
 
         public override bool Execute()
         {
-            Statistics.TotalItems = Configuration.NumberOfItems;
+            int itemsThisRun = Configuration.NumberOfItems + _randy.Next(-Configuration.ItemVariation, Configuration.ItemVariation);
+            TimeSpan sleepSpan = TimeSpan.FromSeconds((Configuration.RunTimeSeconds + _randy.Next(-Configuration.VariationSeconds, Configuration.VariationSeconds) * 1.0) / itemsThisRun);
 
-            for (int x=0;x<Configuration.NumberOfItems;x++)
+            Statistics.TotalItems = itemsThisRun;
+
+            for (int x = 0; x < itemsThisRun; x++)
             {
                 Statistics.Completed++;
-
-                if (Configuration.RunTimeSeconds > 0)
-                {
-                    Thread.Sleep(Configuration.RunTimeSeconds * 1000 / Configuration.NumberOfItems);
-                }
-
                 FireStatusUpdate();
+                Thread.Sleep(sleepSpan);
                 TaskCancellationToken.ThrowIfCancellationRequested();
             }
             return true;

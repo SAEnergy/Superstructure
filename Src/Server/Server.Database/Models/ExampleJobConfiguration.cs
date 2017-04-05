@@ -10,6 +10,8 @@ namespace Server.Database.Models
     public class ExampleJobConfiguration : JobConfiguration
     {
         public int RunTimeSeconds { get; set; }
+        public int VariationSeconds { get; set; }
         public int NumberOfItems { get; set; }
+        public int ItemVariation { get; set; }
     }
 }
